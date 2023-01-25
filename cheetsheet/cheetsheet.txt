@@ -1,0 +1,20 @@
+dump:
+pg_dump -h localhost -U postgres -F c -f /root/itcoty_bot/server_bot/db_backup/backup_from_server.backup
+
+restore:
+pg_restore -h localhost -U postgres -F c -d postgres ./db_backup/itcoty5.backup
+
+кракозябры:
+sudo dpkg-reconfigure console-setup
+Выбираем кодировку - UTF-8
+Выбираем таблицу символов - Кирилица - славянские языки
+Выбираем шрифт - Fixed или TerminusBold
+8x16
+Для того, чтобы наша настройка не слетела после перезагрузки нужно проделать следующее:
+sudo nano /etc/rc.local
+В открывшемся текстовом файле находим exit 0 и над этой строкой пишем:
+setupcon
+
+git stash
+
+chmod 777

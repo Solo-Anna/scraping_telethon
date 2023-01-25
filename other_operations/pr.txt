@@ -1,0 +1,654 @@
+Product manager (розничный бизнес)
+old prof [no_sort]
+___
+new prof1 (title only): {'pm'}
+MA pm={'product manager'}
+MA pm={'product manager'}
+MA pm={'product manager'}
+MA pm={'product manager'}
+
+
+___
+new prof2 (title+body): {'no_sort'}
+MA pm={'product manager'}
+MA pm={'product manager'}
+MA pm={'product manager'}
+MA pm={'product manager'}
+MA analyst={'аналитик'}
+
+MEX pm={'разработчик'}
+MEX pm={'разработчик'}
+MEX analyst={' ва'}
+
+__________________________________
+
+Менеджер проекта
+old prof [no_sort]
+___
+new prof1 (title only): {'no_sort'}
+
+
+___
+new prof2 (title+body): {'no_sort'}
+
+
+__________________________________
+
+Junior Business Analyst
+old prof [mobile, junior, ba]
+___
+new prof1 (title only): {'ba', 'junior'}
+MA ba={'business analyst'}
+MA ba={'business analyst'}
+MA ba={'business analyst'}
+MA junior={'junior'}
+
+
+___
+new prof2 (title+body): {'ba', 'mobile', 'junior'}
+MA ba={' bal', ' ban'}
+MA ba={'business analyst'}
+MA ba={'business analyst'}
+MA ba={'business analyst'}
+MA mobile={'mobile'}
+MA junior={'junior'}
+
+
+__________________________________
+
+Product manager on Amazon | Продакт менеджер Амазон
+old prof [pm]
+___
+new prof1 (title only): {'pm'}
+MA pm={'product manager'}
+MA pm={'product manager'}
+MA pm={'product manager'}
+MA pm={'product manager'}
+
+
+___
+new prof2 (title+body): {'pm'}
+MA pm={'product manager'}
+MA pm={'product manager'}
+MA pm={'product manager'}
+MA pm={'product manager'}
+MA analyst={'аналитик'}
+
+MEX analyst={' ва'}
+
+__________________________________
+
+Заместитель директора по медчасти
+old prof [no_sort]
+___
+new prof1 (title only): {'no_sort'}
+
+
+___
+new prof2 (title+body): {'no_sort'}
+
+
+__________________________________
+
+Middle+/Senior Android Developer
+old prof [qa]
+___
+new prof1 (title only): {'mobile'}
+MA mobile={'android'}
+
+
+___
+new prof2 (title+body): {'qa'}
+MA pm={'product owner'}
+MA pm={' pmo'}
+MA pm={'product owner'}
+MA mobile={'kotlin'}
+MA mobile={'android'}
+MA pm={'product owner'}
+MA pm={' pmo'}
+MA pm={'product owner'}
+MA designer={'ui'}
+MA backend={'java'}
+MA qa={'manual testing'}
+
+MEX pm={'android developer'}
+MEX mobile={'manual testing'}
+MEX pm={'android developer'}
+MEX designer={'product owner'}
+MEX backend={'manual testing'}
+
+__________________________________
+
+Инженер-программист (PHP / HTML / JavaScript)
+old prof [backend]
+___
+new prof1 (title only): {'backend', 'frontend'}
+MA frontend={'javascript'}
+MA backend={'php'}
+MA backend={'java'}
+MA frontend={'javascript'}
+
+
+___
+new prof2 (title+body): {'backend'}
+MA frontend={'javascript'}
+MA designer={'ux'}
+MA backend={'php'}
+MA backend={'java'}
+MA backend={' php'}
+MA backend={'laravel'}
+MA frontend={'javascript'}
+
+MEX frontend={'laravel'}
+MEX designer={'javascript'}
+MEX frontend={'laravel'}
+
+__________________________________
+
+Project Manager
+old prof [mobile]
+___
+new prof1 (title only): {'pm'}
+MA pm={'project manager'}
+MA pm={'project manager'}
+MA pm={'project manager'}
+MA pm={'project manager'}
+MA pm={'project manager'}
+MA pm={'project manager'}
+
+
+___
+new prof2 (title+body): {'mobile'}
+MA marketing={'маркетолог'}
+MA pm={'project manager'}
+MA pm={'project manager'}
+MA pm={'project manager'}
+MA mobile={'mobile'}
+MA pm={'project manager'}
+MA pm={'project manager'}
+MA pm={'project manager'}
+MA analyst={'аналитик'}
+MA designer={'дизайнер'}
+MA designer={'дизайнер'}
+
+MEX marketing={'project manager'}
+MEX pm={'маркетолог'}
+MEX pm={'маркетолог'}
+MEX analyst={' ва'}
+MEX designer={'дизайнеры'}
+
+__________________________________
+
+Product owner
+old prof [no_sort]
+___
+new prof1 (title only): {'pm'}
+MA pm={'product owner'}
+MA pm={'product owner'}
+MA pm={'product owner'}
+MA pm={'product owner'}
+
+
+___
+new prof2 (title+body): {'no_sort'}
+MA marketing={'seo'}
+MA marketing={'маркетолог'}
+MA marketing={'контент'}
+MA pm={'product manager'}
+MA pm={'product owner'}
+MA pm={'product owner'}
+MA pm={'product manager'}
+MA pm={'product manager'}
+MA pm={'product owner'}
+MA pm={'product owner'}
+MA pm={'product manager'}
+MA analyst={'аналитик'}
+MA designer={'ux'}
+MA designer={'ui'}
+MA designer={'ui/ux'}
+
+MEX marketing={'product manager'}
+MEX pm={'web-аналитик'}
+MEX pm={'web-аналитик'}
+MEX analyst={'product manager'}
+MEX designer={'product manager'}
+
+__________________________________
+
+Junior IT consultant
+old prof [ba, sales_manager]
+___
+new prof1 (title only): {'junior'}
+MA junior={'junior'}
+
+
+___
+new prof2 (title+body): {'ba', 'sales_manager'}
+MA ba={' ban'}
+MA sales_manager={'sales manager'}
+MA sales_manager={'sales manager'}
+MA sales_manager={'sales manager'}
+MA sales_manager={'lead generation'}
+MA designer={'ui'}
+MA junior={'junior'}
+
+MEX designer={'gita'}
+MEX junior={'middle'}
+
+__________________________________
+
+PHP-developer / PHP программист (Bitrix)
+old prof [backend]
+___
+new prof1 (title only): {'backend'}
+MA backend={'php'}
+MA backend={' php'}
+
+
+___
+new prof2 (title+body): {'backend'}
+MA frontend={'web-developer'}
+MA frontend={'javascript'}
+MA backend={'php'}
+MA backend={'java'}
+MA backend={' php'}
+MA frontend={'web-developer'}
+MA frontend={'javascript'}
+
+MEX frontend={'web-developer'}
+MEX frontend={'web-developer'}
+
+__________________________________
+
+Учитель-дефектолог
+old prof [no_sort]
+___
+new prof1 (title only): {'no_sort'}
+
+
+___
+new prof2 (title+body): {'no_sort'}
+
+
+__________________________________
+
+Junior Product Manager
+old prof [mobile, junior, pm]
+___
+new prof1 (title only): {'pm', 'junior'}
+MA pm={'product manager'}
+MA pm={'product manager'}
+MA pm={'product manager'}
+MA pm={'product manager'}
+MA junior={'junior'}
+
+
+___
+new prof2 (title+body): {'mobile', 'pm', 'junior'}
+MA pm={'product manager'}
+MA pm={'product manager'}
+MA mobile={'ios'}
+MA pm={'product manager'}
+MA pm={'product manager'}
+MA designer={'ux'}
+MA designer={'ui'}
+MA designer={'ux/ui'}
+MA junior={'junior'}
+
+MEX designer={'product manager'}
+
+__________________________________
+
+Старшая медицинская сестра/старший медицинский брат
+old prof [no_sort]
+___
+new prof1 (title only): {'no_sort'}
+
+
+___
+new prof2 (title+body): {'no_sort'}
+
+
+__________________________________
+
+Product manager / Product Owner
+old prof [mobile]
+___
+new prof1 (title only): {'pm'}
+MA pm={'product manager'}
+MA pm={'product owner'}
+MA pm={'product owner'}
+MA pm={'product manager'}
+MA pm={'product manager'}
+MA pm={'product owner'}
+MA pm={'product owner'}
+MA pm={'product manager'}
+
+
+___
+new prof2 (title+body): {'mobile'}
+MA pm={'product manager'}
+MA pm={'product owner'}
+MA pm={'product owner'}
+MA pm={'product manager'}
+MA mobile={'mobile'}
+MA mobile={'ios'}
+MA mobile={'android'}
+MA pm={'product manager'}
+MA pm={'product owner'}
+MA pm={'product owner'}
+MA pm={'product manager'}
+MA designer={'дизайнер'}
+MA designer={'дизайнер'}
+MA designer={'ux'}
+MA designer={'ui'}
+
+MEX pm={'разработчик'}
+MEX pm={'разработчик'}
+MEX designer={'product manager'}
+
+__________________________________
+
+Mobile QA
+old prof [mobile]
+___
+new prof1 (title only): {'qa', 'mobile'}
+MA mobile={'mobile'}
+MA qa={' qa'}
+
+
+___
+new prof2 (title+body): {'mobile'}
+MA marketing={'aso'}
+MA pm={'product owner'}
+MA pm={'product owner'}
+MA mobile={'mobile'}
+MA mobile={'ios'}
+MA pm={'product owner'}
+MA pm={'product owner'}
+MA designer={'дизайнер'}
+MA designer={'дизайнер'}
+MA designer={'ux'}
+MA designer={'ui'}
+MA designer={'ux/ui'}
+MA hr={' hr'}
+MA qa={' qa'}
+MA qa={'тестировщик'}
+
+MEX marketing={'product owner'}
+MEX pm={'tech lead'}
+MEX pm={'tech lead'}
+MEX designer={'product owner'}
+MEX hr={'пишите в телеграмм нашему hr'}
+MEX qa={'tech lead'}
+
+__________________________________
+
+Product manager (кредитование физических лиц)
+old prof [no_sort]
+___
+new prof1 (title only): {'pm'}
+MA pm={'product manager'}
+MA pm={'product manager'}
+MA pm={'product manager'}
+MA pm={'product manager'}
+
+
+___
+new prof2 (title+body): {'no_sort'}
+MA pm={'product manager'}
+MA pm={'product manager'}
+MA pm={'product manager'}
+MA pm={'product manager'}
+MA analyst={'аналитик'}
+
+MEX pm={'технолог'}
+MEX pm={'технолог'}
+MEX analyst={' ва'}
+
+__________________________________
+
+Product Owner/Product Manager
+old prof [pm]
+___
+new prof1 (title only): {'pm'}
+MA pm={'product manager'}
+MA pm={'product owner'}
+MA pm={'product owner'}
+MA pm={'product manager'}
+MA pm={'product manager'}
+MA pm={'product owner'}
+MA pm={'product owner'}
+MA pm={'product manager'}
+
+
+___
+new prof2 (title+body): {'pm'}
+MA pm={'product manager'}
+MA pm={'product owner'}
+MA pm={'product owner'}
+MA pm={'product manager'}
+MA pm={'product manager'}
+MA pm={'product owner'}
+MA pm={'product owner'}
+MA pm={'product manager'}
+
+
+__________________________________
+
+UI/UX дизайнер/Веб-дизайнер
+old prof [designer, mobile]
+___
+new prof1 (title only): {'designer'}
+MA designer={'дизайнер'}
+MA designer={'дизайнер'}
+MA designer={'ux'}
+MA designer={'ui'}
+MA designer={'ui/ux'}
+
+
+___
+new prof2 (title+body): {'mobile', 'designer'}
+MA mobile={'ios'}
+MA mobile={'android'}
+MA designer={'3d'}
+MA designer={'дизайнер'}
+MA designer={'дизайнер'}
+MA designer={'ux'}
+MA designer={'ui'}
+MA designer={'ui/ux'}
+
+
+__________________________________
+
+Product Manager (gambling)
+old prof [pm]
+___
+new prof1 (title only): {'pm'}
+MA pm={'product manager'}
+MA pm={'product manager'}
+MA pm={'product manager'}
+MA pm={'product manager'}
+
+
+___
+new prof2 (title+body): {'pm'}
+MA marketing={'seo'}
+MA marketing={'контент'}
+MA pm={'product manager'}
+MA pm={'product manager'}
+MA pm={'product manager'}
+MA pm={'product manager'}
+MA analyst={'аналитик'}
+MA designer={'дизайнер'}
+MA designer={'дизайнер'}
+
+MEX marketing={'product manager'}
+MEX analyst={'/ba'}
+MEX designer={'product manager'}
+
+__________________________________
+
+Руководитель по военно-патриотическому воспитанию
+old prof [no_sort]
+___
+new prof1 (title only): {'no_sort'}
+
+
+___
+new prof2 (title+body): {'no_sort'}
+
+
+__________________________________
+
+Операционный менеджер по созданию магазинов (Woocommerce) / Middle Project Manager
+old prof [pm]
+___
+new prof1 (title only): {'pm'}
+MA pm={'project manager'}
+MA pm={'project manager'}
+MA pm={'project manager'}
+MA pm={'project manager'}
+MA pm={'project manager'}
+MA pm={'project manager'}
+
+
+___
+new prof2 (title+body): {'pm'}
+MA pm={'project manager'}
+MA pm={'project manager'}
+MA pm={'project manager'}
+MA pm={'project manager'}
+MA pm={'project manager'}
+MA pm={'project manager'}
+
+
+__________________________________
+
+Project Manager (Senior)
+old prof [no_sort]
+___
+new prof1 (title only): {'pm'}
+MA pm={'project manager'}
+MA pm={'project manager'}
+MA pm={'project manager'}
+MA pm={'project manager'}
+MA pm={'project manager'}
+MA pm={'project manager'}
+
+
+___
+new prof2 (title+body): {'no_sort'}
+MA pm={' pm;', ' pm:', ' pm ', ' pm,'}
+MA pm={' pm,'}
+MA pm={' pm '}
+MA pm={'project manager'}
+MA pm={'project manager'}
+MA pm={'project manager'}
+MA pm={' pm;', ' pm:', ' pm ', ' pm,'}
+MA pm={' pm,'}
+MA pm={' pm '}
+MA pm={'project manager'}
+MA pm={'project manager'}
+MA pm={'project manager'}
+
+MEX pm={'разработчик'}
+MEX pm={'разработчик'}
+
+__________________________________
+
+Junior User Acquisition Manager / Junior UA Manager
+old prof [mobile, junior, marketing, sales_manager]
+___
+new prof1 (title only): {'junior', 'marketing', 'sales_manager', 'designer'}
+MA marketing={'user acquisition'}
+MA sales_manager={'user acquisition'}
+MA designer={'ui'}
+MA junior={'junior'}
+
+
+___
+new prof2 (title+body): {'junior', 'mobile', 'marketing', 'sales_manager'}
+MA marketing={'user acquisition'}
+MA marketing={'aso'}
+MA mobile={'ios'}
+MA sales_manager={'user acquisition'}
+MA designer={'ui'}
+MA junior={'junior'}
+
+MEX designer={' c '}
+
+__________________________________
+
+Python developer (Стажер), Web разработка
+old prof [backend]
+___
+new prof1 (title only): {'backend'}
+MA backend={'python developer'}
+
+
+___
+new prof2 (title+body): {'backend'}
+MA frontend={'front-end'}
+MA backend={'python developer'}
+MA backend={'back-end'}
+MA frontend={'front-end'}
+
+MEX frontend={'python developer'}
+MEX frontend={'python developer'}
+
+__________________________________
+
+Junior Business Development Specialist at Firstmovr
+old prof [game, junior, ba, sales_manager]
+___
+new prof1 (title only): {'junior'}
+MA junior={'junior'}
+
+
+___
+new prof2 (title+body): {'ba', 'junior', 'sales_manager', 'game'}
+MA marketing={'marketing'}
+MA ba={' bas'}
+MA game={'unity'}
+MA pm={' pm '}
+MA pm={' pm '}
+MA pm={' pm '}
+MA pm={' pm '}
+MA sales_manager={'lead generation'}
+MA designer={'ui'}
+MA hr={'recruiter'}
+MA junior={'junior'}
+
+MEX marketing={'lead generation'}
+MEX pm={'sales'}
+MEX pm={'sales'}
+MEX designer={'gita'}
+MEX hr={'business development specialist'}
+
+__________________________________
+
+Операционный менеджер по созданию магазинов (Woocommerce) / Middle Project Manager
+old prof [pm]
+___
+new prof1 (title only): {'pm'}
+MA pm={'project manager'}
+MA pm={'project manager'}
+MA pm={'project manager'}
+MA pm={'project manager'}
+MA pm={'project manager'}
+MA pm={'project manager'}
+
+
+___
+new prof2 (title+body): {'pm'}
+MA pm={'project manager'}
+MA pm={'project manager'}
+MA pm={'project manager'}
+MA pm={'project manager'}
+MA pm={'project manager'}
+MA pm={'project manager'}
+
+
+__________________________________
+

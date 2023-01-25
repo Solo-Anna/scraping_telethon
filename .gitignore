@@ -1,0 +1,13 @@
+__pycache__/
+/.git/
+/idea/
+
+/venv/
+/*.session
+/*.journal
+/excel/excel/
+/excel/messages/
+/excel/participants/
+/db_backup/from_server/
+/__backup__/
+/settings/config_keys.ini

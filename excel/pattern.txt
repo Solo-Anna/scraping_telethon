@@ -1,0 +1,1366 @@
+data:
+	vacancy:
+		ma:
+			('vacancy.ma',)
+		ma2:
+			('vacancy.ma2',)
+		mdef:
+			('vacancy.mdef',)
+		mex:
+			('vacancy.mex',)
+		mex2:
+			('vacancy.mex2',)
+		mincl:
+			('vacancy.mincl',)
+	contacts:
+		ma:
+			('contacts.ma',)
+		ma2:
+			('contacts.ma2',)
+		mdef:
+			('contacts.mdef',)
+		mex:
+			('contacts.mex',)
+		mex2:
+			('contacts.mex2',)
+		mincl:
+			('contacts.mincl',)
+professions:
+	junior:
+		ma:
+			{'junior.ma', 'junior.mdef', 'junior.ma2'}
+		ma2:
+			('junior.ma2',)
+		mdef:
+			('junior.mdef',)
+		mex:
+			{'devops.mdef', 'hr.mdef', 'junior.mex', 'qa.mdef', 'backend.mdef', 'designer.mdef', 'fullstack.mdef', 'mobile.mdef', 'marketing.mdef', 'sales_manager.mdef', 'frontend.mdef', 'pm.mdef', 'game.mdef', 'analyst.mdef'}
+		mex2:
+			('junior.mex2',)
+		mincl:
+			('junior.mincl',)
+		sub:
+			{}
+	analyst:
+		ma:
+			{'analyst.data_scientist.mdef', 'analyst.ba.ma2', 'analyst.sys_analyst.mdef', 'analyst.sys_analyst.ma2', 'analyst.sys_analyst.ma', 'analyst.ba.mdef', 'analyst.ma2', 'analyst.data_scientist.ma', 'analyst.ba.ma', 'analyst.data_scientist.ma2', 'analyst.data_analyst.mdef', 'analyst.data_analyst.ma2', 'analyst.ma', 'analyst.mdef', 'analyst.data_analyst.ma'}
+		ma2:
+			{'analyst.ma2'}
+		mdef:
+			{'analyst.mdef'}
+		mex:
+			{'devops.mdef', 'hr.mdef', 'qa.mdef', 'backend.mdef', 'designer.mdef', 'fullstack.mdef', 'analyst.mex', 'mobile.mdef', 'marketing.mdef', 'sales_manager.mdef', 'frontend.mdef', 'pm.mdef', 'game.mdef'}
+		mex2:
+			{'analyst.mex2'}
+		mincl:
+			{'analyst.mincl'}
+		sub:
+			sys_analyst:
+				ma:
+						{'analyst.sys_analyst.mdef', 'analyst.sys_analyst.ma2', 'analyst.sys_analyst.ma'}
+				ma2:
+						{'analyst.sys_analyst.ma2'}
+				mdef:
+						{'analyst.sys_analyst.mdef'}
+				mex:
+						{'analyst.sys_analyst.mincl', 'analyst.sys_analyst.mex'}
+				mex2:
+						{'analyst.sys_analyst.mex2'}
+				mincl:
+						{'analyst.sys_analyst.mincl'}
+			data_analyst:
+				ma:
+						{'analyst.data_analyst.mdef', 'analyst.data_analyst.ma2', 'analyst.data_analyst.ma'}
+				ma2:
+						('analyst.data_analyst.ma2',)
+				mdef:
+						('analyst.data_analyst.mdef',)
+				mex:
+						{'analyst.data_analyst.mex', 'analyst.data_analyst.mincl'}
+				mex2:
+						('analyst.data_analyst.mex2',)
+				mincl:
+						('analyst.data_analyst.mincl',)
+			data_scientist:
+				ma:
+						{'analyst.data_scientist.ma2', 'analyst.data_scientist.mdef', 'analyst.data_scientist.ma'}
+				ma2:
+						('analyst.data_scientist.ma2',)
+				mdef:
+						('analyst.data_scientist.mdef',)
+				mex:
+						{'analyst.data_scientist.mex', 'analyst.data_scientist.mincl'}
+				mex2:
+						('analyst.data_scientist.mex2',)
+				mincl:
+						('analyst.data_scientist.mincl',)
+			ba:
+				ma:
+						{'analyst.ba.ma', 'analyst.ba.mdef', 'analyst.ba.ma2'}
+				ma2:
+						('analyst.ba.ma2',)
+				mdef:
+						('analyst.ba.mdef',)
+				mex:
+						{'analyst.ba.mincl', 'analyst.ba.mex'}
+				mex2:
+						('analyst.ba.mex2',)
+				mincl:
+						('analyst.ba.mincl',)
+	ba:
+		ma:
+			{'analyst.data_scientist.mdef', 'analyst.ba.ma2', 'analyst.sys_analyst.mdef', 'analyst.sys_analyst.ma2', 'analyst.sys_analyst.ma', 'analyst.ba.mdef', 'analyst.ma2', 'analyst.data_scientist.ma', 'analyst.ba.ma', 'analyst.data_scientist.ma2', 'analyst.data_analyst.mdef', 'analyst.data_analyst.ma2', 'analyst.ma', 'analyst.mdef', 'analyst.data_analyst.ma'}
+		ma2:
+			{'analyst.ma2'}
+		mdef:
+			{'analyst.mdef'}
+		mex:
+			{'devops.mdef', 'hr.mdef', 'qa.mdef', 'backend.mdef', 'designer.mdef', 'fullstack.mdef', 'analyst.mex', 'mobile.mdef', 'marketing.mdef', 'sales_manager.mdef', 'frontend.mdef', 'pm.mdef', 'game.mdef'}
+		mex2:
+			{'analyst.mex2'}
+		mincl:
+			{'analyst.mincl'}
+		sub:
+			sys_analyst:
+				ma:
+						{'analyst.sys_analyst.mdef', 'analyst.sys_analyst.ma2', 'analyst.sys_analyst.ma'}
+				ma2:
+						{'analyst.sys_analyst.ma2'}
+				mdef:
+						{'analyst.sys_analyst.mdef'}
+				mex:
+						{'analyst.sys_analyst.mincl', 'analyst.sys_analyst.mex'}
+				mex2:
+						{'analyst.sys_analyst.mex2'}
+				mincl:
+						{'analyst.sys_analyst.mincl'}
+			data_analyst:
+				ma:
+						{'analyst.data_analyst.mdef', 'analyst.data_analyst.ma2', 'analyst.data_analyst.ma'}
+				ma2:
+						('analyst.data_analyst.ma2',)
+				mdef:
+						('analyst.data_analyst.mdef',)
+				mex:
+						{'analyst.data_analyst.mex', 'analyst.data_analyst.mincl'}
+				mex2:
+						('analyst.data_analyst.mex2',)
+				mincl:
+						('analyst.data_analyst.mincl',)
+			data_scientist:
+				ma:
+						{'analyst.data_scientist.ma2', 'analyst.data_scientist.mdef', 'analyst.data_scientist.ma'}
+				ma2:
+						('analyst.data_scientist.ma2',)
+				mdef:
+						('analyst.data_scientist.mdef',)
+				mex:
+						{'analyst.data_scientist.mex', 'analyst.data_scientist.mincl'}
+				mex2:
+						('analyst.data_scientist.mex2',)
+				mincl:
+						('analyst.data_scientist.mincl',)
+			ba:
+				ma:
+						{'analyst.ba.ma', 'analyst.ba.mdef', 'analyst.ba.ma2'}
+				ma2:
+						('analyst.ba.ma2',)
+				mdef:
+						('analyst.ba.mdef',)
+				mex:
+						{'analyst.ba.mincl', 'analyst.ba.mex'}
+				mex2:
+						('analyst.ba.mex2',)
+				mincl:
+						('analyst.ba.mincl',)
+	backend:
+		ma:
+			{'backend.unity.ma', 'backend.php.ma', 'backend.delphi.mdef', 'backend.one_c.ma2', 'backend.embedded.mdef', 'backend.delphi.ma', 'backend.abap.ma2', 'backend.ml.ma', 'backend.scala.ma', 'backend.ruby.ma', 'backend.java.ma2', 'backend.java.mdef', 'backend.python.ma', 'backend.python.ma2', 'backend.ruby.ma2', 'backend.net.ma', 'backend.php.mdef', 'backend.ruby.mdef', 'backend.golang.ma2', 'backend.unity.mdef', 'backend.c.mdef', 'backend.ml.mdef', 'backend.net.mdef', 'backend.ml.ma2', 'backend.unity.ma2', 'backend.one_c.ma', 'backend.scala.ma2', 'backend.data_engineer.mdef', 'backend.embedded.ma2', 'backend.c.ma2', 'backend.ma', 'backend.laravel.ma2', 'backend.delphi.ma2', 'backend.nodejs.ma', 'backend.data_engineer.ma2', 'backend.net.ma2', 'backend.nodejs.ma2', 'backend.php.ma2', 'backend.abap.mdef', 'backend.golang.mdef', 'backend.mdef', 'backend.laravel.ma', 'backend.abap.ma', 'backend.scala.mdef', 'backend.c.ma', 'backend.ma2', 'backend.laravel.mdef', 'backend.golang.ma', 'backend.one_c.mdef', 'backend.python.mdef', 'backend.java.ma', 'backend.nodejs.mdef', 'backend.embedded.ma', 'backend.data_engineer.ma'}
+		ma2:
+			('backend.ma2',)
+		mdef:
+			('backend.mdef',)
+		mex:
+			{'devops.mdef', 'hr.mdef', 'qa.mdef', 'designer.mdef', 'fullstack.mdef', 'backend.mex', 'mobile.mdef', 'marketing.mdef', 'sales_manager.mdef', 'frontend.mdef', 'pm.mdef', 'game.mdef', 'analyst.mdef'}
+		mex2:
+			('backend.mex2',)
+		mincl:
+			('backend.mincl',)
+		sub:
+			python:
+				ma:
+						{'backend.python.ma2', 'backend.python.mdef', 'backend.python.ma'}
+				ma2:
+						('backend.python.ma2',)
+				mdef:
+						('backend.python.mdef',)
+				mex:
+						{'backend.python.mex', 'backend.python.mex2', 'backend.python.mincl', 'backend.mex'}
+				mex2:
+						('backend.python.mex2',)
+				mincl:
+						('backend.python.mincl',)
+			c:
+				ma:
+						{'backend.c.mdef', 'backend.c.ma2', 'backend.c.ma'}
+				ma2:
+						('backend.c.ma2',)
+				mdef:
+						('backend.c.mdef',)
+				mex:
+						{'backend.c.mincl', 'backend.c.mex2', 'backend.mex', 'backend.c.mex'}
+				mex2:
+						('backend.c.mex2',)
+				mincl:
+						('backend.c.mincl',)
+			php:
+				ma:
+						{'backend.php.mdef', 'backend.php.ma', 'backend.php.ma2'}
+				ma2:
+						('backend.php.ma2',)
+				mdef:
+						('backend.php.mdef',)
+				mex:
+						{'backend.php.mex2', 'backend.mex', 'backend.php.mex', 'backend.php.mincl'}
+				mex2:
+						('backend.php.mex2',)
+				mincl:
+						('backend.php.mincl',)
+			java:
+				ma:
+						{'backend.java.ma', 'backend.java.mdef', 'backend.java.ma2'}
+				ma2:
+						('backend.java.ma2',)
+				mdef:
+						('backend.java.mdef',)
+				mex:
+						{'backend.java.mex2', 'backend.java.mincl', 'backend.mex', 'backend.java.mex'}
+				mex2:
+						('backend.java.mex2',)
+				mincl:
+						('backend.java.mincl',)
+			ruby:
+				ma:
+						{'backend.ruby.ma2', 'backend.ruby.mdef', 'backend.ruby.ma'}
+				ma2:
+						('backend.ruby.ma2',)
+				mdef:
+						('backend.ruby.mdef',)
+				mex:
+						{'backend.ruby.mex', 'backend.ruby.mincl', 'backend.ruby.mex2', 'backend.mex'}
+				mex2:
+						('backend.ruby.mex2',)
+				mincl:
+						('backend.ruby.mincl',)
+			scala:
+				ma:
+						{'backend.scala.mdef', 'backend.scala.ma', 'backend.scala.ma2'}
+				ma2:
+						('backend.scala.ma2',)
+				mdef:
+						('backend.scala.mdef',)
+				mex:
+						{'backend.scala.mex', 'backend.scala.mex2', 'backend.mex', 'backend.scala.mincl'}
+				mex2:
+						('backend.scala.mex2',)
+				mincl:
+						('backend.scala.mincl',)
+			net:
+				ma:
+						{'backend.net.ma', 'backend.net.ma2', 'backend.net.mdef'}
+				ma2:
+						('backend.net.ma2',)
+				mdef:
+						('backend.net.mdef',)
+				mex:
+						{'backend.net.mex', 'backend.net.mex2', 'backend.mex', 'backend.net.mincl'}
+				mex2:
+						('backend.net.mex2',)
+				mincl:
+						('backend.net.mincl',)
+			nodejs:
+				ma:
+						{'backend.nodejs.mdef', 'backend.nodejs.ma2', 'backend.nodejs.ma'}
+				ma2:
+						('backend.nodejs.ma2',)
+				mdef:
+						('backend.nodejs.mdef',)
+				mex:
+						{'backend.nodejs.mincl', 'backend.nodejs.mex2', 'backend.mex', 'backend.nodejs.mex'}
+				mex2:
+						('backend.nodejs.mex2',)
+				mincl:
+						('backend.nodejs.mincl',)
+			laravel:
+				ma:
+						{'backend.laravel.ma2', 'backend.laravel.ma', 'backend.laravel.mdef'}
+				ma2:
+						('backend.laravel.ma2',)
+				mdef:
+						('backend.laravel.mdef',)
+				mex:
+						{'backend.laravel.mex', 'backend.laravel.mincl', 'backend.mex', 'backend.laravel.mex2'}
+				mex2:
+						('backend.laravel.mex2',)
+				mincl:
+						('backend.laravel.mincl',)
+			golang:
+				ma:
+						{'backend.golang.mdef', 'backend.golang.ma', 'backend.golang.ma2'}
+				ma2:
+						('backend.golang.ma2',)
+				mdef:
+						('backend.golang.mdef',)
+				mex:
+						{'backend.golang.mincl', 'backend.golang.mex2', 'backend.mex', 'backend.golang.mex'}
+				mex2:
+						('backend.golang.mex2',)
+				mincl:
+						('backend.golang.mincl',)
+			delphi:
+				ma:
+						{'backend.delphi.ma2', 'backend.delphi.ma', 'backend.delphi.mdef'}
+				ma2:
+						('backend.delphi.ma2',)
+				mdef:
+						('backend.delphi.mdef',)
+				mex:
+						{'backend.delphi.mex', 'backend.delphi.mex2', 'backend.mex', 'backend.delphi.mincl'}
+				mex2:
+						('backend.delphi.mex2',)
+				mincl:
+						('backend.delphi.mincl',)
+			abap:
+				ma:
+						{'backend.abap.ma2', 'backend.abap.ma', 'backend.abap.mdef'}
+				ma2:
+						('backend.abap.ma2',)
+				mdef:
+						('backend.abap.mdef',)
+				mex:
+						{'backend.abap.mincl', 'backend.abap.mex', 'backend.mex', 'backend.abap.mex2'}
+				mex2:
+						('backend.abap.mex2',)
+				mincl:
+						('backend.abap.mincl',)
+			ml:
+				ma:
+						{'backend.ml.mdef', 'backend.ml.ma', 'backend.ml.ma2'}
+				ma2:
+						('backend.ml.ma2',)
+				mdef:
+						('backend.ml.mdef',)
+				mex:
+						{'backend.ml.mex2', 'backend.ml.mex', 'backend.ml.mincl', 'backend.mex'}
+				mex2:
+						('backend.ml.mex2',)
+				mincl:
+						('backend.ml.mincl',)
+			data_engineer:
+				ma:
+						{'backend.data_engineer.ma2', 'backend.data_engineer.mdef', 'backend.data_engineer.ma'}
+				ma2:
+						('backend.data_engineer.ma2',)
+				mdef:
+						('backend.data_engineer.mdef',)
+				mex:
+						{'backend.data_engineer.mex2', 'backend.data_engineer.mex', 'backend.data_engineer.mincl', 'backend.mex'}
+				mex2:
+						('backend.data_engineer.mex2',)
+				mincl:
+						('backend.data_engineer.mincl',)
+			unity:
+				ma:
+						{'backend.unity.ma2', 'backend.unity.mdef', 'backend.unity.ma'}
+				ma2:
+						('backend.unity.ma2',)
+				mdef:
+						('backend.unity.mdef',)
+				mex:
+						{'backend.unity.mincl', 'backend.unity.mex2', 'backend.mex', 'backend.unity.mex'}
+				mex2:
+						('backend.unity.mex2',)
+				mincl:
+						('backend.unity.mincl',)
+			one_c:
+				ma:
+						{'backend.one_c.ma', 'backend.one_c.ma2', 'backend.one_c.mdef'}
+				ma2:
+						('backend.one_c.ma2',)
+				mdef:
+						('backend.one_c.mdef',)
+				mex:
+						{'backend.one_c.mex', 'backend.one_c.mincl', 'backend.mex', 'backend.one_c.mex2'}
+				mex2:
+						('backend.one_c.mex2',)
+				mincl:
+						('backend.one_c.mincl',)
+			embedded:
+				ma:
+						{'backend.embedded.mdef', 'backend.embedded.ma', 'backend.embedded.ma2'}
+				ma2:
+						('backend.embedded.ma2',)
+				mdef:
+						('backend.embedded.mdef',)
+				mex:
+						{'backend.embedded.mex', 'backend.embedded.mincl', 'backend.embedded.mex2', 'backend.mex'}
+				mex2:
+						('backend.embedded.mex2',)
+				mincl:
+						('backend.embedded.mincl',)
+	designer:
+		ma:
+			{'designer.illustrator.ma', 'designer.ui_ux.ma', 'designer.motion.ma', 'designer.mdef', 'designer.ui_ux.mdef', 'designer.dd.mdef', 'designer.dd.ma', 'designer.graphic.mdef', 'designer.illustrator.ma2', 'designer.ui_ux.ma2', 'designer.motion.ma2', 'designer.ddd.ma', 'designer.motion.mdef', 'designer.graphic.ma2', 'designer.game_designer.ma2', 'designer.uxre_searcher.ma', 'designer.illustrator.mdef', 'designer.ddd.ma2', 'designer.ma', 'designer.ddd.mdef', 'designer.game_designer.mdef', 'designer.dd.ma2', 'designer.uxre_searcher.mdef', 'designer.ma2', 'designer.graphic.ma', 'designer.game_designer.ma', 'designer.uxre_searcher.ma2'}
+		ma2:
+			('designer.ma2',)
+		mdef:
+			('designer.mdef',)
+		mex:
+			{'marketing.mdef', 'backend.abap.ma2', 'mobile.android.ma', 'marketing.context.mdef', 'backend.ruby.ma', 'backend.java.mdef', 'backend.python.ma2', 'fullstack.ma', 'sales_manager.mdef', 'backend.net.ma', 'marketing.copyrighter.ma2', 'analyst.ba.ma2', 'backend.php.mdef', 'analyst.sys_analyst.mdef', 'frontend.wordpress.ma', 'backend.unity.ma2', 'analyst.ma2', 'backend.data_engineer.mdef', 'frontend.joomla.ma', 'marketing.tech_writer.mdef', 'backend.nodejs.ma2', 'frontend.drupal.ma', 'admins.ma', 'marketing.content_manager.mdef', 'backend.golang.mdef', 'frontend.vue.mdef', 'marketing.seo.ma2', 'marketing.copyrighter.ma', 'backend.scala.mdef', 'backend.one_c.mdef', 'backend.ma2', 'backend.golang.ma', 'designer.mex2', 'backend.unity.ma', 'frontend.drupal.mdef', 'mobile.react_native.ma', 'frontend.bitrix.ma2', 'backend.nodejs.ma', 'devops.ma', 'marketing.ma', 'marketing.email_marketer.ma2', 'analyst.data_analyst.mdef', 'marketing.tech_writer.ma2', 'frontend.mdef', 'mobile.react_native.mdef', 'devops.mdef', 'frontend.react.ma', 'backend.python.ma', 'marketing.smm.ma2', 'frontend.wordpress.ma2', 'mobile.flutter.mdef', 'frontend.react.ma2', 'pm.product.mdef', 'marketing.ma2', 'backend.unity.mdef', 'backend.c.mdef', 'backend.ml.mdef', 'backend.one_c.ma', 'frontend.joomla.ma2', 'backend.scala.ma2', 'marketing.copyrighter.mdef', 'marketing.context.ma2', 'mobile.ios.ma', 'frontend.angular.ma2', 'frontend.wordpress.mdef', 'analyst.sys_analyst.ma', 'frontend.react.mdef', 'mobile.ios.ma2', 'marketing.content_manager.ma2', 'marketing.media_buyer.ma', 'pm.project.mdef', 'frontend.bitrix.mdef', 'frontend.angular.mdef', 'frontend.django.ma2', 'pm.mdef', 'backend.abap.ma', 'backend.delphi.ma', 'analyst.mdef', 'backend.embedded.ma', 'frontend.vue.ma2', 'marketing.link_builder.ma', 'pm.product.ma', 'pm.project.ma2', 'backend.php.ma', 'backend.embedded.mdef', 'backend.one_c.ma2', 'mobile.android.ma2', 'backend.ml.ma', 'designer.mex', 'backend.scala.ma', 'devops.ma2', 'backend.java.ma2', 'pm.project.ma', 'mobile.android.mdef', 'frontend.vue.ma', 'marketing.seo.mdef', 'backend.ruby.ma2', 'sales_manager.ma2', 'mobile.cross_mobile.ma', 'hr.mdef', 'mobile.ma', 'mobile.cross_mobile.mdef', 'marketing.link_builder.ma2', 'backend.net.mdef', 'backend.embedded.ma2', 'analyst.data_scientist.ma', 'mobile.mdef', 'marketing.media_buyer.ma2', 'backend.ma', 'analyst.ba.ma', 'marketing.content_manager.ma', 'backend.data_engineer.ma2', 'marketing.context.ma', 'game.mdef', 'analyst.data_analyst.ma', 'analyst.data_scientist.mdef', 'backend.net.ma2', 'backend.php.ma2', 'backend.mdef', 'backend.laravel.ma', 'mobile.cross_mobile.ma2', 'analyst.ba.mdef', 'mobile.ma2', 'frontend.joomla.mdef', 'backend.java.ma', 'marketing.seo.ma', 'pm.ma', 'frontend.ma2', 'frontend.ma', 'backend.delphi.mdef', 'frontend.drupal.ma2', 'marketing.email_marketer.mdef', 'marketing.media_buyer.mdef', 'marketing.tech_writer.ma', 'pm.mincl', 'mobile.ios.mdef', 'qa.mdef', 'marketing.smm.ma', 'analyst.data_analyst.ma2', 'backend.ruby.mdef', 'sales_manager.ma', 'backend.golang.ma2', 'marketing.email_marketer.ma', 'marketing.link_builder.mdef', 'mobile.flutter.ma', 'analyst.sys_analyst.ma2', 'backend.ml.ma2', 'mobile.react_native.ma2', 'fullstack.mdef', 'frontend.angular.ma', 'backend.c.ma2', 'backend.laravel.ma2', 'backend.delphi.ma2', 'marketing.smm.mdef', 'frontend.django.mdef', 'backend.abap.mdef', 'frontend.bitrix.ma', 'mobile.flutter.ma2', 'analyst.mex', 'frontend.django.ma', 'fullstack.ma2', 'analyst.data_scientist.ma2', 'backend.c.ma', 'backend.laravel.mdef', 'pm.ma2', 'backend.python.mdef', 'pm.product.ma2', 'backend.nodejs.mdef', 'analyst.ma', 'backend.data_engineer.ma'}
+		mex2:
+			('designer.mex2',)
+		mincl:
+			{'marketing.mdef', 'backend.abap.ma2', 'mobile.android.ma', 'marketing.context.mdef', 'backend.ruby.ma', 'backend.java.mdef', 'backend.python.ma2', 'fullstack.ma', 'sales_manager.mdef', 'backend.net.ma', 'designer.mincl', 'marketing.copyrighter.ma2', 'analyst.ba.ma2', 'backend.php.mdef', 'analyst.sys_analyst.mdef', 'frontend.wordpress.ma', 'backend.unity.ma2', 'analyst.ma2', 'backend.data_engineer.mdef', 'frontend.joomla.ma', 'marketing.tech_writer.mdef', 'backend.nodejs.ma2', 'frontend.drupal.ma', 'admins.ma', 'marketing.content_manager.mdef', 'backend.golang.mdef', 'frontend.vue.mdef', 'marketing.seo.ma2', 'marketing.copyrighter.ma', 'backend.scala.mdef', 'backend.one_c.mdef', 'backend.ma2', 'backend.golang.ma', 'designer.mex2', 'backend.unity.ma', 'frontend.drupal.mdef', 'mobile.react_native.ma', 'frontend.bitrix.ma2', 'backend.nodejs.ma', 'devops.ma', 'marketing.ma', 'marketing.email_marketer.ma2', 'analyst.data_analyst.mdef', 'marketing.tech_writer.ma2', 'frontend.mdef', 'mobile.react_native.mdef', 'devops.mdef', 'frontend.react.ma', 'backend.python.ma', 'marketing.smm.ma2', 'frontend.wordpress.ma2', 'mobile.flutter.mdef', 'frontend.react.ma2', 'pm.product.mdef', 'marketing.ma2', 'backend.unity.mdef', 'backend.c.mdef', 'backend.ml.mdef', 'backend.one_c.ma', 'frontend.joomla.ma2', 'backend.scala.ma2', 'marketing.copyrighter.mdef', 'marketing.context.ma2', 'mobile.ios.ma', 'frontend.angular.ma2', 'frontend.wordpress.mdef', 'analyst.sys_analyst.ma', 'frontend.react.mdef', 'mobile.ios.ma2', 'marketing.content_manager.ma2', 'marketing.media_buyer.ma', 'pm.project.mdef', 'frontend.bitrix.mdef', 'frontend.angular.mdef', 'frontend.django.ma2', 'backend.abap.ma', 'backend.delphi.ma', 'pm.mdef', 'backend.embedded.ma', 'frontend.vue.ma2', 'analyst.mdef', 'marketing.link_builder.ma', 'pm.product.ma', 'pm.project.ma2', 'backend.php.ma', 'backend.embedded.mdef', 'backend.one_c.ma2', 'mobile.android.ma2', 'backend.ml.ma', 'designer.mex', 'backend.scala.ma', 'devops.ma2', 'backend.java.ma2', 'pm.project.ma', 'mobile.android.mdef', 'frontend.vue.ma', 'marketing.seo.mdef', 'backend.ruby.ma2', 'sales_manager.ma2', 'mobile.cross_mobile.ma', 'mobile.ma', 'mobile.cross_mobile.mdef', 'hr.mdef', 'marketing.link_builder.ma2', 'backend.net.mdef', 'backend.embedded.ma2', 'analyst.data_scientist.ma', 'mobile.mdef', 'marketing.media_buyer.ma2', 'backend.ma', 'analyst.ba.ma', 'marketing.content_manager.ma', 'backend.data_engineer.ma2', 'marketing.context.ma', 'analyst.data_analyst.ma', 'analyst.data_scientist.mdef', 'backend.net.ma2', 'backend.php.ma2', 'backend.mdef', 'backend.laravel.ma', 'mobile.cross_mobile.ma2', 'analyst.ba.mdef', 'mobile.ma2', 'frontend.joomla.mdef', 'backend.java.ma', 'marketing.seo.ma', 'pm.ma', 'frontend.ma2', 'frontend.ma', 'backend.delphi.mdef', 'frontend.drupal.ma2', 'marketing.email_marketer.mdef', 'marketing.media_buyer.mdef', 'marketing.tech_writer.ma', 'pm.mincl', 'mobile.ios.mdef', 'qa.mdef', 'marketing.smm.ma', 'analyst.data_analyst.ma2', 'backend.ruby.mdef', 'sales_manager.ma', 'backend.golang.ma2', 'marketing.email_marketer.ma', 'marketing.link_builder.mdef', 'mobile.flutter.ma', 'analyst.sys_analyst.ma2', 'backend.ml.ma2', 'mobile.react_native.ma2', 'fullstack.mdef', 'frontend.angular.ma', 'backend.c.ma2', 'backend.laravel.ma2', 'backend.delphi.ma2', 'marketing.smm.mdef', 'frontend.django.mdef', 'backend.abap.mdef', 'frontend.bitrix.ma', 'mobile.flutter.ma2', 'analyst.mex', 'frontend.django.ma', 'fullstack.ma2', 'analyst.data_scientist.ma2', 'backend.c.ma', 'backend.laravel.mdef', 'pm.ma2', 'backend.python.mdef', 'pm.product.ma2', 'backend.nodejs.mdef', 'analyst.ma', 'backend.data_engineer.ma'}
+		sub:
+			ui_ux:
+				ma:
+						{'designer.ui_ux.ma2', 'designer.ui_ux.mdef', 'designer.ui_ux.ma'}
+				ma2:
+						('designer.ui_ux.ma2',)
+				mdef:
+						('designer.ui_ux.mdef',)
+				mex:
+						{'designer.ui_ux.mex2', 'designer.ui_ux.mincl', 'designer.mex', 'designer.ui_ux.mex'}
+				mex2:
+						('designer.ui_ux.mex2',)
+				mincl:
+						('designer.ui_ux.mincl',)
+			motion:
+				ma:
+						{'designer.motion.ma', 'designer.motion.ma2', 'designer.motion.mdef'}
+				ma2:
+						('designer.motion.ma2',)
+				mdef:
+						('designer.motion.mdef',)
+				mex:
+						{'designer.mex', 'designer.motion.mincl', 'designer.motion.mex2', 'designer.motion.mex'}
+				mex2:
+						('designer.motion.mex2',)
+				mincl:
+						('designer.motion.mincl',)
+			dd:
+				ma:
+						{'designer.dd.ma2', 'designer.dd.ma', 'designer.dd.mdef'}
+				ma2:
+						('designer.dd.ma2',)
+				mdef:
+						('designer.dd.mdef',)
+				mex:
+						{'designer.dd.mex2', 'designer.mex', 'designer.dd.mincl', 'designer.dd.mex'}
+				mex2:
+						('designer.dd.mex2',)
+				mincl:
+						('designer.dd.mincl',)
+			ddd:
+				ma:
+						{'designer.ddd.ma', 'designer.ddd.mdef', 'designer.ddd.ma2'}
+				ma2:
+						('designer.ddd.ma2',)
+				mdef:
+						('designer.ddd.mdef',)
+				mex:
+						{'designer.ddd.mex', 'designer.mex', 'designer.ddd.mex2', 'designer.ddd.mincl'}
+				mex2:
+						('designer.ddd.mex2',)
+				mincl:
+						('designer.ddd.mincl',)
+			game_designer:
+				ma:
+						{'designer.game_designer.ma', 'designer.game_designer.mdef', 'designer.game_designer.ma2'}
+				ma2:
+						('designer.game_designer.ma2',)
+				mdef:
+						('designer.game_designer.mdef',)
+				mex:
+						{'designer.game_designer.mex2', 'designer.game_designer.mex', 'designer.mex', 'designer.game_designer.mincl'}
+				mex2:
+						('designer.game_designer.mex2',)
+				mincl:
+						('designer.game_designer.mincl',)
+			illustrator:
+				ma:
+						{'designer.illustrator.ma2', 'designer.illustrator.ma', 'designer.illustrator.mdef'}
+				ma2:
+						('designer.illustrator.ma2',)
+				mdef:
+						('designer.illustrator.mdef',)
+				mex:
+						{'designer.mex', 'designer.illustrator.mex2', 'designer.illustrator.mincl', 'designer.illustrator.mex'}
+				mex2:
+						('designer.illustrator.mex2',)
+				mincl:
+						('designer.illustrator.mincl',)
+			graphic:
+				ma:
+						{'designer.graphic.ma', 'designer.graphic.ma2', 'designer.graphic.mdef'}
+				ma2:
+						('designer.graphic.ma2',)
+				mdef:
+						('designer.graphic.mdef',)
+				mex:
+						{'designer.graphic.mincl', 'designer.mex', 'designer.graphic.mex2', 'designer.graphic.mex'}
+				mex2:
+						('designer.graphic.mex2',)
+				mincl:
+						('designer.graphic.mincl',)
+			uxre_searcher:
+				ma:
+						{'designer.uxre_searcher.mdef', 'designer.uxre_searcher.ma2', 'designer.uxre_searcher.ma'}
+				ma2:
+						('designer.uxre_searcher.ma2',)
+				mdef:
+						('designer.uxre_searcher.mdef',)
+				mex:
+						{'designer.uxre_searcher.mincl', 'designer.uxre_searcher.mex', 'designer.mex', 'designer.uxre_searcher.mex2'}
+				mex2:
+						('designer.uxre_searcher.mex2',)
+				mincl:
+						('designer.uxre_searcher.mincl',)
+	devops:
+		ma:
+			{'devops.ma2', 'devops.mdef', 'devops.ma'}
+		ma2:
+			('devops.ma2',)
+		mdef:
+			('devops.mdef',)
+		mex:
+			{'hr.mdef', 'devops.mex', 'qa.mdef', 'backend.mdef', 'designer.mdef', 'fullstack.mdef', 'mobile.mdef', 'marketing.mdef', 'sales_manager.mdef', 'frontend.mdef', 'pm.mdef', 'game.mdef', 'analyst.mdef'}
+		mex2:
+			('devops.mex2',)
+		mincl:
+			('devops.mincl',)
+		sub:
+			{}
+	frontend:
+		ma:
+			{'frontend.ma', 'frontend.drupal.ma2', 'frontend.mdef', 'frontend.react.ma', 'frontend.vue.ma', 'frontend.wordpress.ma2', 'frontend.drupal.mdef', 'frontend.react.ma2', 'frontend.angular.mdef', 'frontend.django.ma2', 'frontend.wordpress.ma', 'frontend.joomla.ma2', 'frontend.angular.ma', 'frontend.joomla.ma', 'frontend.django.mdef', 'frontend.angular.ma2', 'frontend.wordpress.mdef', 'frontend.drupal.ma', 'frontend.bitrix.ma', 'frontend.vue.mdef', 'frontend.django.ma', 'frontend.react.mdef', 'frontend.bitrix.mdef', 'frontend.joomla.mdef', 'frontend.bitrix.ma2', 'frontend.vue.ma2', 'frontend.ma2'}
+		ma2:
+			('frontend.ma2',)
+		mdef:
+			('frontend.mdef',)
+		mex:
+			{'devops.mdef', 'frontend.vue.mex2', 'hr.mdef', 'frontend.mex2', 'qa.mdef', 'backend.mdef', 'designer.mdef', 'fullstack.mdef', 'mobile.mdef', 'marketing.mdef', 'sales_manager.mdef', 'frontend.mex', 'pm.mdef', 'game.mdef', 'analyst.mdef'}
+		mex2:
+			('frontend.mex2',)
+		mincl:
+			('frontend.mincl',)
+		sub:
+			vue:
+				ma:
+						{'frontend.vue.mdef', 'frontend.vue.ma', 'frontend.vue.ma2'}
+				ma2:
+						('frontend.vue.ma2',)
+				mdef:
+						('frontend.vue.mdef',)
+				mex:
+						{'frontend.vue.mex2', 'frontend.vue.mincl', 'frontend.vue.mex', 'frontend.mex'}
+				mex2:
+						('frontend.vue.mex2',)
+				mincl:
+						('frontend.vue.mincl',)
+			react:
+				ma:
+						{'frontend.react.ma2', 'frontend.react.ma', 'frontend.react.mdef'}
+				ma2:
+						('frontend.react.ma2',)
+				mdef:
+						('frontend.react.mdef',)
+				mex:
+						{'frontend.react.mincl', 'frontend.react.mex', 'frontend.react.mex2', 'frontend.mex'}
+				mex2:
+						('frontend.react.mex2',)
+				mincl:
+						('frontend.react.mincl',)
+			angular:
+				ma:
+						{'frontend.angular.ma', 'frontend.angular.ma2', 'frontend.angular.mdef'}
+				ma2:
+						('frontend.angular.ma2',)
+				mdef:
+						('frontend.angular.mdef',)
+				mex:
+						{'frontend.angular.mincl', 'frontend.angular.mex2', 'frontend.mex', 'frontend.angular.mex'}
+				mex2:
+						('frontend.angular.mex2',)
+				mincl:
+						('frontend.angular.mincl',)
+			django:
+				ma:
+						{'frontend.django.ma2', 'frontend.django.ma', 'frontend.django.mdef'}
+				ma2:
+						('frontend.django.ma2',)
+				mdef:
+						('frontend.django.mdef',)
+				mex:
+						{'frontend.django.mex', 'frontend.django.mex2', 'frontend.django.mincl', 'frontend.mex'}
+				mex2:
+						('frontend.django.mex2',)
+				mincl:
+						('frontend.django.mincl',)
+			wordpress:
+				ma:
+						{'frontend.wordpress.ma', 'frontend.wordpress.mdef', 'frontend.wordpress.ma2'}
+				ma2:
+						('frontend.wordpress.ma2',)
+				mdef:
+						('frontend.wordpress.mdef',)
+				mex:
+						{'frontend.wordpress.mex2', 'frontend.mex', 'frontend.wordpress.mincl', 'frontend.wordpress.mex'}
+				mex2:
+						('frontend.wordpress.mex2',)
+				mincl:
+						('frontend.wordpress.mincl',)
+			bitrix:
+				ma:
+						{'frontend.bitrix.ma2', 'frontend.bitrix.ma', 'frontend.bitrix.mdef'}
+				ma2:
+						('frontend.bitrix.ma2',)
+				mdef:
+						('frontend.bitrix.mdef',)
+				mex:
+						{'frontend.mex', 'frontend.bitrix.mex2', 'frontend.bitrix.mincl', 'frontend.bitrix.mex'}
+				mex2:
+						('frontend.bitrix.mex2',)
+				mincl:
+						('frontend.bitrix.mincl',)
+			joomla:
+				ma:
+						{'frontend.joomla.mdef', 'frontend.joomla.ma2', 'frontend.joomla.ma'}
+				ma2:
+						('frontend.joomla.ma2',)
+				mdef:
+						('frontend.joomla.mdef',)
+				mex:
+						{'frontend.joomla.mex2', 'frontend.joomla.mex', 'frontend.joomla.mincl', 'frontend.mex'}
+				mex2:
+						('frontend.joomla.mex2',)
+				mincl:
+						('frontend.joomla.mincl',)
+			drupal:
+				ma:
+						{'frontend.drupal.ma', 'frontend.drupal.ma2', 'frontend.drupal.mdef'}
+				ma2:
+						('frontend.drupal.ma2',)
+				mdef:
+						('frontend.drupal.mdef',)
+				mex:
+						{'frontend.mex', 'frontend.drupal.mincl', 'frontend.drupal.mex2', 'frontend.drupal.mex'}
+				mex2:
+						('frontend.drupal.mex2',)
+				mincl:
+						('frontend.drupal.mincl',)
+	game:
+		ma:
+			{'game.mdef', 'game.ma2', 'game.ma'}
+		ma2:
+			('game.ma2',)
+		mdef:
+			('game.mdef',)
+		mex:
+			{'devops.mdef', 'hr.mdef', 'qa.mdef', 'backend.mdef', 'designer.mdef', 'fullstack.mdef', 'mobile.mdef', 'marketing.mdef', 'sales_manager.mdef', 'frontend.mdef', 'game.mex', 'pm.mdef', 'analyst.mdef'}
+		mex2:
+			('game.mex2',)
+		mincl:
+			('game.mincl',)
+		sub:
+			{}
+	hr:
+		ma:
+			{'hr.mdef', 'hr.ma2', 'hr.ma'}
+		ma2:
+			('hr.ma2',)
+		mdef:
+			('hr.mdef',)
+		mex:
+			{'devops.mdef', 'qa.mdef', 'backend.mdef', 'designer.mdef', 'fullstack.mdef', 'mobile.mdef', 'hr.mex', 'marketing.mdef', 'sales_manager.mdef', 'frontend.mdef', 'pm.mdef', 'game.mdef', 'analyst.mdef'}
+		mex2:
+			('hr.mex2',)
+		mincl:
+			('hr.mincl',)
+		sub:
+			{}
+	marketing:
+		ma:
+			{'marketing.ma2', 'marketing.email_marketer.ma', 'marketing.link_builder.mdef', 'marketing.link_builder.ma', 'marketing.link_builder.ma2', 'marketing.ma', 'marketing.email_marketer.ma2', 'marketing.email_marketer.mdef', 'marketing.media_buyer.ma2', 'marketing.mdef', 'marketing.media_buyer.mdef', 'marketing.tech_writer.ma', 'marketing.content_manager.ma', 'marketing.tech_writer.ma2', 'marketing.copyrighter.mdef', 'marketing.smm.mdef', 'marketing.context.mdef', 'marketing.context.ma2', 'marketing.context.ma', 'marketing.tech_writer.mdef', 'marketing.content_manager.mdef', 'marketing.seo.ma2', 'marketing.seo.mdef', 'marketing.smm.ma', 'marketing.copyrighter.ma', 'marketing.smm.ma2', 'marketing.media_buyer.ma', 'marketing.content_manager.ma2', 'marketing.seo.ma', 'marketing.copyrighter.ma2'}
+		ma2:
+			('marketing.ma2',)
+		mdef:
+			('marketing.mdef',)
+		mex:
+			{'devops.mdef', 'hr.mdef', 'marketing.mex', 'qa.mdef', 'backend.mdef', 'designer.mdef', 'fullstack.mdef', 'mobile.mdef', 'sales_manager.mdef', 'frontend.mdef', 'pm.mdef', 'game.mdef', 'analyst.mdef'}
+		mex2:
+			('marketing.mex2',)
+		mincl:
+			('marketing.mincl',)
+		sub:
+			smm:
+				ma:
+						{'marketing.smm.ma2', 'marketing.smm.mdef', 'marketing.smm.ma'}
+				ma2:
+						('marketing.smm.ma2',)
+				mdef:
+						('marketing.smm.mdef',)
+				mex:
+						{'marketing.smm.mex2', 'marketing.smm.mincl', 'marketing.smm.mex', 'marketing.mex'}
+				mex2:
+						('marketing.smm.mex2',)
+				mincl:
+						('marketing.smm.mincl',)
+			copyrighter:
+				ma:
+						{'marketing.copyrighter.mdef', 'marketing.copyrighter.ma2', 'marketing.copyrighter.ma'}
+				ma2:
+						('marketing.copyrighter.ma2',)
+				mdef:
+						('marketing.copyrighter.mdef',)
+				mex:
+						{'marketing.copyrighter.mex2', 'marketing.copyrighter.mex', 'marketing.copyrighter.mincl', 'marketing.mex'}
+				mex2:
+						('marketing.copyrighter.mex2',)
+				mincl:
+						('marketing.copyrighter.mincl',)
+			seo:
+				ma:
+						{'marketing.seo.ma2', 'marketing.seo.ma', 'marketing.seo.mdef'}
+				ma2:
+						('marketing.seo.ma2',)
+				mdef:
+						('marketing.seo.mdef',)
+				mex:
+						{'marketing.seo.mincl', 'marketing.mex', 'marketing.seo.mex', 'marketing.seo.mex2'}
+				mex2:
+						('marketing.seo.mex2',)
+				mincl:
+						('marketing.seo.mincl',)
+			link_builder:
+				ma:
+						{'marketing.link_builder.mdef', 'marketing.link_builder.ma', 'marketing.link_builder.ma2'}
+				ma2:
+						('marketing.link_builder.ma2',)
+				mdef:
+						('marketing.link_builder.mdef',)
+				mex:
+						{'marketing.link_builder.mex2', 'marketing.link_builder.mincl', 'marketing.mex', 'marketing.link_builder.mex'}
+				mex2:
+						('marketing.link_builder.mex2',)
+				mincl:
+						('marketing.link_builder.mincl',)
+			media_buyer:
+				ma:
+						{'marketing.media_buyer.ma', 'marketing.media_buyer.ma2', 'marketing.media_buyer.mdef'}
+				ma2:
+						('marketing.media_buyer.ma2',)
+				mdef:
+						('marketing.media_buyer.mdef',)
+				mex:
+						{'marketing.media_buyer.mex', 'marketing.media_buyer.mincl', 'marketing.media_buyer.mex2', 'marketing.mex'}
+				mex2:
+						('marketing.media_buyer.mex2',)
+				mincl:
+						('marketing.media_buyer.mincl',)
+			email_marketer:
+				ma:
+						{'marketing.email_marketer.mdef', 'marketing.email_marketer.ma2', 'marketing.email_marketer.ma'}
+				ma2:
+						('marketing.email_marketer.ma2',)
+				mdef:
+						('marketing.email_marketer.mdef',)
+				mex:
+						{'marketing.email_marketer.mex2', 'marketing.email_marketer.mex', 'marketing.mex', 'marketing.email_marketer.mincl'}
+				mex2:
+						('marketing.email_marketer.mex2',)
+				mincl:
+						('marketing.email_marketer.mincl',)
+			context:
+				ma:
+						{'marketing.context.mdef', 'marketing.context.ma2', 'marketing.context.ma'}
+				ma2:
+						('marketing.context.ma2',)
+				mdef:
+						('marketing.context.mdef',)
+				mex:
+						{'marketing.context.mex2', 'marketing.context.mex', 'marketing.context.mincl', 'marketing.mex'}
+				mex2:
+						('marketing.context.mex2',)
+				mincl:
+						('marketing.context.mincl',)
+			content_manager:
+				ma:
+						{'marketing.content_manager.ma2', 'marketing.content_manager.mdef', 'marketing.content_manager.ma'}
+				ma2:
+						('marketing.content_manager.ma2',)
+				mdef:
+						('marketing.content_manager.mdef',)
+				mex:
+						{'marketing.content_manager.mex', 'marketing.content_manager.mincl', 'marketing.mex', 'marketing.content_manager.mex2'}
+				mex2:
+						('marketing.content_manager.mex2',)
+				mincl:
+						('marketing.content_manager.mincl',)
+			tech_writer:
+				ma:
+						{'marketing.tech_writer.mdef', 'marketing.tech_writer.ma', 'marketing.tech_writer.ma2'}
+				ma2:
+						('marketing.tech_writer.ma2',)
+				mdef:
+						('marketing.tech_writer.mdef',)
+				mex:
+						{'marketing.tech_writer.mincl', 'marketing.tech_writer.mex2', 'marketing.tech_writer.mex', 'marketing.mex'}
+				mex2:
+						('marketing.tech_writer.mex2',)
+				mincl:
+						('marketing.tech_writer.mincl',)
+	mobile:
+		ma:
+			{'mobile.cross_mobile.ma', 'mobile.ma', 'mobile.cross_mobile.mdef', 'mobile.flutter.ma', 'mobile.mdef', 'mobile.android.ma2', 'mobile.android.ma', 'mobile.react_native.mdef', 'mobile.ios.ma', 'mobile.ios.mdef', 'mobile.flutter.ma2', 'mobile.android.mdef', 'mobile.ios.ma2', 'mobile.cross_mobile.ma2', 'mobile.ma2', 'mobile.flutter.mdef', 'mobile.react_native.ma2', 'mobile.react_native.ma'}
+		ma2:
+			('mobile.ma2',)
+		mdef:
+			('mobile.mdef',)
+		mex:
+			{'designer.illustrator.ma', 'designer.ui_ux.ma', 'designer.mdef', 'marketing.mdef', 'designer.dd.ma', 'frontend.mdef', 'designer.motion.ma2', 'designer.ddd.ma', 'designer.graphic.ma2', 'designer.uxre_searcher.ma', 'devops.mdef', 'mobile.mex', 'designer.illustrator.mdef', 'designer.ddd.ma2', 'qa.mdef', 'designer.ddd.mdef', 'designer.game_designer.mdef', 'designer.uxre_searcher.mdef', 'mobile.mex2', 'designer.ma2', 'sales_manager.mdef', 'hr.mdef', 'designer.motion.ma', 'fullstack.mdef', 'designer.ui_ux.mdef', 'designer.dd.mdef', 'designer.graphic.mdef', 'designer.illustrator.ma2', 'designer.ui_ux.ma2', 'designer.motion.mdef', 'game.mdef', 'designer.game_designer.ma2', 'designer.ma', 'backend.mdef', 'designer.dd.ma2', 'designer.graphic.ma', 'designer.game_designer.ma', 'pm.mdef', 'analyst.mdef', 'designer.uxre_searcher.ma2'}
+		mex2:
+			('mobile.mex2',)
+		mincl:
+			('mobile.mincl',)
+		sub:
+			ios:
+				ma:
+						{'mobile.ios.mdef', 'mobile.ios.ma2', 'mobile.ios.ma'}
+				ma2:
+						('mobile.ios.ma2',)
+				mdef:
+						('mobile.ios.mdef',)
+				mex:
+						{'mobile.mex', 'mobile.ios.mex2', 'mobile.ios.mincl', 'mobile.ios.mex'}
+				mex2:
+						('mobile.ios.mex2',)
+				mincl:
+						('mobile.ios.mincl',)
+			android:
+				ma:
+						{'mobile.android.mdef', 'mobile.android.ma', 'mobile.android.ma2'}
+				ma2:
+						('mobile.android.ma2',)
+				mdef:
+						('mobile.android.mdef',)
+				mex:
+						{'mobile.mex', 'mobile.android.mex', 'mobile.android.mex2', 'mobile.android.mincl'}
+				mex2:
+						('mobile.android.mex2',)
+				mincl:
+						('mobile.android.mincl',)
+			cross_mobile:
+				ma:
+						{'mobile.cross_mobile.ma', 'mobile.cross_mobile.mdef', 'mobile.react_native.ma', 'mobile.flutter.ma', 'mobile.cross_mobile.ma2'}
+				ma2:
+						('mobile.cross_mobile.ma2',)
+				mdef:
+						('mobile.cross_mobile.mdef',)
+				mex:
+						{'mobile.mex', 'mobile.cross_mobile.mincl', 'mobile.cross_mobile.mex', 'mobile.cross_mobile.mex2'}
+				mex2:
+						('mobile.cross_mobile.mex2',)
+				mincl:
+						('mobile.cross_mobile.mincl',)
+			flutter:
+				ma:
+						{'mobile.flutter.ma', 'mobile.flutter.ma2', 'mobile.flutter.mdef'}
+				ma2:
+						('mobile.flutter.ma2',)
+				mdef:
+						('mobile.flutter.mdef',)
+				mex:
+						{'mobile.mex', 'mobile.flutter.mex', 'mobile.flutter.mex2', 'mobile.flutter.mincl'}
+				mex2:
+						('mobile.flutter.mex2',)
+				mincl:
+						('mobile.flutter.mincl',)
+			react_native:
+				ma:
+						{'mobile.react_native.ma2', 'mobile.react_native.ma', 'mobile.react_native.mdef'}
+				ma2:
+						('mobile.react_native.ma2',)
+				mdef:
+						('mobile.react_native.mdef',)
+				mex:
+						{'mobile.mex', 'mobile.react_native.mex', 'mobile.react_native.mincl', 'mobile.react_native.mex2'}
+				mex2:
+						('mobile.react_native.mex2',)
+				mincl:
+						('mobile.react_native.mincl',)
+	pm:
+		ma:
+			{'pm.mincl', 'pm.product.ma', 'pm.product.ma2', 'pm.project.ma', 'pm.project.mdef', 'pm.ma2', 'pm.project.ma2', 'pm.mdef', 'pm.product.mdef', 'pm.ma'}
+		ma2:
+			('pm.ma2',)
+		mdef:
+			('pm.mdef',)
+		mex:
+			{'hr.mdef', 'designer.mdef', 'fullstack.mdef', 'pm.mex', 'mobile.mdef', 'marketing.mdef', 'frontend.mdef', 'game.mdef', 'devops.mdef', 'qa.mdef', 'backend.mdef', 'sales_manager.mdef', 'pm.mdef', 'analyst.mdef'}
+		mex2:
+			('pm.mex2',)
+		mincl:
+			('pm.mincl',)
+		sub:
+			project:
+				ma:
+						{'pm.project.ma2', 'pm.project.ma', 'pm.project.mdef'}
+				ma2:
+						('pm.project.ma2',)
+				mdef:
+						('pm.project.mdef',)
+				mex:
+						{'pm.project.mex', 'pm.project.mincl'}
+				mex2:
+						('pm.project.mex2',)
+				mincl:
+						('pm.project.mincl',)
+			product:
+				ma:
+						{'pm.product.ma2', 'pm.product.mdef', 'pm.product.ma'}
+				ma2:
+						('pm.product.ma2',)
+				mdef:
+						('pm.product.mdef',)
+				mex:
+						{'pm.product.mex', 'pm.product.mincl'}
+				mex2:
+						('pm.product.mex2',)
+				mincl:
+						('pm.product.mincl',)
+	product:
+		ma:
+			{'pm.mincl', 'pm.product.ma', 'pm.product.ma2', 'pm.project.ma', 'pm.project.mdef', 'pm.ma2', 'pm.project.ma2', 'pm.mdef', 'pm.product.mdef', 'pm.ma'}
+		ma2:
+			('pm.ma2',)
+		mdef:
+			('pm.mdef',)
+		mex:
+			{'hr.mdef', 'designer.mdef', 'fullstack.mdef', 'pm.mex', 'mobile.mdef', 'marketing.mdef', 'frontend.mdef', 'game.mdef', 'devops.mdef', 'qa.mdef', 'backend.mdef', 'sales_manager.mdef', 'pm.mdef', 'analyst.mdef'}
+		mex2:
+			('pm.mex2',)
+		mincl:
+			('pm.mincl',)
+		sub:
+			project:
+				ma:
+						{'pm.project.ma2', 'pm.project.ma', 'pm.project.mdef'}
+				ma2:
+						('pm.project.ma2',)
+				mdef:
+						('pm.project.mdef',)
+				mex:
+						{'pm.project.mex', 'pm.project.mincl'}
+				mex2:
+						('pm.project.mex2',)
+				mincl:
+						('pm.project.mincl',)
+			product:
+				ma:
+						{'pm.product.ma2', 'pm.product.mdef', 'pm.product.ma'}
+				ma2:
+						('pm.product.ma2',)
+				mdef:
+						('pm.product.mdef',)
+				mex:
+						{'pm.product.mex', 'pm.product.mincl'}
+				mex2:
+						('pm.product.mex2',)
+				mincl:
+						('pm.product.mincl',)
+	qa:
+		ma:
+			{'qa.aqa.ma', 'qa.ma2', 'qa.manual_qa.ma2', 'qa.support.ma2', 'qa.mdef', 'qa.aqa.ma2', 'qa.manual_qa.ma', 'qa.support.ma', 'qa.aqa.mdef', 'qa.manual_qa.mdef', 'qa.support.mdef'}
+		ma2:
+			{'qa.ma2'}
+		mdef:
+			{'qa.mdef'}
+		mex:
+			{'devops.mdef', 'hr.mdef', 'qa.mex', 'backend.mdef', 'designer.mdef', 'fullstack.mdef', 'mobile.mdef', 'marketing.mdef', 'sales_manager.mdef', 'frontend.mdef', 'pm.mdef', 'game.mdef', 'analyst.mdef'}
+		mex2:
+			{'qa.mex2'}
+		mincl:
+			{'qa.mincl'}
+		sub:
+			manual_qa:
+				ma:
+						{'qa.manual_qa.mdef', 'qa.manual_qa.ma2', 'qa.manual_qa.ma'}
+				ma2:
+						{'qa.manual_qa.ma2'}
+				mdef:
+						{'qa.manual_qa.mdef'}
+				mex:
+						{'marketing.mex', 'qa.manual_qa.mex2', 'qa.manual_qa.mex', 'qa.manual_qa.mincl'}
+				mex2:
+						{'qa.manual_qa.mex2'}
+				mincl:
+						{'qa.manual_qa.mincl'}
+			aqa:
+				ma:
+						{'qa.aqa.ma', 'qa.aqa.mdef', 'qa.aqa.ma2'}
+				ma2:
+						('qa.aqa.ma2',)
+				mdef:
+						('qa.aqa.mdef',)
+				mex:
+						{'qa.aqa.mex', 'marketing.mex', 'qa.aqa.mex2', 'qa.aqa.mincl'}
+				mex2:
+						('qa.aqa.mex2',)
+				mincl:
+						('qa.aqa.mincl',)
+			support:
+				ma:
+						{'qa.support.ma', 'qa.support.ma2', 'qa.support.mdef'}
+				ma2:
+						('qa.support.ma2',)
+				mdef:
+						('qa.support.mdef',)
+				mex:
+						{'qa.support.mex', 'qa.support.mincl'}
+				mex2:
+						('qa.support.mex2',)
+				mincl:
+						('qa.support.mincl',)
+	sales_manager:
+		ma:
+			{'sales_manager.ma', 'sales_manager.ma2', 'sales_manager.mdef'}
+		ma2:
+			('sales_manager.ma2',)
+		mdef:
+			('sales_manager.mdef',)
+		mex:
+			{'devops.mdef', 'hr.mdef', 'sales_manager.mex', 'qa.mdef', 'backend.mdef', 'designer.mdef', 'fullstack.mdef', 'mobile.mdef', 'marketing.mdef', 'frontend.mdef', 'pm.mdef', 'game.mdef', 'analyst.mdef'}
+		mex2:
+			('sales_manager.mex2',)
+		mincl:
+			('sales_manager.mincl',)
+		sub:
+			{}
+	fullstack:
+		ma:
+			{'fullstack.ma', 'fullstack.mdef', 'fullstack.ma2'}
+		ma2:
+			('fullstack.ma2',)
+		mdef:
+			('fullstack.mdef',)
+		mex:
+			{'devops.mdef', 'hr.mdef', 'qa.mdef', 'backend.mdef', 'designer.mdef', 'mobile.mdef', 'marketing.mdef', 'fullstack.mex', 'sales_manager.mdef', 'frontend.mdef', 'pm.mdef', 'game.mdef', 'analyst.mdef'}
+		mex2:
+			('fullstack.mex2',)
+		mincl:
+			('fullstack.mincl',)
+		sub:
+			{}
+additional:
+	dev:
+		ma:
+			{'analyst.ma2', 'analyst.ma', 'analyst.mdef'}
+		ma2:
+			{'analyst.ma2'}
+		mdef:
+			{'analyst.mdef'}
+		mex:
+			{'backend.php.ma', 'backend.embedded.mdef', 'backend.one_c.ma2', 'frontend.vue.ma2', 'backend.delphi.ma', 'backend.abap.ma2', 'backend.ml.ma', 'backend.scala.ma', 'backend.ruby.ma', 'backend.java.ma2', 'backend.java.mdef', 'frontend.vue.ma', 'backend.python.ma2', 'backend.ruby.ma2', 'fullstack.ma', 'backend.net.ma', 'frontend.angular.mdef', 'backend.php.mdef', 'frontend.wordpress.ma', 'backend.net.mdef', 'backend.unity.ma2', 'backend.data_engineer.mdef', 'backend.embedded.ma2', 'backend.ma', 'frontend.joomla.ma', 'backend.data_engineer.ma2', 'backend.net.ma2', 'backend.nodejs.ma2', 'backend.php.ma2', 'frontend.drupal.ma', 'admins.ma', 'backend.golang.mdef', 'backend.mdef', 'backend.laravel.ma', 'frontend.vue.mdef', 'backend.scala.mdef', 'backend.one_c.mdef', 'backend.ma2', 'backend.golang.ma', 'backend.unity.ma', 'frontend.joomla.mdef', 'frontend.drupal.mdef', 'backend.java.ma', 'frontend.bitrix.ma2', 'backend.nodejs.ma', 'frontend.ma2', 'frontend.ma', 'backend.delphi.mdef', 'frontend.drupal.ma2', 'frontend.mdef', 'frontend.react.ma', 'backend.python.ma', 'frontend.wordpress.ma2', 'frontend.react.ma2', 'backend.ruby.mdef', 'backend.golang.ma2', 'backend.unity.mdef', 'backend.c.mdef', 'backend.ml.mdef', 'backend.ml.ma2', 'backend.one_c.ma', 'fullstack.mdef', 'frontend.joomla.ma2', 'backend.scala.ma2', 'frontend.angular.ma', 'backend.c.ma2', 'backend.laravel.ma2', 'backend.delphi.ma2', 'frontend.django.mdef', 'frontend.angular.ma2', 'frontend.wordpress.mdef', 'backend.abap.mdef', 'frontend.bitrix.ma', 'analyst.mex', 'frontend.django.ma', 'fullstack.ma2', 'frontend.react.mdef', 'backend.c.ma', 'backend.laravel.mdef', 'backend.python.mdef', 'frontend.bitrix.mdef', 'frontend.django.ma2', 'backend.abap.ma', 'backend.nodejs.mdef', 'backend.embedded.ma', 'backend.data_engineer.ma'}
+		mex2:
+			{'analyst.mex2'}
+		mincl:
+			{'analyst.mincl'}
+		sub:
+			{}
+	detailed_designer:
+		ma:
+			{'designer.illustrator.ma', 'designer.ui_ux.ma', 'designer.motion.ma', 'designer.ui_ux.mdef', 'designer.dd.mdef', 'designer.dd.ma', 'designer.graphic.mdef', 'designer.illustrator.ma2', 'designer.ui_ux.ma2', 'designer.motion.ma2', 'designer.ddd.ma', 'designer.motion.mdef', 'designer.graphic.ma2', 'designer.game_designer.ma2', 'designer.uxre_searcher.ma', 'designer.illustrator.mdef', 'designer.ddd.ma2', 'designer.ddd.mdef', 'designer.game_designer.mdef', 'designer.dd.ma2', 'designer.uxre_searcher.mdef', 'designer.graphic.ma', 'designer.game_designer.ma', 'designer.uxre_searcher.ma2'}
+		ma2:
+			()
+		mdef:
+			()
+		mex:
+			()
+		mex2:
+			()
+		mincl:
+			()
+		sub:
+			{}
+	non_code_manager:
+		ma:
+			{'sales_manager.non_code_manager.ma', 'sales_manager.non_code_manager.mdef', 'sales_manager.non_code_manager.ma2'}
+		ma2:
+			('sales_manager.non_code_manager.ma2',)
+		mdef:
+			('sales_manager.non_code_manager.mdef',)
+		mex:
+			('sales_manager.non_code_manager.mex',)
+		mex2:
+			('sales_manager.non_code_manager.mex2',)
+		mincl:
+			('sales_manager.non_code_manager.mincl',)
+		sub:
+			{}
+	admins:
+		ma:
+			('admins.ma',)
+		ma2:
+			('admins.ma2',)
+		mdef:
+			('admins.mdef',)
+		mex:
+			('admins.mex',)
+		mex2:
+			('admins.mex2',)
+		mincl:
+			('admins.mincl',)
+others:
+	remote:
+		ma:
+			('remote', 'удаленка', 'удаленная', 'удаленную работу', 'удалённую работу', 'удаленно', 'удалённо')
+		ma2:
+			()
+		mdef:
+			()
+		mex:
+			()
+		mex2:
+			()
+		mincl:
+			()
+	relocate:
+		ma:
+			('relocate', 'relocation', 'релокация')
+		ma2:
+			()
+		mdef:
+			()
+		mex:
+			()
+		mex2:
+			()
+		mincl:
+			()
+	english:
+		ma:
+			('[Ee]nglish[\\W]{0,2}[A-Za-zА-Яа-я][\\W]{0,3}[\\d]', '[Uu]pper[\\W]{0,1}intermediate', '[Ii]ntermediate', '[Pp]re[\\W]{0,1}[Ii]ntermediate', '[Uu]pper')
+	vacancy:
+		ma:
+			
+		mex:
+			
+		sub:
+			common_vacancy:
+					[^a-zA-ZА-Яа-я][Пп]озиция[^
+]{1,3}[^
+\.;]+|[^#][Вв]акансия[^
+,\.;][^а-яА-Я][^
+,]+|[Дд]олжность[^
+]+|в поиске[^
+][А-ЯA-Z][^
+\.,;]+|[Нн]азвание вакансии[^
+,;]+|[^#\w][VACANCYvacancy]{7}[^
+,\.;]+|[Ии]щем[^
+";.,]+
+			marketing_vacancy:
+					[
+][^
+]{0,15}маркетолог|[A-Z]*[a-z]*\s?[A-Z]*[a-z]*\s?[Mm]arketing[\W][Mm]anager
+			ba_vacancy:
+					
+			game_vacancy:
+					
+			product_vacancy:
+					SEO[\W]Specialist[^
+"\.;]{0,30}|[sS]upport[\W]specialist|[Пп]роектн[ыйого]{2,3}[\W][Мм]енеджер[а]?|[^
+а-яА-Я:\.;,]*[Pp]ro[jedu]{2}ct[\W][Mm]anager[^
+(,\."?;]*|[Oo]ffice[\W][mM]anager[^
+\.,;"]+
+			mobile_vacancy:
+					
+			pm_vacancy:
+					SEO[\W]Specialist[^
+"\.;]{0,30}|[sS]upport[\W]specialist|[Пп]роектн[ыйого]{2,3}[\W][Мм]енеджер[а]?|[^
+а-яА-Я:\.;,]*[Pp]ro[jedu]{2}ct[\W][Mm]anager[^
+(,\."?;]*|[Oo]ffice[\W][mM]anager[^
+\.,;"]+
+			sales_manager_vacancy:
+					
+			analyst_vacancy:
+					
+			frontend_vacancy:
+					[^
+.,;!\-]+[Ee]ngineer[^
+.,;]*|[^
+\.,;а-яА-Я#]+[dD]eveloper[^a-z][^
+;а-яА-Я"]*|[^
+.,;]*[Pp]ro[duje]{2}ct[^
+][Mm]anager[^
+,;"]+|[^
+.,;]+[Cc]ommunity[^
+][Mm]anager[^
+.,;]+|Программист[а][^
+\.,][CС]#|Position[^
+]+|[Аа]налитик[а] бизнес[^
+]процессов|[^
+а-яА-Я]*Lead[^
+]ML|React разработчик[а]?|[^
+а-яА-Я,]*[Рр]азработчик[а]?[^а-я][^
+\.;"]*|Middlе Jаvа-рaзрaбoтчик|[a-zA-Z]*[^#\-]QA[^
+\.:;\-"]|Инженер данных [^
+]+|Machine[\W]Learning[\W]Specialist|[^
+а-яА-Яє]+[Ff]ull[\W][sS]tack[^
+а-яА-Яє]+|[a-zA-Z]+[\W][23][Dd][\W]?[хХ]удожник[а]?|[^
+]+blockchain architect|ищем[^
+\.;]+|[^
+;\.,‼️]+artist[^
+;\.,]+|[MmiddleJjuniorSsenior]{6}[\W][Rr]uby[\W][Dd]eveloper|[a-zA-ZА-Яа-я]+\sтестировщик|Junior QA|[Bb]ig[\W][Dd]ata[\W][Ee]ngineer
+			designer_vacancy:
+					[аАРТрт]{3}-[Дд]иректор[а]?[^ом]|2D[\W]дизайнер[^
+,\.;]*|[^
+а-яА-Я]*[UXUI\/]{2,5}[\W][Dd]esigner[^
+\.,;"]+|[^
+@:(]+[Dd]esigner[^
+\.,;"]*|[^
+а-яА-Я]*[UXUI\/\|]{2,5}[\W][Дд]изайнер[^
+)\.,;]*|дизайнеров[\s\-\-]{1,3}[A-Za-z\+\/]+|^[Дд]изайнер$|[^
+а-яА-Я]+2D[\W][Хх]удожник|[^
+а-яА-Я\-]*[Aa]rtist[\W][^
+"]*|[SMMsmmwebWEB]{3}[\W]?дизайнер
+			devops_vacancy:
+					[^
+"]*CTO[^
+\.,;"]*|[^
+"]*technical[\W]officer[^
+"]*
+			hr_vacancy:
+					
+			backend_vacancy:
+					[^
+.,;!\-]+[Ee]ngineer[^
+.,;]*|[^
+\.,;а-яА-Я#]+[dD]eveloper[^a-z][^
+;а-яА-Я"]*|[^
+.,;]*[Pp]ro[duje]{2}ct[^
+][Mm]anager[^
+,;"]+|[^
+.,;]+[Cc]ommunity[^
+][Mm]anager[^
+.,;]+|Программист[а][^
+\.,][CС]#|Position[^
+]+|[Аа]налитик[а] бизнес[^
+]процессов|[^
+а-яА-Я]*Lead[^
+]ML|React разработчик[а]?|[^
+а-яА-Я,]*[Рр]азработчик[а]?[^а-я][^
+\.;"]*|Middlе Jаvа-рaзрaбoтчик|[a-zA-Z]*[^#\-]QA[^
+\.:;\-"]|Инженер данных [^
+]+|Machine[\W]Learning[\W]Specialist|[^
+а-яА-Яє]+[Ff]ull[\W][sS]tack[^
+а-яА-Яє]+|[a-zA-Z]+[\W][23][Dd][\W]?[хХ]удожник[а]?|[^
+]+blockchain architect|ищем[^
+\.;]+|[^
+;\.,‼️]+artist[^
+;\.,]+|[MmiddleJjuniorSsenior]{6}[\W][Rr]uby[\W][Dd]eveloper|[a-zA-ZА-Яа-я]+\sтестировщик|Junior QA|[Bb]ig[\W][Dd]ata[\W][Ee]ngineer
+			qa_vacancy:
+					[^
+.,;!\-]+[Ee]ngineer[^
+.,;]*|[^
+\.,;а-яА-Я#]+[dD]eveloper[^a-z][^
+;а-яА-Я"]*|[^
+.,;]*[Pp]ro[duje]{2}ct[^
+][Mm]anager[^
+,;"]+|[^
+.,;]+[Cc]ommunity[^
+][Mm]anager[^
+.,;]+|Программист[а][^
+\.,][CС]#|Position[^
+]+|[Аа]налитик[а] бизнес[^
+]процессов|[^
+а-яА-Я]*Lead[^
+]ML|React разработчик[а]?|[^
+а-яА-Я,]*[Рр]азработчик[а]?[^а-я][^
+\.;"]*|Middlе Jаvа-рaзрaбoтчик|[a-zA-Z]*[^#\-]QA[^
+\.:;\-"]|Инженер данных [^
+]+|Machine[\W]Learning[\W]Specialist|[^
+а-яА-Яє]+[Ff]ull[\W][sS]tack[^
+а-яА-Яє]+|[a-zA-Z]+[\W][23][Dd][\W]?[хХ]удожник[а]?|[^
+]+blockchain architect|ищем[^
+\.;]+|[^
+;\.,‼️]+artist[^
+;\.,]+|[MmiddleJjuniorSsenior]{6}[\W][Rr]uby[\W][Dd]eveloper|[a-zA-ZА-Яа-я]+\sтестировщик|Junior QA|[Bb]ig[\W][Dd]ata[\W][Ee]ngineer
+			junior_vacancy:
+					
+			middle_vacancy:
+					
+			senior_vacancy:
+					
+			fullstack_vacancy:
+					
+			developer_qa_vacancy:
+					[^
+.,;!\-]+[Ee]ngineer[^
+.,;]*|[^
+\.,;а-яА-Я#]+[dD]eveloper[^a-z][^
+;а-яА-Я"]*|[^
+.,;]*[Pp]ro[duje]{2}ct[^
+][Mm]anager[^
+,;"]+|[^
+.,;]+[Cc]ommunity[^
+][Mm]anager[^
+.,;]+|Программист[а][^
+\.,][CС]#|Position[^
+]+|[Аа]налитик[а] бизнес[^
+]процессов|[^
+а-яА-Я]*Lead[^
+]ML|React разработчик[а]?|[^
+а-яА-Я,]*[Рр]азработчик[а]?[^а-я][^
+\.;"]*|Middlе Jаvа-рaзрaбoтчик|[a-zA-Z]*[^#\-]QA[^
+\.:;\-"]|Инженер данных [^
+]+|Machine[\W]Learning[\W]Specialist|[^
+а-яА-Яє]+[Ff]ull[\W][sS]tack[^
+а-яА-Яє]+|[a-zA-Z]+[\W][23][Dd][\W]?[хХ]удожник[а]?|[^
+]+blockchain architect|ищем[^
+\.;]+|[^
+;\.,‼️]+artist[^
+;\.,]+|[MmiddleJjuniorSsenior]{6}[\W][Rr]uby[\W][Dd]eveloper|[a-zA-ZА-Яа-я]+\sтестировщик|Junior QA|[Bb]ig[\W][Dd]ata[\W][Ee]ngineer
+	company:
+		ma:
+			[Cc]ompany{1}[:\-\s]{1,3}[A-ZА-Я][A-ZА-Яa-zа-я0-9]{1,}[^
+][A-ZА-Я]{0,}[а-яa-zА-ЯA-Z0-9]{0,}[^
+][A-ZА-Я]{0,}[а-яa-zА-ЯA-Z0-9]{0,}[^
+][A-ZА-Я]{0,}[а-яa-zА-ЯA-Z]{0,}|[A-Z][A-Za-z]{1,}\W{0,}[A-Z][A-Za-z]{0,}\W{0,4}[A-Za-zА-Яа-я]{0,}\W[A-Za-zА-Яа-я]{0,}[\W]{1,4}компания|[кК]омпани[я][^
+\.!][:\-\s]{0,2}[A-ZА-Я][A-ZА-Яа-я0-9a-z]{1,}[^
+()][A-ZА-Я]{0,}[а-яa-zА-ЯA-Z0-9]{0,}[^
+()][A-ZА-Я]{0,}[а-яa-zА-ЯA-Z0-9]{0,}[^
+()][A-ZА-Я]{0,}[а-яa-zА-ЯA-Z]{0,}|[A-Z][A-Za-z]{1,}[\s\-]{0,}[a-z]{1,}\s{0,}IT company
+		mex:
+			
+		sub:
+			
+	company2:
+		ma:
+			[Cc]ompany[Nname]{0,4}[:]{0,1}[^
+]{1}[A-Z][^
+()\.,а-яА-Я]+|[Кк]омпания[:]{0,1}[^
+]{1}[“”"'][А-ЯA-Z][^
+()\.,]+|[Нн]азвание\s{1}компании[^
+\.,;]*|разработчик в [^
+();:]*|[Ккомпания]{7,8}[^
+;\/\\.,]{1,2}["]{1}[A-Za-zА-Яа-я]+["]{1}|[
+][^
+]+IT[^
+]компания|IT[^
+]{1,2}компания[^
+]{1,2}[A-Z\s]+
+		mex:
+			
+		sub:
+			
