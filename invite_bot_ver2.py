@@ -288,9 +288,22 @@ class InviteBot():
                                                             '---------------------------------------------------\n\n'
                                                              '---------------- STATISTICS: ----------------\n'
                                                             '/check_title_body\n'
+                                                            '/get_profession_parsing_tags_log - send the file with tags and antitags'
                                                             '/add_statistics\n\n'
                                                             '---------------------------------------------------\n\n'
                                                             '❗️- it is admin options')
+
+        @self.dp.message_handler(commands=['get_profession_parsing_tags_log'])
+        async def get_profession_parsing_tags_log_command(message: types.Message):
+            if message.from_user.id in self.white_admin_list:
+                await send_file_to_user(
+                    message=message,
+                    path=variable.path_log_check_profession,
+                    caption="take the tags"
+                )
+
+            else:
+                await self.bot_aiogram.send_message(message.chat.id, "Sorry, your permission is wrong")
 
         @self.dp.message_handler(commands=['get_flood_error_logs'])
         async def get_flood_error_logs_commands(message: types.Message):
