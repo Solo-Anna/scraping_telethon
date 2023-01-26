@@ -28,28 +28,28 @@ class ParseSites:
 
     async def call_sites(self):
 
-        logs.write_log(f"scraping_telethon2: function: call_sites")
-
         bot_dict = {'bot': self.bot, 'chat_id': self.chat_id}
         
-        # await DevGetInformation(bot_dict).get_content()
-        # await SuperJobGetInformation(bot_dict).get_content()
-        # await RabotaGetInformation(bot_dict).get_content()
-        # await HabrGetInformation(bot_dict).get_content()
-        # await FinderGetInformation(bot_dict).get_content()
-        # await GeekGetInformation(bot_dict).get_content()
-        # await SvyaziGetInformation(bot_dict).get_content()
-        # await HHGetInformation(bot_dict).get_content()
+        await DevGetInformation(bot_dict).get_content()
+        await SuperJobGetInformation(bot_dict).get_content()
+        await RabotaGetInformation(bot_dict).get_content()
+        await HabrGetInformation(bot_dict).get_content()
+        await FinderGetInformation(bot_dict).get_content()
+        await GeekGetInformation(bot_dict).get_content()
+        await SvyaziGetInformation(bot_dict).get_content()
+        await HHGetInformation(bot_dict).get_content()
 
-        task1 = asyncio.create_task(DevGetInformation(bot_dict).get_content())
-        task2 = asyncio.create_task(SuperJobGetInformation(bot_dict).get_content())
-        task3 = asyncio.create_task(RabotaGetInformation(bot_dict).get_content())
-        task4 = asyncio.create_task(HabrGetInformation(bot_dict).get_content())
-        task5 = asyncio.create_task(FinderGetInformation(bot_dict).get_content())
-        task6 = asyncio.create_task(GeekGetInformation(bot_dict).get_content())
-        task7 = asyncio.create_task(SvyaziGetInformation(bot_dict).get_content())
-        task8 = asyncio.create_task(HHGetInformation(bot_dict).get_content())
-        await asyncio.gather(task1, task2, task3, task4, task5, task6, task7, task8)
+        # task1 = asyncio.create_task(HHGetInformation(bot_dict).get_content())
+        # task2 = asyncio.create_task(SuperJobGetInformation(bot_dict).get_content())
+        # task3 = asyncio.create_task(RabotaGetInformation(bot_dict).get_content())
+        # task4 = asyncio.create_task(HabrGetInformation(bot_dict).get_content())
+        # task5 = asyncio.create_task(FinderGetInformation(bot_dict).get_content())
+        # task6 = asyncio.create_task(GeekGetInformation(bot_dict).get_content())
+        # task7 = asyncio.create_task(SvyaziGetInformation(bot_dict).get_content())
+        # task8 = asyncio.create_task(DevGetInformation(bot_dict).get_content())
+        # await asyncio.gather(task1, task2, task3)
+        # await asyncio.gather(task4, task5, task6)
+        # await asyncio.gather(task7, task8)
 
         # p1 = Process(target=asyncio.run(DevGetInformation(bot_dict).get_content), args=())
         # p2 = Process(target=SuperJobGetInformation(bot_dict).get_content, args=())
@@ -69,7 +69,7 @@ class ParseSites:
         # p7.start()
         # p8.start()
         #
-        p1.join()
+        # p1.join()
         # p2.join()
         # p3.join()
         # p4.join()

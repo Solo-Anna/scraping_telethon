@@ -35,6 +35,7 @@ dict_for_title_shorts = {
     '': 'Системных аналитиков',
 }
 
+flood_control_logs_path = "./excel/flood_control.txt"
 pattern_path = "./excel/pattern.txt"
 admin_check_file_path = './logs/check_file.txt'
 sites_search_words = ['designer', 'ui', 'junior', 'без опыта', 'стажер', 'product manager', 'project manager', 'python', 'php']

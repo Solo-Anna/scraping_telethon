@@ -268,10 +268,12 @@ class DataBaseOperations:
         # print('query = ', query)
 
         with self.con:
-
-            cur.execute(query)
-            response = cur.fetchall()
-
+            try:
+                cur.execute(query)
+                response = cur.fetchall()
+            except Exception as e:
+                print(e)
+                return str(e)
         if curs:
             return cur
         return response
@@ -653,8 +655,6 @@ class DataBaseOperations:
 
     def run_free_request(self, request, output_text=None):
 
-        logs.write_log(f"scraping_db: function: run_free_request")
-
         if not self.con:
             self.connect_db()
         cur = self.con.cursor()
@@ -668,7 +668,7 @@ class DataBaseOperations:
                 cur.execute(query)
                 print(output_text)
             except Exception as e:
-                print(e)
+                print('ERROR ', e)
             pass
 
     def write_pattern_new(self, key, ma, mex, value, table_name='pattern'):
@@ -850,6 +850,9 @@ class DataBaseOperations:
         return False
 
     def check_vacancy_exists_in_db(self, tables_list, title, body):
+        title = self.clear_title_or_body(title)
+        body = self.clear_title_or_body(body)
+
         for one_element in tables_list:
             response = self.get_all_from_db(
                 table_name=f'{one_element}',

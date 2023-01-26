@@ -6,6 +6,8 @@ from filters.scraping_get_profession_Alex_next_2809 import AlexSort2809
 from db_operations.scraping_db import DataBaseOperations
 # from scraping_telegramchats2 import WriteToDbMessages
 import pandas as pd
+from helper_functions.helper_functions import to_dict_from_admin_response_sync
+from utils.additional_variables.additional_variables import admin_table_fields
 
 #-----------------------------
 database2 = 'itcoty_backup'
@@ -796,28 +798,37 @@ def remove_no_sort():
 
     print('len = ', len(response))
 
-# response = DataBaseOperations(None).get_all_from_db(
-#     table_name='archive',
-# )
-# print(len(response))
-# for i in response:
-#     print(i)
-# # # remove_no_sort()
-# # # append_columns()
-profession = 'analyst'
-profession_change = 'frontend'
+def to_excel_from_response(response):
+    excel_dict = {}
+    for vacancy in response:
+        response_dict = to_dict_from_admin_response_sync(vacancy, admin_table_fields)
+        for key in response_dict:
+            if key in excel_dict:
+                excel_dict[key].append(response_dict[key])
+            else:
+                excel_dict[key] = [response_dict[key]]
+    df = pd.DataFrame(
+        {
+            'source': excel_dict['chat_name'],
+            'company': excel_dict['company'],
+            'english': excel_dict['english'],
+            'relocation': excel_dict['relocation'],
+            'remote': excel_dict['remote'],
+            'job_type': excel_dict['job_type'],
+            'city': excel_dict['city'],
+            'salary': excel_dict['salary'],
+            'experience': excel_dict['experience'],
+        }
+    )
+
+    df.to_excel('./../excel/vacancy_params.xlsx', sheet_name='Sheet1')
+    print('got it')
+
+
 response = DataBaseOperations(None).get_all_from_db(
     table_name='admin_last_session',
-    param=f"WHERE profession LIKE '%{profession}, %' or profession LIKE '%, {profession}%' OR profession='{profession}'",
-    field='id'
+    param="WHERE profession <> 'no_sort'",
+    field=admin_table_fields
 )
-print(len(response))
-for i in range(0, len(response)-10):
-    id = response[i][0]
-    print(i)
-    DataBaseOperations(None).update_table(
-        table_name="admin_last_session",
-        param=f"WHERE id={id}",
-        field='profession',
-        value=f'{profession_change}'
-    )
+to_excel_from_response(response)
+

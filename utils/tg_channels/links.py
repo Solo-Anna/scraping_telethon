@@ -1,6 +1,4 @@
 list_links = [
-    # 'https://t.me/askrubot',
-    # 'https://t.me/popa_belkvn',
     'https://t.me/it_interns', # interns
     'https://t.me/itvacancycv',
     'https://t.me/fordev',

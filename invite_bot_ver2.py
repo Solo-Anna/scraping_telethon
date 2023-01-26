@@ -1,4 +1,5 @@
 import asyncio
+import threading
 import time
 import pandas as pd
 import psycopg2
@@ -39,6 +40,9 @@ from sites.scraping_rabota import RabotaGetInformation
 from filters.filter_jan_2023.filter_jan_2023 import VacancyFilter
 from helper_functions import helper_functions as helper
 from utils.additional_variables import additional_variables as variable
+from patterns._export_pattern import export_pattern
+from patterns.data_pattern._data_pattern import pattern as data_pattern
+from multiprocessing import Process
 
 logs = Logs()
 import settings.os_getenv as settings
@@ -48,6 +52,11 @@ config.read("./settings/config.ini")
 api_id = settings.api_id
 api_hash = settings.api_hash
 username = settings.username
+
+api_id_double = settings.api_id_double
+api_hash_double = settings.api_hash_double
+username_double = settings.username_double
+
 
 # token = settings.token
 # logging.basicConfig(level=logging.INFO)
@@ -69,7 +78,7 @@ logs.write_log(f'\n------------------ restart --------------------')
 
 class InviteBot():
 
-    def __init__(self, token_in=None):
+    def __init__(self, token_in=None, double=False):
         self.chat_id = None
         self.start_time_listen_channels = datetime.now()
         self.start_time_scraping_channels = None
@@ -107,8 +116,10 @@ class InviteBot():
         # self.bot_aiogram = Bot(token=token)
         # self.storage = MemoryStorage()
         # self.dp = Dispatcher(self.bot_aiogram, storage=self.storage)
-
-        self.client = TelegramClient(username, int(api_id), api_hash)
+        if double:
+            self.client = TelegramClient(username_double, int(api_id_double), api_hash_double)
+        else:
+            self.client = TelegramClient(username, int(api_id), api_hash)
         self.client.start()
 
         logging.basicConfig(level=logging.INFO)
@@ -192,6 +203,17 @@ class InviteBot():
             profession = State()
             quantity_leave = State()
 
+        class Form_pattern(StatesGroup):
+            profession = State()
+            sub = State()
+            sub_profession = State()
+            sub_sub = State()
+
+        class Form_db(StatesGroup):
+            name = State()
+
+        class Form_check_url(StatesGroup):
+            url = State()
 
         @self.dp.message_handler(commands=['start'])
         async def send_welcome(message: types.Message):
@@ -203,15 +225,13 @@ class InviteBot():
             logs.write_log(f'\n------------------ start --------------------')
             # -------- make a parse keyboard for admin ---------------
             parsing_kb = ReplyKeyboardMarkup(resize_keyboard=True)
-            parsing_button1 = KeyboardButton('Get news from channels')
+            # parsing_button1 = KeyboardButton('Get news from channels')
             parsing_button2 = KeyboardButton('Subscr.statistics')
             parsing_button3 = KeyboardButton('Digest')
-            parsing_button4 = KeyboardButton('Invite people')
+            # parsing_button4 = KeyboardButton('Invite people')
             # parsing_button5 = KeyboardButton('Get participants')
 
-            parsing_kb.row(parsing_button1, parsing_button2)
-            parsing_kb.row(parsing_button3, parsing_button4)
-            # parsing_kb.add(parsing_button5)
+            parsing_kb.row(parsing_button3, parsing_button2)
 
             await self.bot_aiogram.send_message(message.chat.id, f'Привет, {message.from_user.first_name}!', reply_markup=parsing_kb)
             await self.bot_aiogram.send_message(variable.id_owner, f'User {message.from_user.id} has started')
@@ -237,6 +257,7 @@ class InviteBot():
                                                             '⛔️/get_pattern_pseudo\n'
                                                             '⛔️/clear_db_table\n'
                                                             '⛔️/numbers_of_archive\n'
+                                                            '⛔️/how_many_records_in_db_table - shows quantity of records in db table\n'
                                                             '----------------------------------------------------\n\n'
                                                             '---------------- PARSING: ----------------\n'
                                                             '🔆/magic_word - input word and get results from hh.ru\n'
@@ -251,6 +272,13 @@ class InviteBot():
                                                             '/download - ❗️you get excel from admin vacancies with search tags\n'
                                                             '/ambulance - if bot gets accident in hard pushing and you think you loose the shorts\n\n'
                                                             '---------------- TOOLS: ----------------\n'
+                                                            '🛠/edit_pattern - stop proccess\n'
+                                                            '/db_check_url_vacancy - does vacancy exist by link\n'
+                                                            '/schedule - non-stop parsing\n'
+                                                            '/restore_from_admin - restory the lost vacancies\n'
+                                                            '/invite_people - start to invite followers\n'
+                                                            '/get_news - start to invite followers\n'
+                                                            '🖐️/stop - stop proccess\n'
                                                             '➡️/refresh_and_save_changes - One click for the correct refresh. Includes:\n'
                                                             '✅/refresh - to get the professions in excel format in all vacancies throgh the new filters logic (without rewriting)\n'
                                                             '✅/check_doubles - remove the vacancy"s doubles\n'
@@ -261,6 +289,94 @@ class InviteBot():
                                                             '/add_statistics\n\n'
                                                             '---------------------------------------------------\n\n'
                                                             '❗️- it is admin options')
+
+
+        @self.dp.message_handler(commands=['how_many_records_in_db_table'])
+        async def how_many_records_in_db_table_commands(message: types.Message):
+            await Form_db.name.set()
+            await self.bot_aiogram.send_message(message.chat.id, 'Type the table name like the profession')
+
+        @self.dp.message_handler(state=Form_db.name)
+        async def emeggency_push_profession(message: types.Message, state: FSMContext):
+            async with state.proxy() as data:
+                data['name'] = message.text
+                db_name = message.text
+            await state.finish()
+            response = self.db.get_all_from_db(
+                table_name=db_name,
+                field='id'
+            )
+            if type(response) is not str:
+                await self.bot_aiogram.send_message(message.chat.id, f'{len(response)} records')
+            else:
+                await self.bot_aiogram.send_message(message.chat.id, f'{str(response)}')
+
+        @self.dp.message_handler(commands=['invite_people'])
+        async def invite_people_command(message: types.Message):
+            await invite_people(message)
+
+        @self.dp.message_handler(commands=['get_news'])
+        async def get_news_command(message: types.Message):
+            await get_news(message)
+
+        @self.dp.message_handler(commands=['schedule'])
+        async def schedule_command(message: types.Message):
+            await schedule(message)
+
+        @self.dp.message_handler(commands=['restore_from_admin'])
+        async def restore_from_admin_command(message: types.Message):
+            await restore_from_admin(message, 110)
+
+        @self.dp.message_handler(commands=['read_pattern_row'])
+        async def stop_commands(message: types.Message):
+            excel_dict = {}
+            pattern = data_pattern
+            for key in pattern:
+                if type(pattern[key]) is not dict:
+                    excel_dict = await compose_excel_dict(
+                        key='profession',
+                        value=key,
+                        key_list=['profession', 'sub', 'sub_profession', 'sub_sub'],
+                        excel_dict=excel_dict
+                    )
+                    for key2 in pattern[key]:
+                        if type(pattern[key][key2]) is not dict:
+                            excel_dict = await compose_excel_dict(
+                                key='sub',
+                                value=key2,
+                                key_list=['profession', 'sub', 'sub_profession', 'sub_sub'],
+                                excel_dict=excel_dict
+                            )
+                            for key3 in pattern[key][key2]:
+                                if type(pattern[key][key2][key3]) is not dict:
+                                    excel_dict = await compose_excel_dict(
+                                        key='sub_profession',
+                                        value=key3,
+                                        key_list=['profession', 'sub', 'sub_profession', 'sub_sub'],
+                                        excel_dict=excel_dict
+                                    )
+
+
+
+        @self.dp.message_handler(commands=['stop'])
+        async def stop_commands(message: types.Message):
+            print("Proccess has been stoped")
+            await self.bot_aiogram.send_message(message.chat.id, "Proccess has been stoped")
+            loop = asyncio.get_running_loop()
+            loop.stop()
+
+        @self.dp.message_handler(commands=['db_check_url_vacancy'])
+        async def db_check_url_vacancy_commands(message: types.Message):
+            await Form_check_url.url.set()
+            await self.bot_aiogram.send_message(message.chat.id, 'Type the vacancy_url to looking for in the database')
+
+        @self.dp.message_handler(state=Form_check_url.url)
+        async def db_check_url_vacancy_form(message: types.Message, state: FSMContext):
+            async with state.proxy() as data:
+                data['url'] = message.text
+                url = message.text
+            await state.finish()
+            await db_check_url_vacancy(message, url=url)
 
         @self.dp.message_handler(commands=['emergency_push'])
         async def emergency_push(message: types.Message):
@@ -294,15 +410,23 @@ class InviteBot():
 
         @self.dp.message_handler(commands=['get_pattern'])
         async def get_logs(message: types.Message):
-            path = variable.pattern_path
-            await helper.get_pattern(path)
-            await send_file_to_user(message, path, 'Please take the pattern')
+            if message.from_user.id in variable.white_admin_list:
+                path = variable.pattern_path
+                await helper.get_pattern(path)
+                await send_file_to_user(message, path, 'Please take the pattern')
+                await send_file_to_user(message, variable.path_last_pattern, 'There are all merges')
+                await send_file_to_user(message, variable.path_data_pattern, 'All data have got from it')
+            else:
+                await self.bot_aiogram.send_message(message.chat.id, variable.message_not_access)
 
         @self.dp.message_handler(commands=['get_pattern_pseudo'])
         async def get_pattern_pseudo_commands(message: types.Message):
-            path = variable.pattern_path
-            await helper.get_pattern(path, pseudo=True)
-            await send_file_to_user(message, path, 'Please take the pattern')
+            if message.from_user.id in variable.white_admin_list:
+                path = variable.pattern_path
+                await helper.get_pattern(path, pseudo=True)
+                await send_file_to_user(message, path, 'Please take the pattern')
+            else:
+                await self.bot_aiogram.send_message(message.chat.id, variable.message_not_access)
 
         @self.dp.message_handler(commands=['debugs'])
         async def get_debugs(message: types.Message):
@@ -354,9 +478,11 @@ class InviteBot():
                 quantity_leave = message.text
                 profession = data['profession']
             await state.finish()
+            msg = await self.bot_aiogram.send_message(message.chat.id, "Please waite a few seconds")
             await clear_db_table(
                 profession, quantity_leave
             )
+            await msg.edit_text(f"{msg.text}\nDone!")
 
         @self.dp.message_handler(commands=['refresh'])
         async def refresh_vacancies(message: types.Message):
@@ -365,12 +491,20 @@ class InviteBot():
 
         @self.dp.message_handler(commands=['refresh_and_save_changes'])  #
         async def refresh_vacancies_and_save(message: types.Message):
+            with open(variable.path_filter_error_file, 'w') as f:
+                f.write(str(datetime.now().strftime('%d-%m-%y %H:%M')))
+
             # refresh all professions
             await refresh(message, save_changes=True)
             # remove doubles in admin
             await get_remove_doubles(message)
             # remove completed professions
             await remove_completed_professions(message)
+            await send_file_to_user(
+                message=message,
+                path=variable.path_filter_error_file,
+                caption='wrong words in pattern'
+            )
 
         @self.dp.message_handler(commands=['remove_completed_professions'])
         async def remove_prof(message: types.Message):
@@ -544,7 +678,16 @@ class InviteBot():
         async def process_api_id(message: types.Message, state: FSMContext):
             async with state.proxy() as data:
                 data['link'] = message.text
-            link = message.text
+                link = message.text
+            await state.finish()
+            if 'https://hh.ru/vacancy/' in link:
+                hh = HHGetInformation(
+                    bot_dict={'bot': self.bot_aiogram, 'chat_id': message.chat.id},
+                    search_word=None
+                )
+                await hh.get_content_by_link_alone(link)
+
+
 
 # -----------------------------------------------------------------------
 
@@ -677,11 +820,11 @@ class InviteBot():
             #     only_profession=True
             # )
 
-            dict_response = AlexSort2809().sort_by_profession_by_Alex(
+            dict_response = VacancyFilter().sort_profession(
                 body=body,
                 title=title,
                 check_contacts=False,
-                check_vacancy=False
+                check_vacancy=True
             )
 
             profession = dict_response['profession']
@@ -1249,8 +1392,6 @@ class InviteBot():
 
                 result_dict = {}
 
-                logs.write_log(f"invite_bot_2: Callback: show_info_last_records")
-
                 # --------- compose data from last session --------------
                 result_dict['last_session'] = {}
                 result_dict['all'] = {}
@@ -1435,57 +1576,22 @@ class InviteBot():
                             await self.bot_aiogram.send_message(message.chat.id,
                                                            '🚀 Sorry, this options available only for admin')
 
-                if message.text == 'Get news from channels':
-
-                    logs.write_log(f"invite_bot_2: content_types: Get news from channels")
-                    await get_news(message=message)
-
-
+                # if message.text == 'Get news from channels':
+                #     await get_news(message=message)
 
                 #----------------------- Listening channels at last --------------------------------------
 
-                if message.text == 'Invite people':
-                    # if client.is_connected():
-                    #     client.disconnect()
+                # if message.text == 'Invite people':
+                #     await invite_people(message=message)
 
-                    logs.write_log(f"invite_bot_2: content_types: Invite people")
-
-                    id_customer = message.from_user.id
-                    customer = await check_customer(message, id_customer)
-                    # con = db_connect()
-                    if customer:
-                        # get_customer_from_db = get_db(id_customer)
-                        get_customer_from_db = DataBaseOperations(None).get_all_from_db(table_name='users', param=f"WHERE id_user='{id_customer}'", without_sort=True)
-                        if not get_customer_from_db:
-                            await Form.api_id.set()
-                            return await self.bot_aiogram.send_message(message.chat.id, "Введите api_id (отменить /cancel)")
-
-                        self.current_customer = get_customer_from_db[0]
-                        self.api_id = int(self.current_customer[2])
-                        self.api_hash = self.current_customer[3]
-                        self.phone_number = self.current_customer[4]
-                        self.password = self.current_customer[5]
-                        try:
-                            if self.client.is_connected():
-                                await self.client.disconnect()
-                        except:
-                            pass
-                        await connect_with_client(message, id_customer)
-
-
-                    # await bot.delete_message(message.chat.id, message.message_id)
-                    # response = requests.get(url='https://tg-channel-parse.herokuapp.com/scrape')
-                    # await bot.send_message(message.chat.id, response.status_code)
-                if message.text == 'Listen to channels':
-
-                    logs.write_log(f"invite_bot_2: content_types: Listen to channels")
-
-                    # await bot.delete_message(message.chat.id, message.message_id)
-                    # await bot.send_message(message.chat.id, "Bot is listening TG channels and it will send notifications here")
-                    # ListenChats()
-                    # await client.run_until_disconnected()
-                    await get_subscribers_statistic(message)
-                    pass
+                # if message.text == 'Listen to channels':
+                #
+                #     # await bot.delete_message(message.chat.id, message.message_id)
+                #     # await bot.send_message(message.chat.id, "Bot is listening TG channels and it will send notifications here")
+                #     # ListenChats()
+                #     # await client.run_until_disconnected()
+                #     await get_subscribers_statistic(message)
+                #     pass
 
                 if message.text == 'Digest':
 
@@ -2402,7 +2508,7 @@ class InviteBot():
             # button_junior = InlineKeyboardButton('junior', callback_data=f'{prefix}/junior')
             # button_analyst = InlineKeyboardButton('analyst', callback_data=f'{prefix}/analyst')
             #
-            markup.row(button_dict['designer'], button_dict['ba'], button_dict['game'], button_dict['product'])
+            markup.row(button_dict['designer'], button_dict['game'], button_dict['product'])
             markup.row(button_dict['mobile'], button_dict['pm'], button_dict['sales_manager'], button_dict['analyst'])
             markup.row(button_dict['frontend'], button_dict['marketing'], button_dict['devops'], button_dict['hr'])
             markup.row(button_dict['backend'], button_dict['qa'], button_dict['junior'])
@@ -2456,58 +2562,207 @@ class InviteBot():
                     if sub_pro:
                         sub_list.append(sub_pro)
 
-                message_for_send = ''
-                if vacancy_from_admin_dict['vacancy']:
-                    if not full:
-                        message_for_send += f"<a href=\"{config['My_channels']['agregator_link']}/{vacancy_from_admin_dict['sended_to_agregator']}\"><b>Вакансия: {vacancy_from_admin_dict['vacancy']}</b>\n</a>"
+            # code for transpose in shorts like reference
+
+                remote_pattern = export_pattern['others']['remote']['ma']
+                relocate_pattern = export_pattern['others']['relocate']['ma']
+                experience_pattern = export_pattern['others']['relocate']['ma']
+                english_pattern = export_pattern['others']['english_for_shorts']['ma']
+                salary_patterns = export_pattern['others']['salary_for_shorts']['ma']
+                city_pattern = export_pattern['others']['city_for_shorts']['ma']
+                vacancy_pattern = export_pattern['others']['vacancy']['sub']
+
+                remote_shorts = ''
+                relocate_shorts = ''
+                experience_shorts = ''
+                english_shorts = ''
+                salary_shorts = ''
+                city_shorts = ''
+
+                if not full:
+                    remote_shorts = await helper.get_field_for_shorts(
+                        presearch_results=[
+                            vacancy_from_admin_dict['job_type'],
+                            vacancy_from_admin_dict['title']+vacancy_from_admin_dict['body'],
+                        ],
+                        pattern=remote_pattern,
+                        return_value='remote',
+                    )
+                    remote_shorts = remote_shorts['return_value']
+
+                    relocate_shorts = await helper.get_field_for_shorts(
+                        presearch_results=[
+                            vacancy_from_admin_dict['job_type'],
+                            vacancy_from_admin_dict['relocation'],
+                            vacancy_from_admin_dict['title']+vacancy_from_admin_dict['body'],
+                            params['relocation']
+                        ],
+                        pattern=relocate_pattern,
+                        return_value = 'relocate'
+                    )
+                    relocate_shorts = relocate_shorts['return_value']
+
+                    experience_shorts = await helper.get_field_for_shorts(
+                        presearch_results=[
+                            vacancy_from_admin_dict['experience'],
+                            vacancy_from_admin_dict['job_type']
+                        ],
+                        pattern=experience_pattern,
+                        return_value = 'relocate'
+                    )
+                    if experience_shorts['match']:
+                        experience_shorts = experience_shorts['match']
+                        experience_shorts = re.findall(r'[0-9]{1,2}', relocate_shorts)
+                        if experience_shorts:
+                            experience_shorts = experience_shorts[0]
                     else:
-                        message_for_send += f"<b>Вакансия: {vacancy_from_admin_dict['vacancy']}</b>\n"
-                elif params['vacancy']:
-                    if not full:
-                        message_for_send += f"<a href=\"{config['My_channels']['agregator_link']}/{vacancy_from_admin_dict['sended_to_agregator']}\"><b>Вакансия: {params['vacancy']}</b>\n</a>"
+                        experience_shorts = ''
+
+                    english_shorts = await helper.get_field_for_shorts(
+                        presearch_results=[
+                            vacancy_from_admin_dict['english'],
+                            params['english']
+                        ],
+                        pattern=english_pattern,
+                        return_value = 'relocate'
+                    )
+                    if english_shorts['match']:
+                        english_shorts = english_shorts['match']
+                    elif english_shorts['element_is_not_empty']:
+                        english_shorts = 'B1+'
                     else:
-                        message_for_send += f"<b>Вакансия: {params['vacancy']}</b>\n"
+                        english_shorts = ''
+
+                    salary_shorts = await helper.get_field_for_shorts(
+                        presearch_results=[
+                            vacancy_from_admin_dict['salary'],
+                            vacancy_from_admin_dict['title']+vacancy_from_admin_dict['body']
+                        ],
+                        pattern=salary_patterns,
+                        return_value = 'salary'
+                    )
+                    salary_shorts = salary_shorts['match']
+                    salary_shorts = salary_shorts.replace('до', '-').replace('  ', ' ')
+
+                    print('///////////////////\nsalary = ', salary_shorts, '\n///////////////////')
+
+                    city_shorts = await helper.get_city_vacancy_for_shorts(
+                        presearch_results=[
+                            vacancy_from_admin_dict['city'],
+                            vacancy_from_admin_dict['job_type'],
+                            vacancy_from_admin_dict['title'] + vacancy_from_admin_dict['body'],
+                        ],
+                            pattern=city_pattern,
+                            return_value = 'match'
+                        )
+                    if city_shorts['return_value']:
+                        city_shorts = city_shorts['return_value']
+                    elif city_shorts['element_is_not_empty']:
+                        if vacancy_from_admin_dict['city']:
+                            city_shorts = vacancy_from_admin_dict['city']
+                        else:
+                            city_shorts = ''
+                    else:
+                        city_shorts = ''
+
+                    message_for_send = ''
+                    vacancy = ''
+                    if vacancy_from_admin_dict['vacancy']:
+                        vacancy = vacancy_from_admin_dict['vacancy']
+                    elif params['vacancy']:
+                        vacancy = params['vacancy']
+                    if not vacancy:
+                        vacancy = await helper.get_city_vacancy_for_shorts(
+                        presearch_results=[
+                            vacancy_from_admin_dict['title'],
+                            vacancy_from_admin_dict['body'],
+                        ],
+                        pattern = vacancy_pattern,
+                        return_value='match'
+                        )
+                        if "#" not in vacancy['match']:
+                            vacancy = vacancy['match']
+                    if not vacancy:
+                        vacancy = f"Вакансия #{random.randrange(100, 5000)}"
+                    message_for_send += f"<a href=\"{config['My_channels']['agregator_link']}/" \
+                                        f"{vacancy_from_admin_dict['sended_to_agregator']}\">" \
+                                        f"<b>{vacancy}</b></a> "
+
+                    company = ''
+                    if vacancy_from_admin_dict['company']:
+                        company = vacancy_from_admin_dict['company']
+                    elif params['company']:
+                        company = params['company']
+                    if company:
+                        message_for_send += f"в {company.strip()} "
+
+                    message_for_send += '('
+
+                    if city_shorts:
+                        message_for_send += f"{city_shorts}, "
+
+                    if english_shorts:
+                        message_for_send += f"eng: {english_shorts}, "
+
+                    if experience_shorts:
+                        message_for_send += f"exp: {experience_shorts} year(s), "
+
+                    if relocate_shorts:
+                        message_for_send += f"{relocate_shorts.capitalize()}, "
+
+                    if remote_shorts:
+                        message_for_send += f"{remote_shorts.capitalize()}, "
+
+                    if salary_shorts:
+                        message_for_send += f"{salary_shorts}, "
+                # end of code
+
                 else:
-                    if not full:
-                        message_for_send += f"<a href=\"{config['My_channels']['agregator_link']}/{vacancy_from_admin_dict['sended_to_agregator']}\"><b>Вакансия: #{random.randrange(100, 5000)}</b>\n</a>"
+
+                    message_for_send = 'Вакансия '
+                    if vacancy_from_admin_dict['vacancy']:
+                        vacancy = vacancy_from_admin_dict['vacancy']
+                    elif params['vacancy']:
+                        vacancy = params['vacancy']
                     else:
-                        message_for_send += f"<b>Вакансия: #{random.randrange(100, 5000)}</b>\n"
+                        vacancy = f"#{random.randrange(100, 5000)}"
+                    message_for_send += f"<b>: {vacancy.replace('.', '').strip()}</b>\n"
 
-                if vacancy_from_admin_dict['company']:
-                    message_for_send += f"Компания: {vacancy_from_admin_dict['company']}\n"
-                elif params['company']:
-                    message_for_send += f"Компания: {params['company']}\n"
+                    company = ''
+                    if vacancy_from_admin_dict['company']:
+                        company = vacancy_from_admin_dict['company']
+                    elif params['company']:
+                        company = params['company']
+                    if company:
+                        message_for_send += f"Компания: {company.strip()}\n"
 
-                if vacancy_from_admin_dict['city']:
-                    message_for_send += f"Город/страна: {vacancy_from_admin_dict['city']}\n"
+                    if vacancy_from_admin_dict['city']:
+                        message_for_send += f"Город/страна: {vacancy_from_admin_dict['city']}\n"
 
-                if vacancy_from_admin_dict['english']:
-                    message_for_send += f"English: {vacancy_from_admin_dict['english']}\n"
-                elif params['english']:
-                    message_for_send += f"English: {params['english']}\n"
+                    english=''
+                    if vacancy_from_admin_dict['english']:
+                        english = vacancy_from_admin_dict['english']
+                    elif params['english']:
+                        english = params['english']
+                    if english:
+                        message_for_send += f"English: {params['english']}\n"
 
-                if vacancy_from_admin_dict['job_type']:
-                    message_for_send += f"Формат работы: {vacancy_from_admin_dict['job_type']}\n"
-                elif params['job_type']:
-                    message_for_send += f"Формат работы: {params['job_type']}\n"
+                    job_type = ''
+                    if vacancy_from_admin_dict['job_type']:
+                        job_type = vacancy_from_admin_dict['job_type']
+                    elif params['job_type']:
+                        job_type = params['job_type']
+                    if job_type:
+                        message_for_send += f"Формат работы: {params['job_type']}\n"
 
-                if vacancy_from_admin_dict['relocation']:
-                    message_for_send += f"Релокация: {vacancy_from_admin_dict['relocation']}\n"
-                elif params['relocation']:
-                    message_for_send += f"Релокация: {params['relocation']}\n"
+                    relocation = ''
+                    if vacancy_from_admin_dict['relocation']:
+                        relocation = vacancy_from_admin_dict['relocation']
+                    elif params['relocation']:
+                        relocation = params['relocation']
+                    if relocation:
+                        message_for_send += f"Релокация: {relocation}\n"
 
-                # if not full:
-                #     if sended_to_agregator and sended_to_agregator != "None":
-                #         message_for_send += f"{config['My_channels']['agregator_link']}/{sended_to_agregator}\n"
-                #         message_for_send += f"<a href=\"{config['My_channels']['agregator_link']}/{sended_to_agregator}\">Подробнее</a>"
-                #         # message_for_send += hlink(title="Подробнее", url=f"{config['My_channels']['agregator_link']}/{sended_to_agregator}")
-                #         message_for_send += '\n'
-
-                if not message_for_send:
-                    message_for_send = 'The vacancy not found\n\n'
-                    await write_to_logs_error(f"The vacancy not found\n{vacancy_from_admin_dict['title']}{vacancy_from_admin_dict['body']}")
-
-                if full:
                     if vacancy_from_admin_dict['salary']:
                         message_for_send += f"Зарплата: {vacancy_from_admin_dict['salary']}\n"
 
@@ -2526,11 +2781,32 @@ class InviteBot():
                 if len(message_for_send) > 4096:
                     message_for_send = message_for_send[0:4092] + '...'
 
+                if not message_for_send:
+                    message_for_send = 'The vacancy not found\n\n'
+                    await write_to_logs_error(f"The vacancy not found\n{vacancy_from_admin_dict['title']}{vacancy_from_admin_dict['body']}")
+
+                if not full:
+                    if message_for_send[-1:] == '(':
+                        message_for_send = message_for_send[:-2] + '\n'
+                    elif message_for_send[-2:] == ', ':
+                        message_for_send = message_for_send[0:-2]
+                        message_for_send += ')\n'
+
 
                 try:
                     sub_list = sub[one_profession]
                 except:
                     sub_list = []
+
+                print('-------------------------------------')
+                print('db_remote = ', vacancy_from_admin_dict['job_type'])
+                print('db_relocation = ', vacancy_from_admin_dict['relocation'])
+                print('db_relocation = ', params['relocation'])
+                print('db_salary = ', vacancy_from_admin_dict['salary'])
+                print('db_english = ', vacancy_from_admin_dict['english'])
+                print('params_english = ', params['english'])
+                print('message_for_send ', message_for_send)
+                print('-------------------------------------')
 
                 return {'composed_message': message_for_send, 'sub_list': sub_list, 'db_id': vacancy_from_admin_dict['id'], 'all_subs': sub}
 
@@ -2718,24 +2994,37 @@ class InviteBot():
                     without_sort=True,
                     field='sended_to_agregator'
                 )
-                print('changed id agreg = ', response_check[0][0])
+                try:
+                    print('changed id agreg = ', response_check[0][0])
+                except Exception as e:
+                    print('hey, dude, WTF in 2832?\n', e)
+                    # self.bot_aiogram.send_message(message.chat.id, f"'hey, dude, WTF in 2832?\n{e}")
 
             # await asyncio.sleep(1)
 
-        async def transfer_vacancy_admin_archive(id_admin_last_session_table):
-            response = self.db.get_all_from_db(
-                table_name=f'{variable.admin_database}',
-                param=f"WHERE id={id_admin_last_session_table}",
-                field=variable.admin_table_fields
-            )
+        async def transfer_vacancy_admin_archive(
+                id_admin_last_session_table,
+                table_from=variable.admin_database,
+                table_to=variable.archive_database,
+                response=None
+        ):
+
+            if not response:
+                response = self.db.get_all_from_db(
+                    table_name=f'{table_from}',
+                    param=f"WHERE id={id_admin_last_session_table}",
+                    field=variable.admin_table_fields
+                )
+                response = response[0]
+
             if response:
                 response_dict = await helper.to_dict_from_admin_response(
-                    response=response[0],
+                    response=response,
                     fields=variable.admin_table_fields
                 )
 
                 # response = response[0]
-                query = f"""INSERT INTO {variable.archive_database} (
+                query = f"""INSERT INTO {table_to} (
                         chat_name, title, body, profession, vacancy, vacancy_url, company, english, relocation, 
                         job_type, city, salary, experience, contacts, time_of_public, created_at, agregator_link, 
                         session, sended_to_agregator, sub) 
@@ -2817,7 +3106,7 @@ class InviteBot():
                 response_temp_dict=None,
                 vacancy_from_admin_dict=None,
                 links_on_prof_channels=False,
-                # from_admin_temporary=True
+                # from_admin_temporary=True,
         ):
 
             """
@@ -3000,7 +3289,7 @@ class InviteBot():
                     title = vacancy[2]
                     body = vacancy[3]
                     vac = vacancy[5]
-                    response_from_filter = AlexSort2809().sort_by_profession_by_Alex(title=title, body=body)
+                    response_from_filter = VacancyFilter().sort_profession(title=title, body=body)
                     profession = response_from_filter['profession']
                     params = response_from_filter['params']
                     if vac:
@@ -3237,28 +3526,13 @@ class InviteBot():
             await asyncio.sleep(1)
 
             # # -----------------------parsing telegram channels -------------------------------------
-#             await bot_aiogram.send_message(
-#                 message.chat.id,
-#                 'Bot is parsing the telegram channels...',
-#                 parse_mode='HTML')
-            await main(self.client, bot_dict={'bot': self.bot_aiogram, 'chat_id': message.chat.id})  # run parser tg channels and write to profession's tables
-            # await bot_aiogram.send_message(
-            #     message.chat.id,
-            #     '...it has been successfully',
-#                 parse_mode='HTML')
-#             await asyncio.sleep(2)
-            #
-            # # ---------------------- parsing the sites. List of them will grow ------------------------
-#             await bot_aiogram.send_message(message.chat.id, 'Bot is parsing the sites...')
-            psites = ParseSites(client=self.client, bot_dict={'bot': self.bot_aiogram, 'chat_id': message.chat.id})
-            await psites.call_sites()
-#             await bot_aiogram.send_message(message.chat.id, '...it has been successfully. Press <b>Digest</b> for the next step', parse_mode='html')
+            bot_dict = {'bot': self.bot_aiogram, 'chat_id': message.chat.id}
 
-            # psites = ParseSites(client=self.client, bot_dict={'bot': self.bot_aiogram, 'chat_id': message.chat.id})
-            # task1 = asyncio.create_task(main(self.client, bot_dict={'bot': self.bot_aiogram, 'chat_id': message.chat.id}))
-            # task2 = asyncio.create_task(psites.call_sites())
-            # await asyncio.gather(task1, task2)
-            # await self.bot_aiogram.send_message(message.chat.id, '----- PARSING HAS DONE! -----')
+            psites = ParseSites(client=self.client, bot_dict=bot_dict)
+            await main(self.client, bot_dict=bot_dict)
+            # self.bot_aiogram.send_message(message.chat.id, "TG channels parsing has finished")
+            await psites.call_sites()
+            await self.bot_aiogram.send_message(message.chat.id, '----- PARSING HAS BEEN DONE! -----')
 
         async def debug_function():
             response = DataBaseOperations(None).get_all_from_db(
@@ -3441,28 +3715,6 @@ class InviteBot():
 
             if "shorts" in callback_data:
                 await shorts_public(message)
-                # for key in self.message_for_send_dict:
-                #     message_for_send = self.message_for_send_dict[key]
-                #     vacancies_list = await cut_message_for_send(message_for_send)
-                #     for short in vacancies_list:
-                #         try:
-                #             await write_to_logs_error(f"Results:\n{short}\n")
-                #             try:
-                #                 await self.bot_aiogram.send_message(
-                #                     variable.channel_id_for_shorts,
-                #                     short,
-                #                     parse_mode='html',
-                #                     disable_web_page_preview=True
-                #                 )
-                #             except:
-                #                 await self.bot_aiogram.send_message(
-                #                     message.chat.id,
-                #                     short,
-                #                     parse_mode='html',
-                #                     disable_web_page_preview=True
-                #                 )
-                #         except Exception as e:
-                #             await self.bot_aiogram.send_message(message.chat.id, str(e))
 
             await delete_and_change_waste_vacancy(message=message,
                                                   last_id_message_agregator=self.last_id_message_agregator,
@@ -3542,7 +3794,11 @@ class InviteBot():
                     updated += 1
                 else:
                     await transfer_vacancy_admin_archive(
-                        id_admin_last_session_table=response[index][1]
+                        id_admin_last_session_table=response[index][1],
+                    )
+                    self.db.delete_data(
+                        table_name=variable.admin_database,
+                        param=f"WHERE id={response[index][1]}"
                     )
                     removed += 1
 
@@ -3560,12 +3816,266 @@ class InviteBot():
                 self.message_for_send_dict[profession] += f"{composed_message_dict['composed_message']}\n"
             self.quantity_entered_to_shorts += 1
 
+        async def compose_excel_dict(key, value, key_list, excel_dict):
+            for i in key_list:
+                if i == key:
+                    excel_dict[i] = value
+                else:
+                    excel_dict[i] = ''
+
+        async def schedule(message):
+            while True:
+                # thr1 = threading.Thread(target=get_news, args=(message))
+                # thr1.start()
+                await get_news(message=message)
+                await self.bot_aiogram.send_message(message.chat.id, 'Pause 10 minutes')
+                print('Pause 10 minutes')
+                await asyncio.sleep(10*60)
+                await self.bot_aiogram.send_message(message.chat.id, 'Next loop has been started')
+
+
+        async def invite_people(message):
+            id_customer = message.from_user.id
+            customer = await check_customer(message, id_customer)
+            if customer:
+                get_customer_from_db = DataBaseOperations(None).get_all_from_db(table_name='users',
+                                                                                param=f"WHERE id_user='{id_customer}'",
+                                                                                without_sort=True)
+                if not get_customer_from_db:
+                    await Form.api_id.set()
+                    return await self.bot_aiogram.send_message(message.chat.id, "Введите api_id (отменить /cancel)")
+
+                self.current_customer = get_customer_from_db[0]
+                self.api_id = int(self.current_customer[2])
+                self.api_hash = self.current_customer[3]
+                self.phone_number = self.current_customer[4]
+                self.password = self.current_customer[5]
+                try:
+                    if self.client.is_connected():
+                        await self.client.disconnect()
+                except:
+                    pass
+                await connect_with_client(message, id_customer)
+
+        async def restore_from_admin(message, numbers):
+            vacancies_from_agregator = await get_tg_history_messages(
+                message=message,
+                channel=config['My_channels']['agregator_channel'],
+                limit_msg=numbers
+            )
+            # vacancies_from_admin = await get_tg_history_messages(
+            #     message=message,
+            #     channel=config['My_channels']['admin_channel'],
+            #     limit_msg=numbers
+            #
+            #
+            positive = 0
+            negative = 0
+            response_dict = {}
+            response_dict['admin_last_session'] = []
+            response_dict['archive'] = []
+            for vacancy in vacancies_from_agregator:
+                print(vacancy['date'])
+                vacancy = str(vacancy['message'])
+                title = vacancy.split('\n')
+                title = title[0].replace('Вакансия : ', '')
+
+                body = vacancy.split('\n\n')
+                body = "\n\n".join(body[1:])
+
+                body = body.split('\n')
+                body = "\n".join(body[1:])
+
+                body = body.split('----')[0]
+
+                title = self.db.clear_title_or_body(title)
+                body = self.db.clear_title_or_body(body)
+
+                prof = VacancyFilter().sort_profession(
+                    title=title,
+                    body=body,
+                    check_contacts=False,
+                    check_vacancy=False,
+                    get_params=False
+                )
+                prof = prof['profession']['profession']
+
+                if 'junior' in prof:
+                    # print('title: ', title)
+                    # print("body: ", body)
+                    param = f"WHERE title LIKE '%{title.strip()}%' and body LIKE '%{body.strip()}%'"
+
+                    response = self.db.get_all_from_db(
+                        table_name=variable.admin_database,
+                        param=param
+                    )
+                    if response:
+                        response_dict['admin_last_session'].append(response[0][0])
+                    response2 = self.db.get_all_from_db(
+                        table_name='archive',
+                        param=param
+                    )
+                    if response2:
+                        response_dict['archive'].append(response2[0][0])
+
+                    if response or response2:
+                        print('response')
+                        positive += 1
+                    else:
+                        param = f"WHERE vacancy LIKE '%{title.strip()}%' and body LIKE '%{body.strip()}%'"
+                        response = self.db.get_all_from_db(
+                            table_name=variable.admin_database,
+                            param=param
+                        )
+                        if response:
+                            response_dict['admin_last_session'].append(response[0][0])
+
+                        response2 = self.db.get_all_from_db(
+                            table_name='archive',
+                            param=param
+                        )
+                        if response2:
+                            response_dict['archive'].append(response2[0][0])
+                        if response2 or response:
+                            print('response')
+                            positive += 1
+                        else:
+                            print('???')
+                            negative += 1
+                    print('----------------')
+                    pass
+                print(f'positive: {positive}\nnegative: {negative}')
+            pass
+
+
+
+            vacancies_from_admin = await get_tg_history_messages(
+                message=message,
+                channel=config["My_channels"]["admin_channel"],
+                limit_msg=5
+            )
+            for vacancy in vacancies_from_admin:
+                vacancy = str(vacancy['message'])
+                title = vacancy.split('\n')
+                title = title[0].replace('Вакансия : ', '')
+
+                body = vacancy.split('\n\n')
+                body = "\n\n".join(body[1:])
+
+                body = body.split('\n')
+                body = "\n".join(body[1:])
+
+                body = body.split('----')[0]
+
+                title = self.db.clear_title_or_body(title)
+                body = self.db.clear_title_or_body(body)
+                param = f"WHERE title LIKE '%{title.strip()}%' and body LIKE '%{body.strip()}%'"
+
+                response = self.db.get_all_from_db(
+                    table_name=variable.admin_database,
+                    param=param
+                )
+                if response:
+                    response_dict['admin_last_session'].append(response[0][0])
+                response2 = self.db.get_all_from_db(
+                    table_name='archive',
+                    param=param
+                )
+                if response2:
+                    response_dict['archive'].append(response2[0][0])
+
+                if response or response2:
+                    print('response')
+                    positive += 1
+                else:
+                    param = f"WHERE vacancy LIKE '%{title.strip()}%' and body LIKE '%{body.strip()}%'"
+                    response = self.db.get_all_from_db(
+                        table_name=variable.admin_database,
+                        param=param
+                    )
+                    if response:
+                        response_dict['admin_last_session'].append(response[0][0])
+
+                    response2 = self.db.get_all_from_db(
+                        table_name='archive',
+                        param=param
+                    )
+                    if response2:
+                        response_dict['archive'].append(response2[0][0])
+                    if response2 or response:
+                        print('response')
+                        positive += 1
+                    else:
+                        print('???')
+                        negative += 1
+                print(f'positive: {positive}\nnegative: {negative}')
+
+                print('----------------')
+
+            pass
+            new_profession = ''
+            for key in response_dict:
+                if key == 'admin_last_session':
+                    for id in response_dict[key]:
+                        profession = self.db.get_all_from_db(
+                            table_name='admin_last_session',
+                            param=f"Where id={id}",
+                            field='profession'
+                        )[0][0]
+                        if 'junior' not in profession:
+                            new_profession = profession + ', junior'
+                        self.db.update_table(
+                            table_name='admin_last_session',
+                            param=f"WHERE id={id}",
+                            field='profession',
+                            value=new_profession
+                        )
+                if key == 'archive':
+                    new_profession = 'junior'
+                    for id in response_dict[key]:
+                        self.db.update_table(
+                            table_name='archive',
+                            param=f"WHERE id={id}",
+                            field='profession',
+                            value=new_profession
+                        )
+                        await transfer_vacancy_admin_archive(
+                            id_admin_last_session_table=id,
+                            table_from='archive',
+                            table_to='admin_last_session'
+                        )
+
+        async def db_check_url_vacancy(message, url):
+            table_list = variable.all_tables_for_vacancy_search
+            url = url.strip()
+
+            for pro in table_list:
+                response = self.db.get_all_from_db(
+                    table_name=pro,
+                    field='title',
+                    param=f"WHERE vacancy_url='{url}'"
+                )
+                # response = self.db.get_all_from_db(
+                #     table_name=pro,
+                #     field='vacancy_url',
+                #     param=f"WHERE chat_name='{url}'"
+                #     param=f"WHERE body LIKE '%В red_mad_robot мы создаём цифровые продукты, которыми пользуются миллионы людей, от маркетплейсов и экосистем до мобильных приложений и веб-порталов — и, возможно, ты один из них! Помогаем компаниям в технологической трансформации и поддерживаем стартапы, которые создают наше общее будущее. Мы ищем QA инженера, который разбирается в том, по каким критериям осуществлять оценку, составляет планы тестирования, разрабатывает тест-кейсы и делает всё, чтобы приёмочное тестирование прошло на отлично с первого раза. Что предстоит делать:   Осуществлять функциональное ручное тестирование клиент-серверных приложений (iOS, Android, Web);   Локализовывать, документировать и поддерживать дефекты;   Разрабатывать и поддерживать тест-кейсы/чек-листы;%'"
+                # )
+
+                if response:
+                    return await self.bot_aiogram.send_message(message.chat.id, f"😎 (+)Vacancy FOUND in {pro} table\n{response[0][0][0:40]}")
+
+            return await self.bot_aiogram.send_message(message.chat.id, f"😱 (-)Vacancy NOT FOUND")
+
         start_polling(self.dp)
         # executor.start_polling(dp, skip_updates=True)
 
 
-def run(token_in=None):
-    InviteBot(token_in).main_invitebot()
+def run(double=False, token_in=None):
+    InviteBot(
+        token_in=token_in,
+        double=double
+    ).main_invitebot()
 
-if __name__ == '__main__':
-   run()
+# if __name__ == '__main__':
+#    run()
