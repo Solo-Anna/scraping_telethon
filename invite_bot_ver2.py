@@ -2564,13 +2564,13 @@ class InviteBot():
 
             # code for transpose in shorts like reference
 
-                remote_pattern = export_pattern['others']['remote']['ma']
-                relocate_pattern = export_pattern['others']['relocate']['ma']
-                experience_pattern = export_pattern['others']['relocate']['ma']
-                english_pattern = export_pattern['others']['english_for_shorts']['ma']
-                salary_patterns = export_pattern['others']['salary_for_shorts']['ma']
-                city_pattern = export_pattern['others']['city_for_shorts']['ma']
-                vacancy_pattern = export_pattern['others']['vacancy']['sub']
+                remote_pattern = export_pattern['others']['remote']['ma'][:40]
+                relocate_pattern = export_pattern['others']['relocate']['ma'][:40]
+                experience_pattern = export_pattern['others']['relocate']['ma'][:40]
+                english_pattern = export_pattern['others']['english_for_shorts']['ma'][:40]
+                salary_patterns = export_pattern['others']['salary_for_shorts']['ma'][:40]
+                city_pattern = export_pattern['others']['city_for_shorts']['ma'][:40]
+                vacancy_pattern = export_pattern['others']['vacancy']['sub'][:100]
 
                 remote_shorts = ''
                 relocate_shorts = ''
@@ -4077,5 +4077,5 @@ def run(double=False, token_in=None):
         double=double
     ).main_invitebot()
 
-# if __name__ == '__main__':
-#    run()
+if __name__ == '__main__':
+   run()
