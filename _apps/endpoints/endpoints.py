@@ -5,7 +5,11 @@ import os
 import psycopg2
 from flask import Flask
 import random
-# from db_operations.scraping_db import DataBaseOperations
+from db_operations.scraping_db import DataBaseOperations
+from utils.additional_variables.additional_variables import admin_database, admin_table_fields
+from helper_functions.helper_functions import to_dict_from_admin_response
+
+db=DataBaseOperations(None)
 
 config = configparser.ConfigParser()
 config.read("./settings/config.ini")
@@ -30,7 +34,29 @@ async def main_endpoints():
 
     @app.route("/")
     async def hello_world():
-        return "Hello World"
+        return "It's the empty page"
+
+
+    @app.route("/get-all-vacancies")
+    async def get_all_vacancies():
+        all_vacancies = {}
+        all_vacancies['vacancies'] = {}
+        response = db.get_all_from_db(
+            table_name=admin_database,
+            param="WHERE profession <> 'no_sort'",
+            field=admin_table_fields
+        )
+        number=0
+        for vacancy in response:
+            vacancy_dict = await to_dict_from_admin_response(
+                response=vacancy,
+                fields=admin_table_fields
+            )
+            if number<100:
+                all_vacancies['vacancies'][str(number)] = vacancy_dict
+            number += 1
+        return json.dumps(all_vacancies)
+
 
     @app.route("/get")
     async def hello_world2():

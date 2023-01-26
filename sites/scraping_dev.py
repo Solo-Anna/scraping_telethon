@@ -435,10 +435,10 @@ class DevGetInformation:
         await self.output_logs(
             response_from_db=response_from_db,
             vacancy=vacancy,
-            word=word
+            vacancy_url=vacancy_url
         )
 
-    async def output_logs(self, response_from_db, vacancy, word=None):
+    async def output_logs(self, response_from_db, vacancy, word=None, vacancy_url=None):
 
         additional_message = ''
         profession = response_from_db['profession']
@@ -450,7 +450,7 @@ class DevGetInformation:
 
         elif not response_from_db:
             prof_str = ", ".join(profession['profession'])
-            additional_message = f"<b>+w: {prof_str}</b>\n"
+            additional_message = f"<b>+w: {prof_str}</b>\n{vacancy_url}\n{profession['tag']}\n{profession['anti_tag']}\n"
 
             if 'no_sort' not in profession['profession']:
                 self.written_vacancies += 1

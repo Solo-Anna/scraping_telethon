@@ -10,7 +10,7 @@ from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service
 from webdriver_manager.chrome import ChromeDriverManager
 from bs4 import BeautifulSoup
-# from bot.scraping_push_to_channels import PushChannels
+# from _apps.scraping_push_to_channels import PushChannels
 from db_operations.scraping_db import DataBaseOperations
 from patterns.pattern_Alex2809 import cities_pattern, params
 
@@ -46,7 +46,7 @@ class AngelGetInformation:
 
         # self.search_words.extend(self.extended)
         self.current_message = None
-        # self.bot = bot_dict['bot']
+        # self._apps = bot_dict['_apps']
         # self.chat_id = bot_dict['chat_id']
 
 
@@ -67,7 +67,7 @@ class AngelGetInformation:
         # self.options.add_argument("--disable-dev-shm-usage")
         # self.options.add_argument("--no-sandbox")
 
-        # await self.bot.send_message(self.chat_id, 'https://angel.co/ is starting', disable_web_page_preview=True)
+        # await self._apps.send_message(self.chat_id, 'https://angel.co/ is starting', disable_web_page_preview=True)
 
         link = 'https://angel.co/jobs/'
         response_dict = await self.get_info(link)

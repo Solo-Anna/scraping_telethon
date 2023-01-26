@@ -365,10 +365,11 @@ class FinderGetInformation:
 
         await self.output_logs(
             response_from_db=response_from_db,
-            vacancy=vacancy
+            vacancy=vacancy,
+            vacancy_url=vacancy_url
         )
 
-    async def output_logs(self, response_from_db, vacancy, word=None):
+    async def output_logs(self, response_from_db, vacancy, word=None, vacancy_url=None):
 
         additional_message = ''
         profession = response_from_db['profession']
@@ -380,7 +381,7 @@ class FinderGetInformation:
 
         elif not response_from_db:
             prof_str = ", ".join(profession['profession'])
-            additional_message = f"<b>+w: {prof_str}</b>\n"
+            additional_message = f"<b>+w: {prof_str}</b>\n{vacancy_url}\n{profession['tag']}\n{profession['anti_tag']}\n"
 
             if 'no_sort' not in profession['profession']:
                 self.written_vacancies += 1
@@ -396,13 +397,6 @@ class FinderGetInformation:
                 msg=self.current_message
             )
 
-            # self.current_message = await self.bot.edit_message_text(
-            #     f'{self.current_message.text}{new_text}',
-            #     self.current_message.chat.id,
-            #     self.current_message.message_id,
-            #     parse_mode='html',
-            #     disable_web_page_preview=True
-            # )
         else:
             new_text = f"{self.count_message_in_one_channel}. {vacancy}\n{additional_message}"
             self.current_message = await send_message(
@@ -410,9 +404,6 @@ class FinderGetInformation:
                 chat_id=self.chat_id,
                 text=new_text
             )
-
-            # self.current_message = await self.bot.send_message(self.chat_id,
-            #                                                    f"{self.count_message_in_one_channel}. {vacancy}\n{additional_message}")
 
         print(f"\n{self.count_message_in_one_channel} from_channel hh.ru search {word}")
         self.count_message_in_one_channel += 1

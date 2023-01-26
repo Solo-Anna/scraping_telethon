@@ -825,10 +825,12 @@ def to_excel_from_response(response):
     print('got it')
 
 
-response = DataBaseOperations(None).get_all_from_db(
-    table_name='admin_last_session',
-    param="WHERE profession <> 'no_sort'",
-    field=admin_table_fields
-)
-to_excel_from_response(response)
-
+for i in valid_profession_list:
+    response = DataBaseOperations(None).get_all_from_db(
+        table_name='admin_last_session',
+        param="WHERE vacancy_url = 'https://www.svyazi.app//vakansii/product-manager-v-telekom'",
+        field='title'
+    )
+    if response:
+        pass
+pass

@@ -129,25 +129,6 @@ class SuperJobGetInformation:
             return False
 
     def normalize_date(self, date):
-        # convert = {
-        #     'января': '01',
-        #     'февраля': '02',
-        #     'марта': '03',
-        #     'апреля': '04',
-        #     'мая': '05',
-        #     'июня': '06',
-        #     'июля': '07',
-        #     'августа': '08',
-        #     'сентября': '09',
-        #     'октября': '10',
-        #     'ноября': '11',
-        #     'декабря': '12',
-        # }
-        #
-        # date = date.split(f'\xa0')
-        # month = date[1]
-        # day = date[0]
-        # year = date[2]
         date_today = datetime.now().strftime('%d')
         month = datetime.now().strftime('%m')
         year = datetime.now().strftime('%Y')
@@ -173,28 +154,6 @@ class SuperJobGetInformation:
         text = re.sub(r'Аккаунт зарегистрирован с (публичной почты|email) \*@[a-z.]*[, не email компании!]{0,1}', '', text)
         text = text.replace(f'\n', '')
         return text
-
-    # async def compose_in_one_file(self):
-    #     hiring = []
-    #     link = []
-    #     contacts = []
-    #
-    #     for i in range(1, 48):
-    #         excel_data_df = pd.read_excel(f'./../messages/geek{i}.xlsx', sheet_name='Sheet1')
-    #
-    #         hiring.extend(excel_data_df['hiring'].tolist())
-    #         link.extend(excel_data_df['hiring_link'].tolist())
-    #         contacts.extend(excel_data_df['contacts'].tolist())
-    #
-    #     df = pd.DataFrame(
-    #         {
-    #         'hiring': hiring,
-    #         'access_hash': link,
-    #         'contacts': contacts,
-    #         }
-    #     )
-    #
-    #     df.to_excel(f'all_geek.xlsx', sheet_name='Sheet1')
 
     async def write_to_db_table_companies(self):
         excel_data_df = pd.read_excel('all_geek.xlsx', sheet_name='Sheet1')
@@ -390,10 +349,10 @@ class SuperJobGetInformation:
         await self.output_logs(
             response_from_db=response_from_db,
             vacancy=vacancy,
-            word=word
+            vacancy_url=vacancy_url
         )
 
-    async def output_logs(self, response_from_db, vacancy, word=None):
+    async def output_logs(self, response_from_db, vacancy, word=None, vacancy_url=None):
 
         additional_message = ''
         profession = response_from_db['profession']
@@ -405,7 +364,7 @@ class SuperJobGetInformation:
 
         elif not response_from_db:
             prof_str = ", ".join(profession['profession'])
-            additional_message = f"<b>+w: {prof_str}</b>\n"
+            additional_message = f"<b>+w: {prof_str}</b>\n{vacancy_url}\n{profession['tag']}\n{profession['anti_tag']}\n"
 
             if 'no_sort' not in profession['profession']:
                 self.written_vacancies += 1
@@ -421,13 +380,6 @@ class SuperJobGetInformation:
                 msg=self.current_message
             )
 
-            # self.current_message = await self.bot.edit_message_text(
-            #     f'{self.current_message.text}{new_text}',
-            #     self.current_message.chat.id,
-            #     self.current_message.message_id,
-            #     parse_mode='html',
-            #     disable_web_page_preview=True
-            # )
         else:
             new_text = f"{self.count_message_in_one_channel}. {vacancy}\n{additional_message}"
             self.current_message = await send_message(

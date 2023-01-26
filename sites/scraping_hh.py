@@ -12,7 +12,10 @@ from db_operations.scraping_db import DataBaseOperations
 from patterns.pattern_Alex2809 import cities_pattern, params
 from sites.write_each_vacancy_to_db import write_each_vacancy
 from settings.browser_settings import options, chrome_driver_path
-from utils.additional_variables.additional_variables import sites_search_words
+from utils.additional_variables.additional_variables import sites_search_words, how_much_pages
+from helper_functions.helper_functions import edit_message, send_message
+from sites.send_log_txt import send_log_txt
+
 class HHGetInformation:
 
     def __init__(self, bot_dict, search_word=None):
@@ -88,7 +91,7 @@ class HHGetInformation:
                 pass
             await self.get_link_message(self.browser.page_source, word)
 
-            till = 13
+            till = how_much_pages
             for self.page_number in range(1, till):
                 try:
                     await self.bot.send_message(self.chat_id, f'https://hh.ru/search/vacancy?text={word}&from=suggest_post&salary=&schedule=remote&no_magic=true&ored_clusters=true&enable_snippets=true&search_period=1&excluded_text=&page={self.page_number}&hhtmFrom=vacancy_search_list',
@@ -295,9 +298,6 @@ class HHGetInformation:
             counter += 1
         job_type = re.sub(r'\<[a-zA-Z\s\.\-\'"=!\<_\/]+\>', " ", job_type)
 
-        if re.findall(r'удаленная работа', job_type):
-            remote = True
-
         contacts = ''
 
         try:
@@ -359,56 +359,80 @@ class HHGetInformation:
             'job_type': job_type,
             'city':city,
             'salary':salary,
-            'experience':'',
+            'experience':experience,
             'time_of_public':date,
             'contacts':contacts,
             'session': self.current_session
         }
 
+
         response_from_db = write_each_vacancy(results_dict)
+
+        await self.output_logs(
+            response_from_db=response_from_db,
+            vacancy=vacancy,
+            word=word,
+            vacancy_url=vacancy_url
+        )
+
+    async def output_logs(self, response_from_db, vacancy, word=None, vacancy_url=None):
+
+        additional_message = ''
         profession = response_from_db['profession']
         response_from_db = response_from_db['response_from_db']
+
         if response_from_db:
             additional_message = f'-exists in db\n'
             self.rejected_vacancies += 1
 
-        elif not response_from_db and 'no_sort' not in profession['profession']:
-            prof_str = ''
-            for j in profession['profession']:
-                prof_str += f"{j}, "
-            prof_str = prof_str[:-2]
-            additional_message = f"<b>+w: {prof_str}</b>\n" \
-                                 f"tags: {profession['tag']}\n" \
-                                 f"anti_tags: {profession['anti_tag']}"
-            self.written_vacancies += 1
+        elif not response_from_db:
+            prof_str = ", ".join(profession['profession'])
+            additional_message = f"<b>+w: {prof_str}</b>\n{vacancy_url}\n{profession['tag']}\n{profession['anti_tag']}\n-------\n"
 
-        else:
-            # additional_message = f'(no_sort)\n'
-            prof_str = ''
-            for j in profession['profession']:
-                prof_str += f"{j}, "
-            prof_str = prof_str[:-2]
-            additional_message = f"<b>+w: {prof_str}</b>\n" \
-                                 f"tags: {profession['tag']}\n" \
-                                 f"anti_tags: {profession['anti_tag']}"
-            # self.rejected_vacancies += 1
-            self.written_vacancies += 1
+            text_for_log = f"{vacancy}\n+w: {prof_str}\n{vacancy_url}\n{profession['tag']}\n{profession['anti_tag']}\n-------\n"
+            await send_log_txt(text_for_log)
 
+            if 'no_sort' not in profession['profession']:
+                self.written_vacancies += 1
+            else:
+                self.written_vacancies += 1
 
-        if len(f"{self.current_message}\n{self.count_message_in_one_channel}. {vacancy}\n{additional_message}")< 4096:
-            self.current_message = await self.bot.edit_message_text(
-                f'{self.current_message.text}\n{self.count_message_in_one_channel}. {vacancy}\n{additional_message}',
-                self.current_message.chat.id,
-                self.current_message.message_id,
-                parse_mode='html',
-                disable_web_page_preview=True
+        if len(f"{self.current_message}\n{self.count_message_in_one_channel}. {vacancy}\n{additional_message}") < 4096:
+            new_text = f"\n{self.count_message_in_one_channel}. {vacancy}\n{additional_message}"
+
+            self.current_message = await edit_message(
+                bot=self.bot,
+                text=new_text,
+                msg=self.current_message
             )
-            pass
+
         else:
-            self.current_message = await self.bot.send_message(self.chat_id, f"{self.count_message_in_one_channel}. {vacancy}\n{additional_message}")
-            pass
+            new_text = f"{self.count_message_in_one_channel}. {vacancy}\n{additional_message}"
+            self.current_message = await send_message(
+                bot=self.bot,
+                chat_id=self.chat_id,
+                text=new_text
+            )
+
         print(f"\n{self.count_message_in_one_channel} from_channel hh.ru search {word}")
         self.count_message_in_one_channel += 1
+
+    async def get_content_by_link_alone(self, link):
+        self.browser = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
+        try:
+            self.browser.get(link)
+        except Exception as e:
+            print(e)
+            await self.bot.send_message(self.chat_id, str(e))
+            return False
+        try:
+            self.browser.execute_script("window.scrollTo(0, document.body.scrollHeight);")
+        except:
+            pass
+        self.browser.quit()
+
+
+
 # loop = asyncio.new_event_loop()
 # loop.run_until_complete(HHGetInformation(bot_dict={}).get_content())
 

@@ -16,7 +16,12 @@ valid_professions_extended = []
 valid_professions_extended.extend(valid_professions)
 valid_professions_extended.extend(['fullstack'])
 tables_for_search_vacancy_existing = [admin_database, 'archive']
-all_tables_for_vacancy_search = valid_professions_extended.extend(tables_for_search_vacancy_existing)
+# all_tables_for_vacancy_search = ['designer', 'game', 'product', 'mobile', 'pm', 'sales_manager', 'analyst', 'frontend',
+#                      'marketing', 'devops', 'hr', 'backend', 'qa', 'junior', admin_database, archive_database]
+
+all_tables_for_vacancy_search = []
+all_tables_for_vacancy_search.extend([admin_database, archive_database])
+all_tables_for_vacancy_search.extend(valid_professions)
 
 not_lower_professions = ['pm', 'game', 'designer', 'hr', 'analyst', 'qa', 'ba' 'devops', 'product']
 
@@ -38,6 +43,8 @@ dict_for_title_shorts = {
 flood_control_logs_path = "./excel/flood_control.txt"
 pattern_path = "./excel/pattern.txt"
 admin_check_file_path = './logs/check_file.txt'
+path_log_check_profession = "./excel/send_log_txt.txt"
+
 sites_search_words = ['designer', 'ui', 'junior', 'без опыта', 'стажер', 'product manager', 'project manager', 'python', 'php']
 
 table_list_for_checking_message_in_db = ['admin_last_session', 'archive']

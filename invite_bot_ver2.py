@@ -43,6 +43,7 @@ from utils.additional_variables import additional_variables as variable
 from patterns._export_pattern import export_pattern
 from patterns.data_pattern._data_pattern import pattern as data_pattern
 from multiprocessing import Process
+from sites.send_log_txt import send_log_txt
 
 logs = Logs()
 import settings.os_getenv as settings
@@ -257,6 +258,7 @@ class InviteBot():
                                                             '⛔️/get_pattern_pseudo\n'
                                                             '⛔️/clear_db_table\n'
                                                             '⛔️/numbers_of_archive\n'
+                                                            '⛔️/get_flood_error_logs\n'
                                                             '⛔️/how_many_records_in_db_table - shows quantity of records in db table\n'
                                                             '----------------------------------------------------\n\n'
                                                             '---------------- PARSING: ----------------\n'
@@ -290,6 +292,13 @@ class InviteBot():
                                                             '---------------------------------------------------\n\n'
                                                             '❗️- it is admin options')
 
+        @self.dp.message_handler(commands=['get_flood_error_logs'])
+        async def get_flood_error_logs_commands(message: types.Message):
+            await send_file_to_user(
+                message=message,
+                path=variable.flood_control_logs_path,
+                caption="take the exception logs"
+            )
 
         @self.dp.message_handler(commands=['how_many_records_in_db_table'])
         async def how_many_records_in_db_table_commands(message: types.Message):
@@ -321,7 +330,10 @@ class InviteBot():
 
         @self.dp.message_handler(commands=['schedule'])
         async def schedule_command(message: types.Message):
-            await schedule(message)
+            if message.from_user.id in self.white_admin_list:
+                await schedule(message)
+            else:
+                await self.bot_aiogram.send_message(message.chat.id, "Sorry, your permission is wrong")
 
         @self.dp.message_handler(commands=['restore_from_admin'])
         async def restore_from_admin_command(message: types.Message):
@@ -360,8 +372,8 @@ class InviteBot():
 
         @self.dp.message_handler(commands=['stop'])
         async def stop_commands(message: types.Message):
-            print("Proccess has been stoped")
-            await self.bot_aiogram.send_message(message.chat.id, "Proccess has been stoped")
+            print("Process has been stopped")
+            await self.bot_aiogram.send_message(message.chat.id, "Process has been stopped")
             loop = asyncio.get_running_loop()
             loop.stop()
 
@@ -376,7 +388,10 @@ class InviteBot():
                 data['url'] = message.text
                 url = message.text
             await state.finish()
-            await db_check_url_vacancy(message, url=url)
+            vacancy_text = await db_check_url_vacancy(message, url=url)
+            if vacancy_text:
+                await self.bot_aiogram.send_message(message.chat.id, vacancy_text)
+
 
         @self.dp.message_handler(commands=['emergency_push'])
         async def emergency_push(message: types.Message):
@@ -622,11 +637,17 @@ class InviteBot():
                 data['word'] = message.text
                 search_word = message.text
             await state.finish()
+            await send_log_txt(text='', write_mode='w')
             hh = HHGetInformation(
                 search_word=search_word,
                 bot_dict={'bot': self.bot_aiogram, 'chat_id': message.chat.id}
             )
             await hh.get_content()
+            await send_file_to_user(
+                message=message,
+                path=variable.path_log_check_profession,
+                caption=""
+            )
 
             # pool = Pool(processes=3)
             # result = pool.apply_async(hh.get_content, ())
@@ -657,13 +678,13 @@ class InviteBot():
                 body = data['body']
             await state.finish()
             results = await search_vacancy_in_db(title, body)
-            if not results:
+            if not results['len']:
                 await self.bot_aiogram.send_message(message.chat.id, f"not found")
             else:
                 message_for_send = ''
                 for i in results:
-                    message_for_send += f"{i}: {results[i]}"
-                await self.bot_aiogram.send_message(message.chat.id, f"search results:\n{results}")
+                    message_for_send += f"{i}: {results[i]}\n"
+                await self.bot_aiogram.send_message(message.chat.id, f"search results:\n{message_for_send}")
 
 
         @self.dp.message_handler(commands=['check_link_hh'])
@@ -759,7 +780,7 @@ class InviteBot():
                             stat_dict[date][channel] += len(re.findall(r"Вакансия: ", vacancy['message']))
                 except:
                     print(f'channel {channel} has the accidence')
-                    self.bot_aiogram.send_message(message.chat.id, f'channel {channel} has the accidence')
+                    await self.bot_aiogram.send_message(message.chat.id, f'channel {channel} has the accidence')
 
                 await asyncio.sleep(3)
 
@@ -823,7 +844,7 @@ class InviteBot():
             dict_response = VacancyFilter().sort_profession(
                 body=body,
                 title=title,
-                check_contacts=False,
+                check_contacts=True,
                 check_vacancy=True
             )
 
@@ -3275,12 +3296,9 @@ class InviteBot():
                 response = DataBaseOperations(None).get_all_from_db(
                     table_name=f'{i}',
                     param="""WHERE profession <> 'no_sort'""",
-                    # param="""WHERE profession LIKE '%designer%'""",
                     without_sort=True
                 )
 
-                # if n > 200:
-                #     break
                 await self.bot_aiogram.send_message(message.chat.id, f'There are {len(response)} records from {i}\nPlease wait...')
                 msg = await self.bot_aiogram.send_message(message.chat.id, 'progress 0%')
                 n=0
@@ -3289,7 +3307,12 @@ class InviteBot():
                     title = vacancy[2]
                     body = vacancy[3]
                     vac = vacancy[5]
-                    response_from_filter = VacancyFilter().sort_profession(title=title, body=body)
+                    response_from_filter = VacancyFilter().sort_profession(
+                        title=title,
+                        body=body,
+                        check_vacancy=False,
+                        check_contacts=False
+                    )
                     profession = response_from_filter['profession']
                     params = response_from_filter['params']
                     if vac:
@@ -3310,8 +3333,6 @@ class InviteBot():
                         current_number=n,
                         end_number = length
                     )
-                    # if n>200:
-                    #     break
             df = pd.DataFrame(
                 {
                     'title': excel_list['title'],
@@ -3516,6 +3537,8 @@ class InviteBot():
 
         async def get_news(message):
             # ----------------- make the current session and write it in DB ----------------------
+            await send_log_txt(text='', write_mode='w')
+
             self.current_session = datetime.now().strftime("%Y%m%d%H%M%S")
             DataBaseOperations(None).write_current_session(self.current_session)
             await self.bot_aiogram.send_message(message.chat.id, f'Session is {self.current_session}')
@@ -3533,6 +3556,17 @@ class InviteBot():
             # self.bot_aiogram.send_message(message.chat.id, "TG channels parsing has finished")
             await psites.call_sites()
             await self.bot_aiogram.send_message(message.chat.id, '----- PARSING HAS BEEN DONE! -----')
+            await send_file_to_user(
+                message=message,
+                path=variable.flood_control_logs_path,
+                caption="take the exception logs"
+            )
+            await send_file_to_user(
+                message=message,
+                path=variable.path_log_check_profession,
+                caption="take the profession logs"
+            )
+
 
         async def debug_function():
             response = DataBaseOperations(None).get_all_from_db(
@@ -4052,20 +4086,15 @@ class InviteBot():
             for pro in table_list:
                 response = self.db.get_all_from_db(
                     table_name=pro,
-                    field='title',
+                    field='title, body',
                     param=f"WHERE vacancy_url='{url}'"
                 )
-                # response = self.db.get_all_from_db(
-                #     table_name=pro,
-                #     field='vacancy_url',
-                #     param=f"WHERE chat_name='{url}'"
-                #     param=f"WHERE body LIKE '%В red_mad_robot мы создаём цифровые продукты, которыми пользуются миллионы людей, от маркетплейсов и экосистем до мобильных приложений и веб-порталов — и, возможно, ты один из них! Помогаем компаниям в технологической трансформации и поддерживаем стартапы, которые создают наше общее будущее. Мы ищем QA инженера, который разбирается в том, по каким критериям осуществлять оценку, составляет планы тестирования, разрабатывает тест-кейсы и делает всё, чтобы приёмочное тестирование прошло на отлично с первого раза. Что предстоит делать:   Осуществлять функциональное ручное тестирование клиент-серверных приложений (iOS, Android, Web);   Локализовывать, документировать и поддерживать дефекты;   Разрабатывать и поддерживать тест-кейсы/чек-листы;%'"
-                # )
-
                 if response:
-                    return await self.bot_aiogram.send_message(message.chat.id, f"😎 (+)Vacancy FOUND in {pro} table\n{response[0][0][0:40]}")
-
-            return await self.bot_aiogram.send_message(message.chat.id, f"😱 (-)Vacancy NOT FOUND")
+                    await self.bot_aiogram.send_message(message.chat.id, f"😎 (+)Vacancy FOUND in {pro} table\n{response[0][0][0:40]}")
+                    text = f"{response[0][0]}\n{response[0][1]}"
+                    return text
+            await self.bot_aiogram.send_message(message.chat.id, f"😱 (-)Vacancy NOT FOUND")
+            return ''
 
         start_polling(self.dp)
         # executor.start_polling(dp, skip_updates=True)

@@ -73,23 +73,6 @@ class GeekGetInformation:
     async def get_info(self):
         self.browser = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
 
-        # for word in self.search_words:
-        #     self.page_number = 0
-        #     link = f'https://geekjob.ru/vacancies'
-        #     await self.bot.send_message(self.chat_id, link, disable_web_page_preview=True)
-        #
-        #     print('page link: ', link)
-        #     try:
-        #         self.browser.get(link)
-        #     except Exception as telethon:
-        #         print('bot could not to get the link', telethon)
-        #
-        #     try:
-        #         self.browser.execute_script("window.scrollTo(0, document.body.scrollHeight);")
-        #     except:
-        #         pass
-        #     await self.get_link_message(self.browser.page_source, word)
-
         till = 6
         for self.page_number in range(1, till):
             try:
@@ -363,9 +346,10 @@ class GeekGetInformation:
         await self.output_logs(
             response_from_db=response_from_db,
             vacancy=vacancy,
+            vacancy_url=vacancy_url
         )
 
-    async def output_logs(self, response_from_db, vacancy, word=None):
+    async def output_logs(self, response_from_db, vacancy, word=None, vacancy_url=None):
 
         additional_message = ''
         profession = response_from_db['profession']
@@ -377,7 +361,7 @@ class GeekGetInformation:
 
         elif not response_from_db:
             prof_str = ", ".join(profession['profession'])
-            additional_message = f"<b>+w: {prof_str}</b>\n"
+            additional_message = f"<b>+w: {prof_str}</b>\n{vacancy_url}\n{profession['tag']}\n{profession['anti_tag']}\n"
 
             if 'no_sort' not in profession['profession']:
                 self.written_vacancies += 1
@@ -392,14 +376,6 @@ class GeekGetInformation:
                 text=new_text,
                 msg=self.current_message
             )
-
-            # self.current_message = await self.bot.edit_message_text(
-            #     f'{self.current_message.text}{new_text}',
-            #     self.current_message.chat.id,
-            #     self.current_message.message_id,
-            #     parse_mode='html',
-            #     disable_web_page_preview=True
-            # )
         else:
             new_text = f"{self.count_message_in_one_channel}. {vacancy}\n{additional_message}"
             self.current_message = await send_message(

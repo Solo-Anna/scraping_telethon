@@ -193,6 +193,7 @@ class VacancyFilter:
                     break
         else:
             anti_tags = ''
+        pass
         return {'result': key if result else '', 'tags': tags, 'anti_tags': anti_tags}
 
     def get_params(self, text, profession, all_fields_null=False):
