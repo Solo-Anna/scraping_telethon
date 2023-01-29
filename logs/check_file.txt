@@ -11915,3 +11915,237 @@ id_admin_last_session_table = 44547
 it was sending to agregator = 19018
 title = Game Designer / Геймдизайнер (гиперказуальные игры
 ------------------------------------------------------------
+              NEXT                
+-------- in callback admin -------
+id admin_channel = 1498
+id_admin_last_session_table = 46669
+it was sending to agregator = None
+title = Руководитель проекта (аренда недвижимости)
+--------------------------------------------
+--------in function push_to_admin_temporary-------
+id admin_channel = 1498
+id_admin_last_session_table = 46669
+it was sending to agregator = None
+title = Руководитель проекта (аренда недвижимости)
+------------------------------------------------------------
+              NEXT                
+-------- in callback admin -------
+id admin_channel = 1500
+id_admin_last_session_table = 46669
+it was sending to agregator = None
+title = Руководитель проекта (аренда недвижимости)
+--------------------------------------------
+--------in function push_to_admin_temporary-------
+id admin_channel = 1500
+id_admin_last_session_table = 46669
+it was sending to agregator = None
+title = Руководитель проекта (аренда недвижимости)
+------------------------------------------------------------
+              NEXT                
+-------- in callback admin -------
+id admin_channel = 1501
+id_admin_last_session_table = 46681
+it was sending to agregator = None
+title = Product Manager
+--------------------------------------------
+--------in function push_to_admin_temporary-------
+id admin_channel = 1501
+id_admin_last_session_table = 46681
+it was sending to agregator = None
+title = Product Manager
+------------------------------------------------------------
+              NEXT                
+-------- in callback admin -------
+id admin_channel = 1502
+id_admin_last_session_table = 46907
+it was sending to agregator = None
+title = Product Manager (senior)
+--------------------------------------------
+--------in function push_to_admin_temporary-------
+id admin_channel = 1502
+id_admin_last_session_table = 46907
+it was sending to agregator = None
+title = Product Manager (senior)
+------------------------------------------------------------
+              NEXT                
+-------- in callback admin -------
+id admin_channel = 1503
+id_admin_last_session_table = 47422
+it was sending to agregator = None
+title = Руководитель отдела продукта и сервиса в онлайн-шк
+--------------------------------------------
+--------in function push_to_admin_temporary-------
+id admin_channel = 1503
+id_admin_last_session_table = 47422
+it was sending to agregator = None
+title = Руководитель отдела продукта и сервиса в онлайн-шк
+------------------------------------------------------------
+              NEXT                
+-------- in callback admin -------
+id admin_channel = 1505
+id_admin_last_session_table = 46669
+it was sending to agregator = None
+title = Руководитель проекта (аренда недвижимости)
+--------------------------------------------
+--------in function push_to_admin_temporary-------
+id admin_channel = 1505
+id_admin_last_session_table = 46669
+it was sending to agregator = None
+title = Руководитель проекта (аренда недвижимости)
+------------------------------------------------------------
+              NEXT                
+-------- in callback admin -------
+id admin_channel = 1506
+id_admin_last_session_table = 46681
+it was sending to agregator = None
+title = Product Manager
+--------------------------------------------
+--------in function push_to_admin_temporary-------
+id admin_channel = 1506
+id_admin_last_session_table = 46681
+it was sending to agregator = None
+title = Product Manager
+------------------------------------------------------------
+              NEXT                
+-------- in callback admin -------
+id admin_channel = 1507
+id_admin_last_session_table = 46907
+it was sending to agregator = None
+title = Product Manager (senior)
+--------------------------------------------
+--------in function push_to_admin_temporary-------
+id admin_channel = 1507
+id_admin_last_session_table = 46907
+it was sending to agregator = None
+title = Product Manager (senior)
+------------------------------------------------------------
+              NEXT                
+-------- in callback admin -------
+id admin_channel = 1508
+id_admin_last_session_table = 47422
+it was sending to agregator = None
+title = Руководитель отдела продукта и сервиса в онлайн-шк
+--------------------------------------------
+--------in function push_to_admin_temporary-------
+id admin_channel = 1508
+id_admin_last_session_table = 47422
+it was sending to agregator = None
+title = Руководитель отдела продукта и сервиса в онлайн-шк
+------------------------------------------------------------
+              NEXT                
+-------- in callback admin -------
+id admin_channel = 1509
+id_admin_last_session_table = 47440
+it was sending to agregator = None
+title = Менеджер проекта
+--------------------------------------------
+--------in function push_to_admin_temporary-------
+id admin_channel = 1509
+id_admin_last_session_table = 47440
+it was sending to agregator = None
+title = Менеджер проекта
+------------------------------------------------------------
+              NEXT                
+-------- in callback admin -------
+id admin_channel = 1510
+id_admin_last_session_table = 47672
+it was sending to agregator = None
+title = Head of Business unit / Head of Product (Fax)
+--------------------------------------------
+--------in function push_to_admin_temporary-------
+id admin_channel = 1510
+id_admin_last_session_table = 47672
+it was sending to agregator = None
+title = Head of Business unit / Head of Product (Fax)
+------------------------------------------------------------
+              NEXT                
+-------- in callback admin -------
+id admin_channel = 1511
+id_admin_last_session_table = 47733
+it was sending to agregator = None
+title = Lead Consultant / Solution Architect
+--------------------------------------------
+--------in function push_to_admin_temporary-------
+id admin_channel = 1511
+id_admin_last_session_table = 47733
+it was sending to agregator = None
+title = Lead Consultant / Solution Architect
+------------------------------------------------------------
+              NEXT                
+-------- in callback admin -------
+id admin_channel = 1512
+id_admin_last_session_table = 47713
+it was sending to agregator = None
+title = Project Manager (внутренние проекты)
+--------------------------------------------
+--------in function push_to_admin_temporary-------
+id admin_channel = 1512
+id_admin_last_session_table = 47713
+it was sending to agregator = None
+title = Project Manager (внутренние проекты)
+------------------------------------------------------------
+              NEXT                
+-------- in callback admin -------
+id admin_channel = 1513
+id_admin_last_session_table = 47722
+it was sending to agregator = None
+title = Project Manager / Менеджер интеграций (API)
+--------------------------------------------
+--------in function push_to_admin_temporary-------
+id admin_channel = 1513
+id_admin_last_session_table = 47722
+it was sending to agregator = None
+title = Project Manager / Менеджер интеграций (API)
+------------------------------------------------------------
+              NEXT                
+-------- in callback admin -------
+id admin_channel = 1514
+id_admin_last_session_table = 47764
+it was sending to agregator = None
+title = Руководитель направления E-commerce “продажи на Ам
+--------------------------------------------
+--------in function push_to_admin_temporary-------
+id admin_channel = 1514
+id_admin_last_session_table = 47764
+it was sending to agregator = None
+title = Руководитель направления E-commerce “продажи на Ам
+------------------------------------------------------------
+              NEXT                
+-------- in callback admin -------
+id admin_channel = 1515
+id_admin_last_session_table = 47779
+it was sending to agregator = None
+title = Менеджер проекта
+--------------------------------------------
+--------in function push_to_admin_temporary-------
+id admin_channel = 1515
+id_admin_last_session_table = 47779
+it was sending to agregator = None
+title = Менеджер проекта
+------------------------------------------------------------
+              NEXT                
+-------- in callback admin -------
+id admin_channel = 1516
+id_admin_last_session_table = 47783
+it was sending to agregator = None
+title = Проджект менеджер
+--------------------------------------------
+--------in function push_to_admin_temporary-------
+id admin_channel = 1516
+id_admin_last_session_table = 47783
+it was sending to agregator = None
+title = Проджект менеджер
+------------------------------------------------------------
+              NEXT                
+-------- in callback admin -------
+id admin_channel = 1517
+id_admin_last_session_table = 47791
+it was sending to agregator = None
+title = Менеджер проекта/менеджер по аренде
+--------------------------------------------
+--------in function push_to_admin_temporary-------
+id admin_channel = 1517
+id_admin_last_session_table = 47791
+it was sending to agregator = None
+title = Менеджер проекта/менеджер по аренде
+------------------------------------------------------------

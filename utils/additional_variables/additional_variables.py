@@ -6,6 +6,11 @@ archive_database = 'archive'
 admin_table_fields = "id, chat_name, title, body, profession, vacancy, vacancy_url, company, english, relocation, " \
                              "job_type, city, salary, experience, contacts, time_of_public, created_at, agregator_link, " \
                              "session, sended_to_agregator, sub"
+profession_table_fields = "id, chat_name, title, body, profession, vacancy, vacancy_url, company, english, relocation, " \
+                             "job_type, city, salary, experience, contacts, time_of_public, created_at, agregator_link, " \
+                             "session, sub"
+
+
 fields_admin_temporary = "id_admin_channel, id_admin_last_session_table, sended_to_agregator"
 
 additional_elements = {'admin_last_session', 'archive'}

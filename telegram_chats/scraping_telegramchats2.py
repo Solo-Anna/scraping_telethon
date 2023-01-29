@@ -166,10 +166,6 @@ class WriteToDbMessages():
             chat_id=self.bot_dict['chat_id'],
             text=new_text
         )
-        # self.msg = await self.bot_dict['bot'].send_message(self.bot_dict['chat_id'], f'<em>channel {channel}</em>', parse_mode='html', disable_web_page_preview = True)
-
-        # data = await self.client.get_entity('https://t.me/fake_adminka')
-        # print(data)
 
         while True:
             try:
@@ -285,7 +281,6 @@ class WriteToDbMessages():
 
             # STEP NEXT/ Get the profession/ previous it needs to get companies list from table companies
             #           I have got the companies previous. Look at up
-            # self.companies = DataBaseOperations(con=con).get_all_from_db(table_name='companies', without_sort=True)  # check!!!
 
             response = VacancyFilter().sort_profession(title, body)
             profession = response['profession']
@@ -294,9 +289,6 @@ class WriteToDbMessages():
             # STEP1/ we need to write to DB by professions that message with last message's id in agregator_channel
             #       I can get this with DBOperations()
 
-            # if 'no_sort' not in profession['profession']:
-            # profession = await self.clear_not_valid_professions(profession)  # delete not valid keys (middle, senior and others)
-            # print('valid professions ', profession['profession'])
             if profession['profession']:
                 for key in params:
                     if not results_dict[key] and params[key]:
@@ -322,239 +314,6 @@ class WriteToDbMessages():
             i.delete()
         self.msg = []
 
-    # async def get_last_and_tgpublic_shorts(self, current_session, shorts=False, fulls_all=False, one_profession=None):
-    #     """
-    #     It gets last messages from profession's tables,
-    #     composes shorts from them
-    #     and send to profession's tg channels
-    #     Here user decide short or full sending
-    #
-    #     """
-    #     logs.write_log(f"scraping_telethon2: function: get_last_and_tgpublic_shorts")
-    #
-    #     self.companies = DataBaseOperations(None).get_all_from_db(table_name='companies', without_sort=True)  # check!!!
-    #
-    #     # get current session
-    #     if not current_session:
-    #         pass
-    #         current_session = DataBaseOperations(None).get_all_from_db(
-    #             table_name='current_session',
-    #             param='ORDER BY id DESC LIMIT 1',
-    #             without_sort=True,
-    #             order=None,
-    #             field='session',
-    #             curs=None
-    #         )
-    #         for value in current_session:
-    #             self.current_session = value[0]
-    #     else:
-    #         self.current_session = current_session
-    #
-    #     if one_profession:
-    #         self.last_id_agregator = await self.get_last_id_agregator()
-    #
-    #     if shorts:
-    #         await self.send_sorts()  # 1. for send shorts
-    #     elif not fulls_all:
-    #         await self.send_fulls(all=False, one_profession=one_profession)  # 2. for send last full messages from db
-    #     else:
-    #         await self.send_fulls(all=True, one_profession=one_profession)  # 2. for send last full messages from db
-    #
-    #     await self.bot_dict['bot'].send_message(self.bot_dict['chat_id'], 'Telegram channels parsing: DONE')
-
-    # async def send_sorts(self):
-    #
-    #     logs.write_log(f"scraping_telethon2: function: send_sorts")
-    #
-    #     messages_counter = 1
-    #     short_message = ''
-    #     for pro in self.valid_profession_list:
-    #         print(f"It gets from profession's tables = {pro}")
-    #         # get last records from table with profession PRO
-    #         # param = f"WHERE created_at > '{time_start['year']}-{time_start['month']}-{time_start['day']} {time_start['hour']}:{time_start['minute']}:{time_start['sec']}'"
-    #         param = f"WHERE session='{self.current_session}'"
-    #         response_messages = DataBaseOperations(None).get_all_from_db(pro,
-    #                                                                         param=param)  # check!!!
-    #         for response in response_messages:
-    #             title = response[2]
-    #             body = response[3]
-    #             agregator_id = response[7]
-    #             # response_params = AlexSort2809().sort_by_profession_by_Alex(title, body, self.companies)
-    #             response_params = AlexSort2809().sort_by_profession_by_Alex(title, body)
-    #
-    #             params = response_params['params']
-    #             short_message += f"Вакансия: \n"
-    #             short_message += f"Компания: {params['company_hiring']}\n" if params['company_hiring'] else ''
-    #             short_message += f"English: {params['english_level']}\n" if params['english_level'] else ''
-    #             short_message += f"Тип работы: {params['jobs_type']}\n" if params['jobs_type'] else ''
-    #             short_message += f"Релокация: {params['relocation']}\n" if params['relocation'] else ''
-    #             short_message += f"Город: {params['city']}\n" if params['city'] else ''
-    #             short_message += hlink('Подробнее >>>\n\n', f"{config['My_channels']['agregator_link']}/{agregator_id}")
-    #
-    #             # STEP4/ send this shorts in channels
-    #             if messages_counter > 5 or messages_counter == len(response_messages):
-    #                 short_message = f"Вакансии для {pro}:\n\n" + short_message
-    #                 await self.bot_dict['bot'].send_message(
-    #                     config['My_channels'][f"{pro}_channel"],
-    #                     short_message, parse_mode='HTML',
-    #                     disable_web_page_preview = True)
-    #
-    #                 print(f'\nprinted short in channel {pro}\n')
-    #                 time.sleep(2)
-    #                 short_message = ''
-    #                 messages_counter = 1
-    #             else:
-    #                 messages_counter += 1
-    #
-    # async def send_fulls(self, all, one_profession=None):
-    #
-    #     logs.write_log(f"scraping_telethon2: function: send_fulls")
-    #
-    #     professions_amount = []
-    #     param = ''
-    #     profession_list = {}
-    #     profession_list['profession'] = []
-    #     results_dict = {}
-    #
-    #     if not all:
-    #         param = f"WHERE session='{self.current_session}'"
-    #
-    #     if one_profession:
-    #         one_profession = one_profession[2:]
-    #         if param:
-    #             param += f" AND profession LIKE '%{one_profession}%'"
-    #         else:
-    #             param = f"WHERE profession LIKE '%{one_profession}%'"
-    #
-    #     # 1) choose all records with one_profession
-    #     response_messages = DataBaseOperations(None).get_all_from_db('admin_last_session', param=param)
-    #     await self.bot_dict['bot'].send_message(self.bot_dict['chat_id'], f"There are {len(response_messages)} vacancies")
-    #     self.message = await self.bot_dict['bot'].send_message(self.bot_dict['chat_id'], f'progress {self.percent}%')
-    #     n = 0
-    #     for message in response_messages:
-    #         n += 1
-    #         await self.show_process(n, len(response_messages))
-    #
-    #         if message[4]:
-    #             profession_list['profession'] = []
-    #             print(message[4])
-    #             if ',' in message[4]:
-    #                 pro = message[4].split(',')
-    #             else:
-    #                 pro = [message[4]]
-    #
-    #             for i in pro:
-    #                 profession_list['profession'].append(i.strip())
-    #
-    #             if one_profession:
-    #                 professions_amount = profession_list['profession']  # count how much of professions
-    #                 profession_list['profession'] = [one_profession,]  # rewrite list if one_profession
-    #
-    #             results_dict['chat_name'] = message[1]
-    #             results_dict['title'] = message[2]
-    #             results_dict['body'] = message[3]
-    #             results_dict['profession'] = message[4]
-    #             results_dict['vacancy'] = message[5]
-    #             results_dict['vacancy_url'] = message[6]
-    #             results_dict['company'] = message[7]
-    #             results_dict['english'] = message[8]
-    #             results_dict['relocation'] = message[9]
-    #             results_dict['job_type'] = message[10]
-    #             results_dict['city'] = message[11]
-    #             results_dict['salary'] = message[12]
-    #             results_dict['experience'] = message[13]
-    #             results_dict['contacts'] = message[14]
-    #             results_dict['time_of_public'] = message[15]
-    #             results_dict['created_at'] = message[16]
-    #             results_dict['agregator_link'] = message[17]
-    #             results_dict['session'] = message[18]
-    #             sended_to_agregator = message[19]
-    #
-    #             if sended_to_agregator:
-    #                 results_dict['agregator_link'] = sended_to_agregator
-    #
-    #             # compose message_to_send
-    #             message_to_send = ''
-    #             if results_dict['vacancy']:
-    #                 message_to_send += f"<b>Вакансия:</b> {results_dict['vacancy']}\n"
-    #             if results_dict['company']:
-    #                 message_to_send += f"<b>Компания:</b> {results_dict['company']}\n"
-    #             if results_dict['english']:
-    #                 message_to_send += f"<b>Английский:</b> {results_dict['english']}\n"
-    #             if results_dict['relocation']:
-    #                 message_to_send += f"<b>Релокация:</b> {results_dict['relocation']}\n"
-    #             if results_dict['job_type']:
-    #                 message_to_send += f"<b>Тип работы:</b> {results_dict['job_type']}\n"
-    #             if results_dict['city']:
-    #                 message_to_send += f"<b>Город/страна:</b> {results_dict['city']}\n"
-    #             if results_dict['salary']:
-    #                 message_to_send += f"<b>Зарплата:</b> {results_dict['salary']}\n"
-    #             if results_dict['experience']:
-    #                 message_to_send += f"<b>Опыт работы:</b> {results_dict['experience']}\n"
-    #             if results_dict['contacts']:
-    #                 message_to_send += f"<b>Контакты:</b> {results_dict['contacts']}\n"
-    #             elif results_dict['vacancy_url']:
-    #                 message_to_send += f"<b>Ссылка на вакансию:</b> {results_dict['vacancy_url']}\n\n"
-    #
-    #             message_to_send += f"{results_dict['title']}\n"
-    #             message_to_send += results_dict['body']
-    #
-    #             if len(message_to_send) > 4096:
-    #                 message_to_send = message_to_send[0:4092] + '...'
-    #
-    #             # push to profession tables
-    #             profession_list = await self.clear_not_valid_professions(profession_list)
-    #             response_dict = DataBaseOperations(None).push_to_bd(results_dict, profession_list, self.last_id_agregator)
-    #
-    #             # push to agregator
-    #             # if profession is not no_sort than public in agregator, else public to n0_sort
-    #             if 'no_sort' not in response_dict and False in response_dict.values() and not sended_to_agregator:  # sended_to_agregator shows it was sended to agregator yet
-    #                 await self.bot_dict['bot'].send_message(config['My_channels']['agregator_channel'], message_to_send, parse_mode='html')
-    #                 results_dict['agregator_link'] = self.last_id_agregator
-    #
-    #                 # if it was sending to agregator that I give it the number agregator message for mark that as has sended already
-    #                 DataBaseOperations(None).run_free_request(request=f"UPDATE admin_last_session SET sended_to_agregator='{self.last_id_agregator}' WHERE id={message[0]}")
-    #
-    #                 self.last_id_agregator += 1
-    #                 print(f'Send to TG channel agregator\n')
-    #                 await asyncio.sleep(random.randrange(5, 17))
-    #
-    #             # push to profession channels
-    #             print('for check: id message = ', message[0])
-    #             pass
-    #             for channel in response_dict:
-    #                 if not response_dict[channel]:
-    #                     try:
-    #                         await self.bot_dict['bot'].send_message(config['My_channels'][f'{channel}_channel'],
-    #                                                                 message_to_send, parse_mode='html')
-    #                     except Exception as telethon:
-    #                         await self.bot_dict['bot'].send_message(self.bot_dict['chat_id'],
-    #                                                                 f"error: channel - {channel}")  # I had the error from sending to some channel
-    #                     print(f'Send to TG channel {channel}\n')
-    #                     await asyncio.sleep(random.randrange(5, 17))
-    #
-    #             if not one_profession or (one_profession and len(professions_amount)<2):  # 3) if this vacancy has not another professions - delete it
-    #                 # delete from admin_last_session
-    #                 id_message_from_admin = message[0]
-    #                 DataBaseOperations(None).delete_data(
-    #                     table_name='admin_last_session',
-    #                     param=f"WHERE id={id_message_from_admin}"
-    #                 )
-    #                 print(f'Message id {id_message_from_admin} was deleted')
-    #             else:
-    #                 #  4) if this vacancy has another professions - don't delete.
-    #                 # 	But add it message_id in agregator channel to it to know that it was publishing
-    #                 # 	And delete from professions that one_profession
-    #                 profession = ''
-    #                 for pro in professions_amount:
-    #                     if pro != one_profession:
-    #                         profession += f"{pro}, "
-    #                 profession = profession[:-2]
-    #                 DataBaseOperations(None).run_free_request(request=f"UPDATE admin_last_session SET profession='{profession}' WHERE id={message[0]}")
-    #
-    #         else:
-    #             print('message[4] doesnt exist. id=  ', message[0])
-    #         pass
 
     async def show_process(self, n, len):
         check = n*100//len
@@ -563,30 +322,6 @@ class WriteToDbMessages():
             self.percent = check
             self.message = await self.bot_dict['bot'].edit_message_text(f"progress {'|'* quantity} {self.percent}%", self.bot_dict['chat_id'], self.message.message_id)
 
-    # async def clear_not_valid_professions(self, profession):
-    #
-    #     logs.write_log(f"scraping_telethon2: function: clear_not_valid_professions")
-    #
-    #     # check if is it set or list? There is used methods for set, not for list and generated the error
-    #     if type(profession['profession']) is list:
-    #         profession['profession'] = set(profession['profession'])
-    #
-    #     if 'fullstack' in profession['profession']:
-    #         if 'backend' not in profession['profession']:
-    #             profession['profession'].update({'backend'},)
-    #         if 'frontend' not in profession['profession']:
-    #             profession['profession'].update({'frontend'},)
-    #
-    #     exclude_list = []
-    #     values_list = profession['profession']
-    #     for value in values_list:
-    #         if value not in self.valid_profession_list:
-    #             exclude_list.append(value)
-    #     for exclude in exclude_list:
-    #         profession['profession'].remove(exclude)
-    #     if not profession['profession']:
-    #         profession['profession'] = ['no_sort']
-    #     return profession
 
     async def get_last_id_agregator(self):
 
@@ -606,8 +341,6 @@ class WriteToDbMessages():
     async def main_start(self, list_links, limit_msg, action):
 
         print('main_start')
-        # self.last_id_agregator = 0
-        # self.last_id_agregator = await self.get_last_id_agregator()+1
 
         if action == 'get_message':
             for url in list_links:

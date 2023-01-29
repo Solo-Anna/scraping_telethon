@@ -260,6 +260,9 @@ class InviteBot():
                                                             '⛔️/numbers_of_archive\n'
                                                             '⛔️/get_flood_error_logs\n'
                                                             '⛔️/how_many_records_in_db_table - shows quantity of records in db table\n'
+                                                            '⛔️/get_vacancy_for_example\n'
+                                                            '⛔️/get_vacancy_from_backend\n'
+                                                            '⛔️/add_and_push_subs\n'
                                                             '----------------------------------------------------\n\n'
                                                             '---------------- PARSING: ----------------\n'
                                                             '🔆/magic_word - input word and get results from hh.ru\n'
@@ -292,6 +295,37 @@ class InviteBot():
                                                             '/add_statistics\n\n'
                                                             '---------------------------------------------------\n\n'
                                                             '❗️- it is admin options')
+
+        @self.dp.message_handler(commands=['get_vacancy_from_backend'])
+        async def get_vacancy_from_backend_command(message: types.Message):
+            await get_vacancy_from_backend(message, table_name='backend')
+
+        @self.dp.message_handler(commands=['add_and_push_subs'])
+        async def add_and_push_subs_command(message: types.Message):
+            await add_subs()
+            await push_subs(message=message)
+
+        @self.dp.message_handler(commands=['get_vacancy_for_example'])
+        async def get_vacancy_for_example_command(message: types.Message):
+            response_dict = {}
+            response = self.db.get_all_from_db(
+                table_name=variable.admin_database,
+                field=variable.admin_table_fields
+            )
+            if response:
+                response_dict = await helper.to_dict_from_admin_response(
+                    response=response[random.randrange(0, len(response))],
+                    fields=variable.admin_table_fields
+                )
+                if len(str(response_dict))<4096:
+                    await self.bot_aiogram.send_message(message.chat.id, response_dict)
+                else:
+                    await self.bot_aiogram.send_message(message.chat.id, 'to long')
+
+            else:
+                await self.bot_aiogram.send_message(message.chat.id, 'not response')
+
+
 
         @self.dp.message_handler(commands=['get_profession_parsing_tags_log'])
         async def get_profession_parsing_tags_log_command(message: types.Message):
@@ -918,6 +952,20 @@ class InviteBot():
                         results_dict['experience'] = ''
                         results_dict['contacts'] = ''
                         results_dict['session'] = '20221114114824'
+                        results_dict['sub'] = ''
+
+                        sub = VacancyFilter().sort_profession(
+                            title=results_dict['title'],
+                            body=results_dict['body'],
+                            check_contacts=False,
+                            check_vacancy=True,
+                            get_params=False
+                        )['profession']['sub']
+
+                        if profession in sub:
+                            results_dict['sub'] = f"{profession}: {', '.join(results_dict['sub'][profession])}"
+                        else:
+                            results_dict['sub'] = f"{profession}: "
 
                         is_exist = DataBaseOperations(None).get_all_from_db(
                             table_name=profession,
@@ -2111,7 +2159,8 @@ class InviteBot():
                 # choose from db regarding profession
                 response = self.db.get_all_from_db(
                     table_name='admin_last_session',
-                    param = f"WHERE profession LIKE '%{profession}' OR profession LIKE '%{profession},%'"
+                    param=f"WHERE profession LIKE '%{profession}' OR profession LIKE '%{profession},%'",
+                    field=variable.admin_table_fields
                 )
                 if response:
                     await self.bot_aiogram.send_message(message.chat.id, f"{profession} in progress...")
@@ -2598,13 +2647,13 @@ class InviteBot():
 
             # code for transpose in shorts like reference
 
-                remote_pattern = export_pattern['others']['remote']['ma'][:40]
-                relocate_pattern = export_pattern['others']['relocate']['ma'][:40]
-                experience_pattern = export_pattern['others']['relocate']['ma'][:40]
-                english_pattern = export_pattern['others']['english_for_shorts']['ma'][:40]
-                salary_patterns = export_pattern['others']['salary_for_shorts']['ma'][:40]
-                city_pattern = export_pattern['others']['city_for_shorts']['ma'][:40]
-                vacancy_pattern = export_pattern['others']['vacancy']['sub'][:100]
+                remote_pattern = export_pattern['others']['remote']['ma']
+                relocate_pattern = export_pattern['others']['relocate']['ma']
+                experience_pattern = export_pattern['others']['relocate']['ma']
+                english_pattern = export_pattern['others']['english_for_shorts']['ma']
+                salary_patterns = export_pattern['others']['salary_for_shorts']['ma']
+                city_pattern = export_pattern['others']['city_for_shorts']['ma']
+                vacancy_pattern = export_pattern['others']['vacancy']['sub']
 
                 remote_shorts = ''
                 relocate_shorts = ''
@@ -2720,7 +2769,7 @@ class InviteBot():
                         vacancy = f"Вакансия #{random.randrange(100, 5000)}"
                     message_for_send += f"<a href=\"{config['My_channels']['agregator_link']}/" \
                                         f"{vacancy_from_admin_dict['sended_to_agregator']}\">" \
-                                        f"<b>{vacancy}</b></a> "
+                                        f"<b>{vacancy[0:40]}</b></a> "
 
                     company = ''
                     if vacancy_from_admin_dict['company']:
@@ -2728,27 +2777,27 @@ class InviteBot():
                     elif params['company']:
                         company = params['company']
                     if company:
-                        message_for_send += f"в {company.strip()} "
+                        message_for_send += f"в {company.strip()[:40]} "
 
                     message_for_send += '('
 
                     if city_shorts:
-                        message_for_send += f"{city_shorts}, "
+                        message_for_send += f"{city_shorts[:40]}, "
 
                     if english_shorts:
-                        message_for_send += f"eng: {english_shorts}, "
+                        message_for_send += f"eng: {english_shorts[:40]}, "
 
                     if experience_shorts:
-                        message_for_send += f"exp: {experience_shorts} year(s), "
+                        message_for_send += f"exp: {experience_shorts[:40]} year(s), "
 
                     if relocate_shorts:
-                        message_for_send += f"{relocate_shorts.capitalize()}, "
+                        message_for_send += f"{relocate_shorts.capitalize()[:40]}, "
 
                     if remote_shorts:
-                        message_for_send += f"{remote_shorts.capitalize()}, "
+                        message_for_send += f"{remote_shorts.capitalize()[:40]}, "
 
                     if salary_shorts:
-                        message_for_send += f"{salary_shorts}, "
+                        message_for_send += f"{salary_shorts[:40]}, "
                 # end of code
 
                 else:
@@ -3649,13 +3698,7 @@ class InviteBot():
             # get messages from TG admin
             history_messages = await get_tg_history_messages(message)
             self.out_from_admin_channel = len(history_messages)
-            # message_for_send = f'<i>Функционал дайджеста находится в состоянии альфа-тестирования, приносим свои ' \
-            #                    f'извинения, мы работаем над тем чтобы вы получали информацию максимально ' \
-            #                    f'качественную и в сжатые сроки</i>\n\n' \
-            #                    f'<b>Дайджест вакансий для {profession} за {datetime.now().strftime("%d.%m.%Y")}:</b>\n\n'
-
             message_for_send = f'<b>Дайджест вакансий для {profession} за {datetime.now().strftime("%d.%m.%Y")}:</b>\n\n'
-
 
             length = len(history_messages)
             n = 0
@@ -3684,15 +3727,11 @@ class InviteBot():
                     vacancy_from_admin_dict = await helper.to_dict_from_admin_response(vacancy_from_admin[0],
                                                                                        variable.admin_table_fields)
 
-                    # prof_stack = vacancy_from_admin[0][4]
 
                     # if vacancy has sent in agregator already, it doesn't push again. And remove profess from profs or drop vacancy if there is profession alone
                     await push_vacancies_to_agregator_from_admin(
                         message=message,
                         vacancy_message=vacancy,
-                        # vacancy_from_admin=vacancy_from_admin,
-                        # response=response,
-                        # profession=profession,
                         prof_stack=vacancy_from_admin_dict['profession'],
                         response_temp_dict=response_temp_dict,
                         vacancy_from_admin_dict=vacancy_from_admin_dict,
@@ -3704,13 +3743,9 @@ class InviteBot():
                         # ---------- the unique operation block for fulls = pushing to prof channel full message ----------
                         print('push vacancy in channel\n')
                         print(f"\n{vacancy['message'][0:40]}")
-                        # response_dict = await compose_for_push_to_db(response, profession)
-                        # if False in response_dict.values():
                         await self.bot_aiogram.send_message(int(config['My_channels'][f'{profession}_channel']),
                                                             vacancy['message'])
                         await asyncio.sleep(random.randrange(3, 4))
-                        # else:
-                        #     print('It has been got True from db')
                     # ------------------- end of  pushing to prof channel full message -----------------
 
                     elif "shorts" in callback_data:
@@ -3739,7 +3774,6 @@ class InviteBot():
                         await compose_data_and_push_to_db(
                             vacancy_from_admin_dict=vacancy_from_admin_dict,
                             profession=profession,
-                            # vacancy_from_admin=vacancy_from_admin,
                         )
                         prof_list = vacancy_from_admin_dict['profession'].split(', ')
                         profession_list['profession'] = [profession, ]
@@ -4108,6 +4142,80 @@ class InviteBot():
                     return text
             await self.bot_aiogram.send_message(message.chat.id, f"😱 (-)Vacancy NOT FOUND")
             return ''
+
+        async def add_subs():
+            self.db.append_columns(
+                table_name_list=variable.valid_professions,
+                column='sub VARCHAR (250)'
+            )
+
+        async def push_subs(message):
+            progress = ShowProgress(
+                bot_dict={
+                    'bot': self.bot_aiogram,
+                    'chat_id': message.chat.id
+                }
+            )
+            sub_write_to_db = ''
+            fields = 'id, title, body, profession'
+
+
+            for table_name in variable.valid_professions:
+                response_all_vacancies = self.db.get_all_from_db(
+                    table_name=table_name,
+                    field=fields
+                )
+                await self.bot_aiogram.send_message(message.chat.id, table_name)
+                length = len(response_all_vacancies)
+                n = 0
+                msg = await self.bot_aiogram.send_message(message.chat.id, "progress 0%")
+                await progress.reset_percent()
+
+                if response_all_vacancies:
+                    for vacancy in response_all_vacancies:
+                        profession = VacancyFilter().sort_profession(
+                            title=vacancy[1],
+                            body=vacancy[2],
+                            check_contacts=False,
+                            check_profession=True,
+                            check_vacancy=False,
+                            get_params=False
+                        )
+                        subs = profession['profession']['sub']
+
+                        if table_name in subs:
+                            sub_write_to_db = f"{table_name}: {', '.join(subs[table_name])}"
+                        else:
+                            sub_write_to_db = f"{table_name}: "
+
+                        self.db.update_table(
+                            table_name=table_name,
+                            param=f"WHERE id={vacancy[0]}",
+                            field='sub',
+                            value=sub_write_to_db
+                        )
+                        n += 1
+                        await progress.show_the_progress(msg, n, length)
+
+                else:
+                    await self.bot_aiogram.send_message(message.chat.id, "Sorry, but it has not any response")
+
+        async def get_vacancy_from_backend(message, table_name):
+            response_all_vacancies = self.db.get_all_from_db(
+                table_name=table_name,
+                field=variable.profession_table_fields
+            )
+            if response_all_vacancies:
+                response_dict = await helper.to_dict_from_admin_response(
+                    response=response_all_vacancies[random.randrange(0, len(response_all_vacancies))],
+                    fields=variable.profession_table_fields
+                )
+                if len(str(response_dict))<4096:
+                    await self.bot_aiogram.send_message(message.chat.id, str(response_dict))
+                else:
+                    await self.bot_aiogram.send_message(message.chat.id, "Sorry, but it has not any response")
+
+
 
         start_polling(self.dp)
         # executor.start_polling(dp, skip_updates=True)

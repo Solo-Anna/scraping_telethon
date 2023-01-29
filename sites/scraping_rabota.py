@@ -225,8 +225,12 @@ class RabotaGetInformation:
         print('passed soup = BeautifulSoup(self.browser.page_source, \'lxml\')')
 
         # get vacancy ------------------------
-        vacancy = soup.find('div', class_='vacancy-title').find('span').get_text()
-        print('vacancy = ', vacancy)
+        vacancy = ''
+        try:
+            vacancy = soup.find('div', class_='vacancy-title').find('span').get_text()
+            print('vacancy = ', vacancy)
+        except:
+            print('vacancy not found')
 
         # get title --------------------------
         title = vacancy

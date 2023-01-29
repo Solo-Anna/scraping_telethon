@@ -120,8 +120,6 @@ class DataBaseOperations:
     #--------------------------------------------------
     def check_or_create_table(self, cur, table_name):
 
-        logs.write_log(f"scraping_db: function: check_or_create_table")
-
         cur = self.con.cursor()
 
         with self.con:
@@ -144,6 +142,7 @@ class DataBaseOperations:
                             time_of_public TIMESTAMP,
                             created_at TIMESTAMP,
                             agregator_link VARCHAR(200),
+                            sub VARCHAR (250),  
                             session VARCHAR(15),
                             FOREIGN KEY (session) REFERENCES current_session(session)
                             );"""
@@ -152,26 +151,12 @@ class DataBaseOperations:
 
     def push_to_bd(self, results_dict, profession_list=None, agregator_id=None):
 
-        logs.write_log(f"scraping_db: function: push_to_bd")
-
         response_dict = {}
         if not self.con:
             self.connect_db()
         cur = self.con.cursor()
 
-#         chat_name = results_dict['chat_name']
-#         title = results_dict['title'].replace(f'\'', '"')
-#         body = str(results_dict['body']).replace(f'\'', '"')
         pro = profession_list['profession']
-# # -------------------- if add or no_sort -------------------
-#         if profession_list['profession'] in ['ad', 'no_sort'] and len(profession_list)>1:
-#             profession_list = {'profession': profession_list['profession']}
-#         print(f'\nResponse DB: profession = {pro}\n')
-#         time_of_public = results_dict['time_of_public']
-#         try:
-#             created_at = results_dict['created_at']
-#         except:
-#             created_at = datetime.now()
         self.quant = 1
 # -------------------------- create short message --------------------------------
         if type(pro) is list or type(pro) is set:
@@ -214,25 +199,35 @@ class DataBaseOperations:
         if not r and r2:
             pass
 
-
         if not r and not r2:
+
+            # to get the one sub only
+            results_dict['sub'] = helper.decompose_from_str_to_list(
+                data_str=results_dict['sub']
+            )
+            if pro in results_dict['sub']:
+                results_dict['sub'] = f"{pro}: {', '.join(results_dict['sub'][pro])}"
+            else:
+                results_dict['sub'] = f"{pro}: "
+
             response_dict[pro] = False
+
             new_post = f"""INSERT INTO {pro} (
             chat_name, title, body, profession, vacancy, vacancy_url, company, english, relocation, job_type, 
-            city, salary, experience, contacts, time_of_public, created_at, agregator_link, session) 
+            city, salary, experience, contacts, time_of_public, created_at, agregator_link, session, sub) 
                         VALUES ('{results_dict['chat_name']}', '{results_dict['title']}', '{results_dict['body']}', 
                         '{pro}', '{results_dict['vacancy']}', '{results_dict['vacancy_url']}', '{results_dict['company']}', 
                         '{results_dict['english']}', '{results_dict['relocation']}', '{results_dict['job_type']}', 
                         '{results_dict['city']}', '{results_dict['salary']}', '{results_dict['experience']}', 
                         '{results_dict['contacts']}', '{results_dict['time_of_public']}', '{datetime.now()}', '{agregator_id}', 
-                        '{results_dict['session']}');"""
+                        '{results_dict['session']}', '{results_dict['sub']}');"""
             # print('query in db: ', new_post)
             with self.con:
                 try:
                     cur.execute(new_post)
                     print(self.quant, f'+++++++++++++ The vacancy has been added to DB {pro}\n')
                 except Exception as e:
-                    print('didnt push in DB ', e)
+                    print('Did not push to DB ', e)
                     pass
 
                 self.quant += 1

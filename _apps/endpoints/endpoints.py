@@ -8,6 +8,7 @@ import random
 from db_operations.scraping_db import DataBaseOperations
 from utils.additional_variables.additional_variables import admin_database, admin_table_fields
 from helper_functions.helper_functions import to_dict_from_admin_response
+from flask_cors import CORS, cross_origin
 
 db=DataBaseOperations(None)
 
@@ -29,8 +30,10 @@ con = psycopg2.connect(
     port=port
 )
 
+
 async def main_endpoints():
     app = Flask(__name__)
+    CORS(app)
 
     @app.route("/")
     async def hello_world():
@@ -39,24 +42,17 @@ async def main_endpoints():
 
     @app.route("/get-all-vacancies")
     async def get_all_vacancies():
-        all_vacancies = {}
-        all_vacancies['vacancies'] = {}
-        response = db.get_all_from_db(
-            table_name=admin_database,
-            param="WHERE profession <> 'no_sort'",
-            field=admin_table_fields
-        )
-        number=0
-        for vacancy in response:
-            vacancy_dict = await to_dict_from_admin_response(
-                response=vacancy,
-                fields=admin_table_fields
-            )
-            if number<100:
-                all_vacancies['vacancies'][str(number)] = vacancy_dict
-            number += 1
-        return json.dumps(all_vacancies)
+        return await get_all_vacancies_from_db()
 
+    @app.route("/get-all-vacancies2")
+    async def get_all_vacancies1():
+        print('!!!!!!!!!!!!!!!')
+        return await get_all_vacancies_from_db()
+
+    @app.route("/get-all-vacancies3")
+    async def get_all_vacancies3():
+
+        return await get_all_vacancies_from_db()
 
     @app.route("/get")
     async def hello_world2():
@@ -81,6 +77,25 @@ async def main_endpoints():
             cur.execute(query)
         response = cur.fetchall()
         return response
+
+    async def get_all_vacancies_from_db():
+        all_vacancies = {}
+        all_vacancies['vacancies'] = {}
+        response = db.get_all_from_db(
+            table_name=admin_database,
+            param="WHERE profession <> 'no_sort'",
+            field=admin_table_fields
+        )
+        number = 0
+        for vacancy in response:
+            vacancy_dict = await to_dict_from_admin_response(
+                response=vacancy,
+                fields=admin_table_fields
+            )
+            if number < 100:
+                all_vacancies['vacancies'][str(number)] = vacancy_dict
+            number += 1
+        return all_vacancies
 
     app.run(host=localhost, port=int(os.environ.get('PORT', 5000)))
 
