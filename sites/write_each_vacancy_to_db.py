@@ -33,3 +33,15 @@ def write_each_vacancy(results_dict):
         return {'response_from_db': response_from_db, "profession": profession}
     return {'response_from_db': exist_or_not, "profession": None}
 
+async def get_name_session():
+    current_session = DataBaseOperations(None).get_all_from_db(
+        table_name='current_session',
+        param='ORDER BY id DESC LIMIT 1',
+        without_sort=True,
+        order=None,
+        field='session',
+        curs=None
+    )
+    for value in current_session:
+        current_session = value[0]
+    return  current_session

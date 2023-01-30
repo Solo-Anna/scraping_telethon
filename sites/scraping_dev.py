@@ -3,19 +3,15 @@ import re
 from datetime import datetime
 import pandas as pd
 from selenium import webdriver
-from selenium.webdriver.common.by import By
-from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service
 from webdriver_manager.chrome import ChromeDriverManager
 from bs4 import BeautifulSoup
-
-import helper_functions.helper_functions
 from db_operations.scraping_db import DataBaseOperations
 from sites.sites_additional_utils.get_structure import get_structure, get_structure_advance
-from sites.write_each_vacancy_to_db import write_each_vacancy
+from sites.write_each_vacancy_to_db import write_each_vacancy, get_name_session
 from settings.browser_settings import options, chrome_driver_path
 from utils.additional_variables.additional_variables import sites_search_words
-from helper_functions.helper_functions import edit_message, send_message, get_name_session
+from helper_functions.helper_functions import edit_message, send_message
 
 junior_link = 'https://jobs.devby.io/?filter[levels][]=intern&filter[levels][]=junior'
 link_search = 'https://jobs.devby.io/?&filter[search]=project%20manager'

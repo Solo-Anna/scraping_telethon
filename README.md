@@ -9,5 +9,3 @@ What does do this project
 - sends vacancies to thematic telegram channels (fulls and shorts)
 
 - invites people to telegram channels
-
-- 
