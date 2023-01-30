@@ -8,12 +8,14 @@ from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service
 from webdriver_manager.chrome import ChromeDriverManager
 from bs4 import BeautifulSoup
+
+import helper_functions.helper_functions
 from db_operations.scraping_db import DataBaseOperations
 from sites.sites_additional_utils.get_structure import get_structure, get_structure_advance
 from sites.write_each_vacancy_to_db import write_each_vacancy
 from settings.browser_settings import options, chrome_driver_path
 from utils.additional_variables.additional_variables import sites_search_words
-from helper_functions.helper_functions import edit_message, send_message
+from helper_functions.helper_functions import edit_message, send_message, get_name_session
 
 junior_link = 'https://jobs.devby.io/?filter[levels][]=intern&filter[levels][]=junior'
 link_search = 'https://jobs.devby.io/?&filter[search]=project%20manager'
@@ -146,16 +148,18 @@ class DevGetInformation:
 
             # -------------------- check what is current session --------------
 
-            current_session = DataBaseOperations(None).get_all_from_db(
-                table_name='current_session',
-                param='ORDER BY id DESC LIMIT 1',
-                without_sort=True,
-                order=None,
-                field='session',
-                curs=None
-            )
-            for value in current_session:
-                self.current_session = value[0]
+            self.current_session = get_name_session()
+
+            # current_session = DataBaseOperations(None).get_all_from_db(
+            #     table_name='current_session',
+            #     param='ORDER BY id DESC LIMIT 1',
+            #     without_sort=True,
+            #     order=None,
+            #     field='session',
+            #     curs=None
+            # )
+            # for value in current_session:
+            #     self.current_session = value[0]
 
             # --------------------- LOOP -------------------------
             self.written_vacancies = 0

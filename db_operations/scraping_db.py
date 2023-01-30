@@ -353,81 +353,7 @@ class DataBaseOperations:
                 print('Dont push in db, error = ', e)
                 # return response_dict['error', telethon]
             pass
-# ---------------- это для того, чтобы достать неотсортированные сообщения из базы и прогнать через оба алгоритма ---------
-#     def get_from_bd_for_analyze_python_vs_excel(self):
-#         """
-#         Get in DB messages and write it to Excel file to check
-#         :return: nothing
-#         """
-#         logs.write_log(f"scraping_db: function: get_from_bd_for_analyze_python_vs_excel")
-#
-#         profession_alex = []
-#         profession_rus = []
-#         profession_channel = []
-#         profession_title = []
-#         profession_body = []
-#         profession_alex_tag = []
-#         profession_alex_antitag = []
-#         profession_rus_tag = []
-#
-#         if not self.con:
-#             self.connect_db()
-#
-#         cur = self.con.cursor()
-#
-#         query = f"""SELECT * FROM all_messages WHERE DATE(created_at) > '2022-09-24' ORDER BY time_of_public"""
-#         with self.con:
-#             cur.execute(query)
-#             r = cur.fetchall()
-#         for item in r:
-#             pro_alex = ''
-#             pro_rus = ''
-#             created_at = ''
-#
-#             print('r = ', item)
-#             channel = item[1]
-#             title = item[2].replace('Обсуждение вакансии в чате @devops_jobs', '')
-#             body = item[3].replace('Обсуждение вакансии в чате @devops_jobs', '')
-#             time_public = item[5]
-#             created_at = item[6]
-#             # alex_old = AlexSort().sort_by_profession_by_Alex(title, body)
-#             alex = AlexSort2809().sort_by_profession_by_Alex(title, body)
-#             rus = AlexRusSort().sort_by_profession_by_AlexRus(title, body)
-#
-#
-#             for pro in alex['profession']:
-#                 pro_alex += pro + ' '
-#             pro_rus = rus['profession']
-#
-#             profession_channel.append(channel)
-#             profession_alex.append(pro_alex)
-#             profession_alex_tag.append(alex['tag'])
-#             profession_alex_antitag.append(alex['anti_tag'])
-#             profession_rus.append(pro_rus)
-#             try:
-#                 profession_rus_tag.append(rus['tag'])
-#             except:
-#                 pass
-#             profession_title.append(title)
-#             profession_body.append(body)
-#
-#
-#         df = pd.DataFrame(
-#             {
-#                'channel':  profession_channel,
-#                 'pro_Alex_28092022_nigth': profession_alex,
-#                 # 'tag_Alex': profession_alex_tag,
-#                 # 'antitag_Alex': profession_alex_antitag,
-#                 'alternative': profession_rus,
-#                 # 'tag_Rus': profession_rus_tag,
-#                 'title': profession_title,
-#                 'body': profession_body,
-#                 'created_at': created_at,
-#                 'time_public': time_public,
-#             }
-#         )
-#
-#         df.to_excel('all_messages.xlsx', sheet_name='Sheet1')
+
 
     def collect_data_for_send_to_bot(self, profession):
         """
@@ -569,9 +495,6 @@ class DataBaseOperations:
             self.connect_db()
         cur = self.con.cursor()
 
-        # for i in ['backend', 'frontend', 'devops', 'pm', 'product', 'designer', 'analyst',
-        #                             'fullstack', 'mobile', 'qa', 'hr', 'game', 'ba', 'marketing', 'junior',
-        #                             'sales_manager', 'middle', 'senior']:
         for i in ['admin_last_session',]:
 
             query = f"""ALTER TABLE {i} ADD COLUMN sended_to_agregator VARCHAR(30)"""
@@ -629,19 +552,6 @@ class DataBaseOperations:
         cur = self.con.cursor()
 
         for table in table_name_list:
-            # query = f"""ALTER TABLE {table}
-            #     ADD COLUMN IF NOT EXISTS vacancy VARCHAR (700),
-            #     ADD COLUMN IF NOT EXISTS vacancy_url VARCHAR (150),
-            #     ADD COLUMN IF NOT EXISTS company VARCHAR (200),
-            #     ADD COLUMN IF NOT EXISTS english VARCHAR (100),
-            #     ADD COLUMN IF NOT EXISTS relocation VARCHAR (100),
-            #     ADD COLUMN IF NOT EXISTS job_type VARCHAR (700),
-            #     ADD COLUMN IF NOT EXISTS city VARCHAR (150),
-            #     ADD COLUMN IF NOT EXISTS salary VARCHAR (300),
-            #     ADD COLUMN IF NOT EXISTS experience VARCHAR (700),
-            #     ADD COLUMN IF NOT EXISTS contacts VARCHAR (500),
-            #     ADD COLUMN IF NOT EXISTS agregator_link VARCHAR(200);
-            # """
             query = f"""ALTER TABLE {table} ADD COLUMN IF NOT EXISTS {column};"""
 
             with self.con:

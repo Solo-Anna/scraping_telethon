@@ -17,6 +17,7 @@ from aiogram.dispatcher import FSMContext
 from aiogram.dispatcher.filters import Text
 from aiogram.dispatcher.filters.state import StatesGroup, State
 from aiogram.types import KeyboardButton, ReplyKeyboardMarkup, InlineKeyboardMarkup, InlineKeyboardButton
+from aiogram.utils import executor
 from aiogram.utils.executor import start_polling
 from telethon.sync import TelegramClient
 from telethon.tl import functions
@@ -4217,8 +4218,8 @@ class InviteBot():
 
 
 
-        start_polling(self.dp)
-        # executor.start_polling(dp, skip_updates=True)
+        # start_polling(self.dp)
+        executor.start_polling(self.dp, skip_updates=True)
 
 
 def run(double=False, token_in=None):

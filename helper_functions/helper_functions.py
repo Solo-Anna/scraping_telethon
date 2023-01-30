@@ -2,6 +2,7 @@ import re
 import time
 from datetime import datetime
 
+from db_operations.scraping_db import DataBaseOperations
 from patterns._export_pattern import export_pattern
 from patterns.pseudo_pattern.pseudo_export_pattern import export_pattern as pseudo_export_pattern
 from utils.additional_variables.additional_variables import flood_control_logs_path
@@ -184,3 +185,16 @@ async def edit_message(bot, text, msg, parse_mode='html', disable_web_page_previ
                     seconds = match[0].split(' ')[0]
                     time.sleep(int(seconds) + 5)
     return msg
+
+async def get_name_session():
+    current_session = DataBaseOperations(None).get_all_from_db(
+        table_name='current_session',
+        param='ORDER BY id DESC LIMIT 1',
+        without_sort=True,
+        order=None,
+        field='session',
+        curs=None
+    )
+    for value in current_session:
+        current_session = value[0]
+    return  current_session
