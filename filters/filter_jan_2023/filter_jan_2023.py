@@ -32,7 +32,6 @@ class VacancyFilter:
         self.profession['sub'] = []
         params = {}
         vacancy = f"{title}\n{body}"
-        patt = q
 
         if check_profession:
             # if it is not vacancy, return no_sort
