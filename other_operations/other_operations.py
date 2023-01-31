@@ -1,5 +1,4 @@
 import re
-import time
 
 import psycopg2
 from filters.scraping_get_profession_Alex_next_2809 import AlexSort2809
@@ -77,7 +76,7 @@ def delete_since(tables_list=None, ids_list=None, param=None):
                 print(f'Was deleted id={id} from {i}')
 
 def write_pattern_to_db():
-    from patterns.pattern_Alex2809 import pattern
+    from __backup__.pattern_Alex2809 import pattern
 
     for key in pattern:
         for ma_or_mex in pattern[key]:
@@ -266,7 +265,7 @@ def check_english():
     with open('../file.txt', 'r') as f:
         text = f.read()
 
-    from patterns.pattern_Alex2809 import english_pattern
+    from __backup__.pattern_Alex2809 import english_pattern
 
     for i in text:
         match = re.findall(english_pattern, i)
@@ -512,7 +511,7 @@ def write_to_excel_from_proff_and_nosort():
     print('got it')
 
 def rewrite_vacancy():
-    from patterns.pattern_Alex2809 import vacancy_name
+    from __backup__.pattern_Alex2809 import vacancy_name
     excel_data_df = pd.read_excel("./../excel/for_checking.xlsx", sheet_name='Sheet1')
     excel_dict = {
             'chat_name': excel_data_df['chat_name'].tolist(),
@@ -825,12 +824,9 @@ def to_excel_from_response(response):
     print('got it')
 
 
-for i in valid_profession_list:
-    response = DataBaseOperations(None).get_all_from_db(
-        table_name='admin_last_session',
-        param="WHERE vacancy_url = 'https://www.svyazi.app//vakansii/product-manager-v-telekom'",
-        field='title'
-    )
-    if response:
-        pass
+response = DataBaseOperations(None).get_all_from_db(
+    table_name='admin_last_session',
+    param="WHERE profession LIKE '%junior%'",
+    field='title, profession, sub'
+)
 pass

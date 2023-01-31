@@ -1,5 +1,3 @@
-import asyncio
-import os
 from datetime import datetime, timedelta
 import pandas as pd
 from bs4 import BeautifulSoup
@@ -11,7 +9,7 @@ from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service
 from webdriver_manager.chrome import ChromeDriverManager
 import re
-from patterns.pattern_Alex2809 import cities_pattern, params
+from __backup__.pattern_Alex2809 import cities_pattern, params
 
 
 class FindJobGetInformation:

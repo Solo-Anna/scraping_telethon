@@ -50,7 +50,7 @@ pattern_path = "./excel/pattern.txt"
 admin_check_file_path = './logs/check_file.txt'
 path_log_check_profession = "./excel/send_log_txt.txt"
 
-sites_search_words = ['designer', 'ui', 'junior', 'без опыта', 'стажер', 'product manager', 'project manager', 'python', 'php']
+sites_search_words = ['designer', 'ui', 'junior', 'стажер', 'стажировка', 'product manager', 'project manager', 'python', 'php']
 
 table_list_for_checking_message_in_db = ['admin_last_session', 'archive']
 

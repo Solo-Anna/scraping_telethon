@@ -1,11 +1,9 @@
 import configparser
 import json
 import re
-import time
 from utils.additional_variables.additional_variables import admin_database
 from utils.additional_variables.additional_variables import table_list_for_checking_message_in_db
 
-import pandas as pd
 import psycopg2
 from datetime import datetime
 # from filters.scraping_get_profession_Alex_Rus import AlexRusSort
@@ -15,11 +13,9 @@ from helper_functions import helper_functions as helper
 logs = Logs()
 
 # from scraping_send_to_bot import PushToDB
-from patterns import pattern_Alex2809
 
 config = configparser.ConfigParser()
 config.read("./../settings/config.ini")
-
 # ---------------------DB operations ----------------------
 class DataBaseOperations:
 

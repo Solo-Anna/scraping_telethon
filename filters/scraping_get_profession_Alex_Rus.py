@@ -3,7 +3,8 @@
 """
 
 import re
-from patterns import pattern_Alex, pattern_Ruslan
+from patterns import pattern_Ruslan
+from __backup__ import pattern_Alex
 
 
 class AlexRusSort:

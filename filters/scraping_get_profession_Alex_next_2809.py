@@ -3,10 +3,10 @@ It is the new pattern from Alexander
 """
 
 import re
-from patterns import pattern_Alex2809
+from __backup__ import pattern_Alex2809
 from db_operations.scraping_db import DataBaseOperations
-from patterns.pattern_Alex2809 import search_companies, search_companies2, english_pattern, remote_pattern, \
-    relocate_pattern, middle_pattern, senior_pattern, vacancy_name, vacancy_pattern, contacts_pattern, profession_new_pattern
+from __backup__.pattern_Alex2809 import search_companies, search_companies2, english_pattern, remote_pattern, \
+    relocate_pattern, vacancy_pattern
 
 
 class AlexSort2809:

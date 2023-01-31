@@ -5,6 +5,7 @@ from sites.scraping_dev import DevGetInformation
 from sites.scraping_geekjob import GeekGetInformation
 from sites.scraping_habr import HabrGetInformation
 from sites.scraping_hh import HHGetInformation
+from sites.scraping_hhkz import HHKzGetInformation
 from sites.scraping_rabota import RabotaGetInformation
 from sites.scraping_superjob import SuperJobGetInformation
 from sites.scraping_svyazi import SvyaziGetInformation
@@ -38,6 +39,8 @@ class ParseSites:
         await GeekGetInformation(bot_dict).get_content()
         await SvyaziGetInformation(bot_dict).get_content()
         await HHGetInformation(bot_dict).get_content()
+        await HHKzGetInformation(bot_dict).get_content()
+
 
         # task1 = asyncio.create_task(HHGetInformation(bot_dict).get_content())
         # task2 = asyncio.create_task(SuperJobGetInformation(bot_dict).get_content())

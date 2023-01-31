@@ -12149,3 +12149,328 @@ id_admin_last_session_table = 47791
 it was sending to agregator = None
 title = Менеджер проекта/менеджер по аренде
 ------------------------------------------------------------
+              NEXT                
+-------- in callback admin -------
+id admin_channel = 1519
+id_admin_last_session_table = 45731
+it was sending to agregator = None
+title = Младший логист/Младший менеджер по логистике
+--------------------------------------------
+--------in function push_to_admin_temporary-------
+id admin_channel = 1519
+id_admin_last_session_table = 45731
+it was sending to agregator = None
+title = Младший логист/Младший менеджер по логистике
+------------------------------------------------------------
+              NEXT                
+-------- in callback admin -------
+id admin_channel = 1520
+id_admin_last_session_table = 45328
+it was sending to agregator = 19175
+title = Системный аналитик в МТС.
+--------------------------------------------
+--------in function push_to_admin_temporary-------
+id admin_channel = 1520
+id_admin_last_session_table = 45328
+it was sending to agregator = 19175
+title = Системный аналитик в МТС.
+------------------------------------------------------------
+              NEXT                
+-------- in callback admin -------
+id admin_channel = 1521
+id_admin_last_session_table = 45872
+it was sending to agregator = None
+title = Помощник руководителя по финансам / начинающий спе
+--------------------------------------------
+--------in function push_to_admin_temporary-------
+id admin_channel = 1521
+id_admin_last_session_table = 45872
+it was sending to agregator = None
+title = Помощник руководителя по финансам / начинающий спе
+------------------------------------------------------------
+              NEXT                
+-------- in callback admin -------
+id admin_channel = 1522
+id_admin_last_session_table = 45884
+it was sending to agregator = None
+title = Начинающий менеджер по продажам недвижимости / ста
+--------------------------------------------
+--------in function push_to_admin_temporary-------
+id admin_channel = 1522
+id_admin_last_session_table = 45884
+it was sending to agregator = None
+title = Начинающий менеджер по продажам недвижимости / ста
+------------------------------------------------------------
+              NEXT                
+-------- in callback admin -------
+id admin_channel = 1523
+id_admin_last_session_table = 44994
+it was sending to agregator = None
+title =  #Удаленка
+--------------------------------------------
+--------in function push_to_admin_temporary-------
+id admin_channel = 1523
+id_admin_last_session_table = 44994
+it was sending to agregator = None
+title =  #Удаленка
+------------------------------------------------------------
+              NEXT                
+-------- in callback admin -------
+id admin_channel = 1525
+id_admin_last_session_table = 48075
+it was sending to agregator = None
+title = Стажер-аналитик в команду разработки ПО
+--------------------------------------------
+--------in function push_to_admin_temporary-------
+id admin_channel = 1525
+id_admin_last_session_table = 48075
+it was sending to agregator = None
+title = Стажер-аналитик в команду разработки ПО
+------------------------------------------------------------
+              NEXT                
+-------- in callback admin -------
+id admin_channel = 1526
+id_admin_last_session_table = 48076
+it was sending to agregator = None
+title = Младший клиентский менеджер/Junior client manager
+--------------------------------------------
+--------in function push_to_admin_temporary-------
+id admin_channel = 1526
+id_admin_last_session_table = 48076
+it was sending to agregator = None
+title = Младший клиентский менеджер/Junior client manager
+------------------------------------------------------------
+              NEXT                
+-------- in callback admin -------
+id admin_channel = 1527
+id_admin_last_session_table = 48213
+it was sending to agregator = None
+title = Junior (младший) бэкенд-разработчик PHP
+--------------------------------------------
+--------in function push_to_admin_temporary-------
+id admin_channel = 1527
+id_admin_last_session_table = 48213
+it was sending to agregator = None
+title = Junior (младший) бэкенд-разработчик PHP
+------------------------------------------------------------
+              NEXT                
+-------- in callback admin -------
+id admin_channel = 1528
+id_admin_last_session_table = 48214
+it was sending to agregator = None
+title = Junior Documentation Manager
+--------------------------------------------
+--------in function push_to_admin_temporary-------
+id admin_channel = 1528
+id_admin_last_session_table = 48214
+it was sending to agregator = None
+title = Junior Documentation Manager
+------------------------------------------------------------
+              NEXT                
+-------- in callback admin -------
+id admin_channel = 1529
+id_admin_last_session_table = 48215
+it was sending to agregator = None
+title = Стажер-аналитик в команду разработки ПО
+--------------------------------------------
+--------in function push_to_admin_temporary-------
+id admin_channel = 1529
+id_admin_last_session_table = 48215
+it was sending to agregator = None
+title = Стажер-аналитик в команду разработки ПО
+------------------------------------------------------------
+              NEXT                
+-------- in callback admin -------
+id admin_channel = 1530
+id_admin_last_session_table = 48078
+it was sending to agregator = None
+title = Junior SEO-Специалист (интернет-маркетинг, удаленн
+--------------------------------------------
+--------in function push_to_admin_temporary-------
+id admin_channel = 1530
+id_admin_last_session_table = 48078
+it was sending to agregator = None
+title = Junior SEO-Специалист (интернет-маркетинг, удаленн
+------------------------------------------------------------
+              NEXT                
+-------- in callback admin -------
+id admin_channel = 1531
+id_admin_last_session_table = 48079
+it was sending to agregator = None
+title = Junior SEO-Специалист (интернет-маркетинг)
+--------------------------------------------
+--------in function push_to_admin_temporary-------
+id admin_channel = 1531
+id_admin_last_session_table = 48079
+it was sending to agregator = None
+title = Junior SEO-Специалист (интернет-маркетинг)
+------------------------------------------------------------
+              NEXT                
+-------- in callback admin -------
+id admin_channel = 1532
+id_admin_last_session_table = 48080
+it was sending to agregator = None
+title = Junior SEO-Специалист (интернет-маркетинг), удален
+--------------------------------------------
+--------in function push_to_admin_temporary-------
+id admin_channel = 1532
+id_admin_last_session_table = 48080
+it was sending to agregator = None
+title = Junior SEO-Специалист (интернет-маркетинг), удален
+------------------------------------------------------------
+              NEXT                
+-------- in callback admin -------
+id admin_channel = 1533
+id_admin_last_session_table = 48081
+it was sending to agregator = None
+title = Junior DevOps-инженер
+--------------------------------------------
+--------in function push_to_admin_temporary-------
+id admin_channel = 1533
+id_admin_last_session_table = 48081
+it was sending to agregator = None
+title = Junior DevOps-инженер
+------------------------------------------------------------
+              NEXT                
+-------- in callback admin -------
+id admin_channel = 1534
+id_admin_last_session_table = 48083
+it was sending to agregator = None
+title = Разработчик C# Junior (ASP.NET)
+--------------------------------------------
+--------in function push_to_admin_temporary-------
+id admin_channel = 1534
+id_admin_last_session_table = 48083
+it was sending to agregator = None
+title = Разработчик C# Junior (ASP.NET)
+------------------------------------------------------------
+              NEXT                
+-------- in callback admin -------
+id admin_channel = 1535
+id_admin_last_session_table = 48084
+it was sending to agregator = None
+title = PHP-разработчик Junior (Bitrix и Laravel)
+--------------------------------------------
+--------in function push_to_admin_temporary-------
+id admin_channel = 1535
+id_admin_last_session_table = 48084
+it was sending to agregator = None
+title = PHP-разработчик Junior (Bitrix и Laravel)
+------------------------------------------------------------
+              NEXT                
+-------- in callback admin -------
+id admin_channel = 1536
+id_admin_last_session_table = 48085
+it was sending to agregator = None
+title = Математик (Junior/Middle/Senior Data Scientist)
+--------------------------------------------
+--------in function push_to_admin_temporary-------
+id admin_channel = 1536
+id_admin_last_session_table = 48085
+it was sending to agregator = None
+title = Математик (Junior/Middle/Senior Data Scientist)
+------------------------------------------------------------
+              NEXT                
+-------- in callback admin -------
+id admin_channel = 1537
+id_admin_last_session_table = 48224
+it was sending to agregator = None
+title = Junior интернет-маркетолог (удаленно)
+--------------------------------------------
+--------in function push_to_admin_temporary-------
+id admin_channel = 1537
+id_admin_last_session_table = 48224
+it was sending to agregator = None
+title = Junior интернет-маркетолог (удаленно)
+------------------------------------------------------------
+              NEXT                
+-------- in callback admin -------
+id admin_channel = 1538
+id_admin_last_session_table = 48103
+it was sending to agregator = None
+title = Junior SEO-Специалист (интернет-маркетинг) удаленн
+--------------------------------------------
+--------in function push_to_admin_temporary-------
+id admin_channel = 1538
+id_admin_last_session_table = 48103
+it was sending to agregator = None
+title = Junior SEO-Специалист (интернет-маркетинг) удаленн
+------------------------------------------------------------
+              NEXT                
+-------- in callback admin -------
+id admin_channel = 1539
+id_admin_last_session_table = 48216
+it was sending to agregator = None
+title = Junior-аналитик (Отдел маркетинга)
+--------------------------------------------
+--------in function push_to_admin_temporary-------
+id admin_channel = 1539
+id_admin_last_session_table = 48216
+it was sending to agregator = None
+title = Junior-аналитик (Отдел маркетинга)
+------------------------------------------------------------
+              NEXT                
+-------- in callback admin -------
+id admin_channel = 1540
+id_admin_last_session_table = 48217
+it was sending to agregator = None
+title = Junior Программист 1С
+--------------------------------------------
+--------in function push_to_admin_temporary-------
+id admin_channel = 1540
+id_admin_last_session_table = 48217
+it was sending to agregator = None
+title = Junior Программист 1С
+------------------------------------------------------------
+              NEXT                
+-------- in callback admin -------
+id admin_channel = 1541
+id_admin_last_session_table = 48218
+it was sending to agregator = None
+title = Junior PHP developer (Laravel)
+--------------------------------------------
+--------in function push_to_admin_temporary-------
+id admin_channel = 1541
+id_admin_last_session_table = 48218
+it was sending to agregator = None
+title = Junior PHP developer (Laravel)
+------------------------------------------------------------
+              NEXT                
+-------- in callback admin -------
+id admin_channel = 1542
+id_admin_last_session_table = 48221
+it was sending to agregator = None
+title = Младший специалист по обработке информации
+--------------------------------------------
+--------in function push_to_admin_temporary-------
+id admin_channel = 1542
+id_admin_last_session_table = 48221
+it was sending to agregator = None
+title = Младший специалист по обработке информации
+------------------------------------------------------------
+              NEXT                
+-------- in callback admin -------
+id admin_channel = 1543
+id_admin_last_session_table = 48222
+it was sending to agregator = None
+title = Middle PHP-разработчик (junior golang)
+--------------------------------------------
+--------in function push_to_admin_temporary-------
+id admin_channel = 1543
+id_admin_last_session_table = 48222
+it was sending to agregator = None
+title = Middle PHP-разработчик (junior golang)
+------------------------------------------------------------
+              NEXT                
+-------- in callback admin -------
+id admin_channel = 1544
+id_admin_last_session_table = 48226
+it was sending to agregator = None
+title = Стажер в отдел маркетинга
+--------------------------------------------
+--------in function push_to_admin_temporary-------
+id admin_channel = 1544
+id_admin_last_session_table = 48226
+it was sending to agregator = None
+title = Стажер в отдел маркетинга
+------------------------------------------------------------

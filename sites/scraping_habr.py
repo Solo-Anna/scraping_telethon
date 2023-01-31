@@ -1,20 +1,14 @@
-import asyncio
 import re
-import time
-from datetime import datetime, timedelta
+from datetime import datetime
 import pandas as pd
-import requests
 from selenium import webdriver
-from selenium.webdriver.common.by import By
-from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service
 from webdriver_manager.chrome import ChromeDriverManager
 from bs4 import BeautifulSoup
 from db_operations.scraping_db import DataBaseOperations
-from patterns.pattern_Alex2809 import cities_pattern, params
-from filters.scraping_get_profession_Alex_next_2809 import AlexSort2809
+from __backup__.pattern_Alex2809 import cities_pattern, params
 from sites.write_each_vacancy_to_db import write_each_vacancy
-from settings.browser_settings import options, chrome_driver_path
+from settings.browser_settings import options
 from utils.additional_variables.additional_variables import sites_search_words
 from helper_functions.helper_functions import edit_message, send_message
 
