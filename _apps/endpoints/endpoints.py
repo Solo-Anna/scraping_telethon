@@ -50,7 +50,7 @@ async def main_endpoints():
     @app.route("/get-all-vacancies-admin")
     async def get_all_vacancies_admin():
         response = await get_all_vacancies_from_db()
-        response['pattern'] = await get_export_pattern_dict()
+        # response['pattern'] = await get_export_pattern_dict()
         return response
 
     @app.route("/get")

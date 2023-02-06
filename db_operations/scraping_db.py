@@ -139,6 +139,10 @@ class DataBaseOperations:
                             created_at TIMESTAMP,
                             agregator_link VARCHAR(200),
                             sub VARCHAR (250),  
+                            tags VARCHAR (700),
+                            full_tags VARCHAR (700),
+                            full_anti_tags VARCHAR (700),
+                            short_session_numbers VARCHAR (300),
                             session VARCHAR(15),
                             FOREIGN KEY (session) REFERENCES current_session(session)
                             );"""
@@ -483,20 +487,27 @@ class DataBaseOperations:
                     except Exception as e:
                         print('error: ', e)
 
-    def add_columns_to_tables(self):
+    def add_columns_to_tables(self, table_list=None, column_name_type=None):
 
-        logs.write_log(f"scraping_db: function: add_columns_to_tables")
+        if not table_list:
+            table_list = [admin_database, ]
+
+        if not column_name_type:
+            column_name_type = 'sended_to_agregator VARCHAR(30)'
 
         if not self.con:
             self.connect_db()
         cur = self.con.cursor()
 
-        for i in ['admin_last_session',]:
+        for table_name in table_list:
 
-            query = f"""ALTER TABLE {i} ADD COLUMN sended_to_agregator VARCHAR(30)"""
+            query = f"""ALTER TABLE {table_name} ADD COLUMN {column_name_type}"""
             with self.con:
-                cur.execute(query)
-                print(f'Added agr_link to {i}')
+                try:
+                    cur.execute(query)
+                    print(f'Added {column_name_type} to {table_name}')
+                except Exception as e:
+                    print(e)
 
     def output_tables(self):
 
@@ -692,6 +703,10 @@ class DataBaseOperations:
                                 session VARCHAR(15),
                                 sended_to_agregator VARCHAR(30),
                                 sub VARCHAR (250),  
+                                tags VARCHAR (700),
+                                full_tags VARCHAR (700),
+                                full_anti_tags VARCHAR (700),
+                                short_session_numbers VARCHAR (300),
                                 FOREIGN KEY (session) REFERENCES current_session(session)
                                 );"""
                             )

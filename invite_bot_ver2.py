@@ -220,6 +220,9 @@ class InviteBot():
         class Form_check_url(StatesGroup):
             url = State()
 
+        class Form_vacancy_names(StatesGroup):
+            profession = State()
+
         @self.dp.message_handler(commands=['start'])
         async def send_welcome(message: types.Message):
 
@@ -243,65 +246,30 @@ class InviteBot():
 
         @self.dp.message_handler(commands=['help'])
         async def get_logs(message: types.Message):
-            await self.bot_aiogram.send_message(message.chat.id, '/log or /logs - get custom logs (useful for developer\n'
-                                                            '/get_participants - ❗️get the channel follower numbers\n'
-                                                            '/delete_till - ❗️delete old vacancy from admin DB till date\n\n'
-                                                            '------------ FOR DEVELOPER: ------------\n'
-                                                            '⛔️/debugs\n'
-                                                            '⛔️/developing\n'
-                                                            # '⛔️/refresh_pattern - to get the modify pattern from DB\n'
-                                                            '⛔️/peerchannel - useful for a developer to get id channel\n'
-                                                            '⛔️/getdata - get channel data\n'
-                                                            '⛔️/check_parameters - get vacancy\'s parameters\n'
-                                                            '⛔️/get_backup_db - receive last db backup\n'
-                                                            '⛔️/check_link_hh - doesnt work :)\n'
-                                                            '⛔️/get_participants\n'
-                                                            '⛔️/get_user_data\n'
-                                                            '⛔️/emergency_push\n'
-                                                            '⛔️/get_pattern\n'
-                                                            '⛔️/get_pattern_pseudo\n'
-                                                            '⛔️/clear_db_table\n'
-                                                            '⛔️/numbers_of_archive\n'
-                                                            '⛔️/get_flood_error_logs\n'
-                                                            '⛔️/how_many_records_in_db_table - shows quantity of records in db table\n'
-                                                            '⛔️/get_vacancy_for_example - receivw the random vacncy from admin\n'
-                                                            '⛔️/get_vacancy_from_backend - random vacancy from backend\n'
-                                                            '⛔️/add_and_push_subs - add subs and fill them\n'
-                                                            '⛔️/get_random_vacancy_by_profession \n'
-                                                            '⛔️/get_post_request \n'
-                                                            '----------------------------------------------------\n\n'
-                                                            '---------------- PARSING: ----------------\n'
-                                                            '🔆/magic_word - input word and get results from hh.ru\n'
-                                                            '🔆/hh_kz - input word and get results from hh.ru\n'
-                                                            '🔆/svyazi - get data from svyazi.app\n'
-                                                            '🔆/finder - get the data from finder.vc\n'
-                                                            '🔆/habr - get the data from career.habr.com\n'
-                                                            '🔆/superjob - get the data from superjob.ru\n'
-                                                            '🔆/rabota - get the data from rabota.by\n'
-                                                            '🔆/dev - get the data from dev.by\n'
-                                                            '🔆/geek - get data from geek.ru\n'
-                                                            '---------------------------------------------------\n\n'
-                                                            '/download - ❗️you get excel from admin vacancies with search tags\n'
-                                                            '/ambulance - if bot gets accident in hard pushing and you think you loose the shorts\n\n'
-                                                            '---------------- TOOLS: ----------------\n'
-                                                            '🛠/edit_pattern - stop proccess\n'
-                                                            '/db_check_url_vacancy - does vacancy exist by link\n'
-                                                            '/schedule - non-stop parsing\n'
-                                                            '/restore_from_admin - restory the lost vacancies\n'
-                                                            '/invite_people - start to invite followers\n'
-                                                            '/get_news - start to invite followers\n'
-                                                            '🖐️/stop - stop proccess\n'
-                                                            '➡️/refresh_and_save_changes - One click for the correct refresh. Includes:\n'
-                                                            '✅/refresh - to get the professions in excel format in all vacancies throgh the new filters logic (without rewriting)\n'
-                                                            '✅/check_doubles - remove the vacancy"s doubles\n'
-                                                            '✅/remove_completed_professions - remove complete professions\n'
-                                                            '---------------------------------------------------\n\n'
-                                                             '---------------- STATISTICS: ----------------\n'
-                                                            '/check_title_body\n'
-                                                            '/get_profession_parsing_tags_log - send the file with tags and antitags'
-                                                            '/add_statistics\n\n'
-                                                            '---------------------------------------------------\n\n'
-                                                            '❗️- it is admin options')
+            await self.bot_aiogram.send_message(message.chat.id, variable.help_text)
+
+        @self.dp.message_handler(commands=['rollback_by_number_short_session'])
+        async def rollback_by_number_short_session_command(message: types.Message):
+            await rollback_by_number_short_session(message=message)
+
+
+        @self.dp.message_handler(commands=['add_tags_to_DB'])
+        async def add_tags_to_db_command(message: types.Message):
+            await add_tags_to_db(message=message)
+
+        @self.dp.message_handler(commands=['get_vacancy_names'])
+        async def get_vacancy_names_command(message: types.Message):
+            await Form_vacancy_names.profession.set()
+            await self.bot_aiogram.send_message(message.chat.id, 'Type the profession and bot shows you vacancy_names')
+
+        @self.dp.message_handler(state=Form_vacancy_names.profession)
+        async def get_vacancy_names_form(message: types.Message, state: FSMContext):
+            async with state.proxy() as data:
+                data['profession'] = message.text
+                profession = message.text
+            await state.finish()
+            await get_vacancy_names(message, profession)
+
 
         @self.dp.message_handler(commands=['get_post_request'])
         async def get_post_request_command(message: types.Message):
@@ -4249,6 +4217,166 @@ class InviteBot():
                     await self.bot_aiogram.send_message(message.chat.id, str(response_dict))
                 else:
                     await self.bot_aiogram.send_message(message.chat.id, "Sorry, but it has not any response")
+
+        async def get_vacancy_names(message, profession):
+            message_for_send = ''
+            message_list = []
+            responses = self.db.get_all_from_db(
+                table_name = variable.admin_database,
+                param=f"WHERE profession LIKE '%{profession}%'",
+                field=variable.admin_table_fields
+            )
+            for response in responses:
+                response_dict = await helper.to_dict_from_admin_response(
+                    response=response,
+                    fields=variable.admin_table_fields
+                )
+                if response_dict['vacancy']:
+                    if len(f"{message_for_send}\n{response_dict['vacancy']}\n")<4096:
+                        message_for_send += f"{response_dict['vacancy']}\n"
+                    else:
+                        message_list.append(message_for_send)
+                        message_for_send = ''
+                else:
+                    if len(f"{message_for_send}\n{response_dict['title']}\n")<4096:
+                        message_for_send += f"{response_dict['title']}\n"
+                    else:
+                        message_list.append(message_for_send)
+                        message_for_send = ''
+                    message_for_send += f"{response_dict['title']}\n"
+            message_list.append(message_for_send)
+
+            for i in message_list:
+                await self.bot_aiogram.send_message(message.chat.id, i)
+                await asyncio.sleep(random.randrange(1,3))
+
+        async def add_tags_to_db(message):
+            bot_dict = {'bot': self.bot_aiogram, 'chat_id': message.chat.id}
+            progress = ShowProgress(bot_dict)
+            # add tags
+            table_list = []
+            table_list.extend(variable.valid_professions)
+            table_list.append(variable.admin_database)
+            self.db.add_columns_to_tables(
+                table_list=table_list,
+                column_name_type="tags VARCHAR (700)"
+            )
+            self.db.add_columns_to_tables(
+                table_list=table_list,
+                column_name_type="full_tags VARCHAR (700)"
+            )
+            self.db.add_columns_to_tables(
+                table_list=table_list,
+                column_name_type="full_anti_tags VARCHAR (700)"
+            )
+            self.db.add_columns_to_tables(
+                table_list=table_list,
+                column_name_type="short_session_numbers VARCHAR (300)"
+            )
+
+            # get tags from sort_profession and write to each vacancy
+            responses = self.db.get_all_from_db(
+                table_name=variable.admin_database,
+                param="WHERE profession <> 'no_sort'",
+                field=variable.admin_table_fields
+            )
+
+            msg = await self.bot_aiogram.send_message(message.chat.id, 'progress 0%')
+            self.percent = 0
+            length = len(responses)
+            n = 0
+            for response in responses:
+                response_dict = await helper.to_dict_from_admin_response(
+                    response=response,
+                    fields=variable.admin_table_fields
+                )
+                profession = VacancyFilter().sort_profession(
+                    title=response_dict['title'], body=response_dict['body'],
+                    check_contacts=False,
+                    check_profession=True,
+                    get_params=False
+
+                )
+                tag_list = profession['profession']['tag'].split('\n')
+                anti_tag_list = profession['profession']['anti_tag'].split('\n')
+                tags = ''
+                tags_set = set()
+                for tag in tag_list:
+                    if tag:
+                        if 'vacancy' not in tag:
+                            tag_value = tag.split("'")[-2]
+                            tag_word = tag.split("=")[0][3:]
+                            if anti_tag_list:
+                                for anti_tag in anti_tag_list:
+                                    if anti_tag:
+                                        anti_tag_word = anti_tag.split("=")[0][4:]
+                                        if anti_tag_word != tag_word:
+                                            tags_set.add(tag_value)
+                                    else:
+                                        tags_set.add(tag_value)
+                tags = ", ".join(tags_set)
+                print('tags: ', tags)
+
+                if tags:
+                    self.db.update_table(
+                        table_name=variable.admin_database,
+                        param=f"WHERE id={response_dict['id']}",
+                        field='tags',
+                        value=tags
+                    )
+                if profession['profession']['tag'] :
+                    self.db.update_table(
+                        table_name=variable.admin_database,
+                        param=f"WHERE id={response_dict['id']}",
+                        field='full_tags',
+                        value=profession['profession']['tag'].replace("'", "")
+                    )
+                if profession['profession']['anti_tag']:
+                    self.db.update_table(
+                        table_name=variable.admin_database,
+                        param=f"WHERE id={response_dict['id']}",
+                        field='full_anti_tags',
+                        value=profession['profession']['anti_tag'].replace("'", "")
+                    )
+
+                await progress.show_the_progress(
+                    message=msg,
+                    current_number=n,
+                    end_number=length
+                )
+
+        async def rollback_by_number_short_session(message, short_session_number):
+            # layout: backend: 070220230134; junior: 070220320135
+            bot_dict = {'bot': self.bot_aiogram, 'chat_id': message.chat.id}
+            progress = ShowProgress(bot_dict)
+            # add tags
+            table_list = []
+            table_list.extend(variable.valid_professions)
+            table_list.append(variable.admin_database)
+            fields = 'id, profession, short_session_numbers'
+            for table_name in table_list:
+                responses = self.db.get_all_from_db(
+                    table_name=table_name,
+                    param=f"WHERE short_session_numbers LIKE '%{short_session_number}%'",
+                    field=fields
+                )
+                if responses:
+                    for response in responses:
+                        response_dict = await helper.to_dict_from_admin_response(
+                            response=response,
+                            fields=fields
+                        )
+                        for response in responses:
+                            session_numbers = response_dict['short_session_numbers'].split(', ')
+                            for session in session_numbers:
+                                if short_session_number in session:
+                                    profession = session.split(":")[0]
+                                    if table_name == variable.admin_database:
+                                        pass
+                                        #update
+                                    # elif table_name ==
+
+
 
 
 
