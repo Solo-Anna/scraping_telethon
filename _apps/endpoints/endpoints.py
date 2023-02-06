@@ -8,7 +8,11 @@ import random
 from db_operations.scraping_db import DataBaseOperations
 from utils.additional_variables.additional_variables import admin_database, admin_table_fields
 from helper_functions.helper_functions import to_dict_from_admin_response
-from flask_cors import CORS, cross_origin
+from flask_cors import CORS
+from flask import request
+from utils.additional_variables.additional_variables import path_post_request_file, post_request_for_example, valid_professions
+from patterns._export_pattern import export_pattern
+from patterns.data_pattern._data_pattern import pattern
 
 db=DataBaseOperations(None)
 
@@ -39,20 +43,15 @@ async def main_endpoints():
     async def hello_world():
         return "It's the empty page"
 
-
     @app.route("/get-all-vacancies")
     async def get_all_vacancies():
         return await get_all_vacancies_from_db()
 
-    @app.route("/get-all-vacancies2")
-    async def get_all_vacancies1():
-        print('!!!!!!!!!!!!!!!')
-        return await get_all_vacancies_from_db()
-
-    @app.route("/get-all-vacancies3")
-    async def get_all_vacancies3():
-
-        return await get_all_vacancies_from_db()
+    @app.route("/get-all-vacancies-admin")
+    async def get_all_vacancies_admin():
+        response = await get_all_vacancies_from_db()
+        response['pattern'] = await get_export_pattern_dict()
+        return response
 
     @app.route("/get")
     async def hello_world2():
@@ -70,6 +69,15 @@ async def main_endpoints():
         }
         return json.dumps(data_dict, sort_keys=False, indent=4, ensure_ascii=False, separators=(',', ': '))
 
+    @app.route("/post-vacancies", methods = ['POST'])
+    async def post_data():
+        request_data = request.json
+        await write_to_file(text=request_data)
+        # request_data = post_request_for_example
+        all_vacancies = await compose_request_to_db(request_data)
+        # return {'It works': request_data}
+        return all_vacancies
+
     async def get_from_db():
         cur = con.cursor()
         query = "SELECT * FROM admin_last_session WHERE profession <> 'no_sort'"
@@ -78,15 +86,16 @@ async def main_endpoints():
         response = cur.fetchall()
         return response
 
-    async def get_all_vacancies_from_db():
+    async def get_all_vacancies_from_db(param="WHERE profession <> 'no_sort'"):
         all_vacancies = {}
         all_vacancies['vacancies'] = {}
         response = db.get_all_from_db(
             table_name=admin_database,
-            param="WHERE profession <> 'no_sort'",
+            param=param,
             field=admin_table_fields
         )
         number = 0
+        print(param)
         for vacancy in response:
             vacancy_dict = await to_dict_from_admin_response(
                 response=vacancy,
@@ -96,6 +105,62 @@ async def main_endpoints():
                 all_vacancies['vacancies'][str(number)] = vacancy_dict
             number += 1
         return all_vacancies
+
+    async def write_to_file(text):
+        with open(path_post_request_file, 'a', encoding='utf-8') as file:
+            file.write(f"{str(text)}\n-----------\n")
+
+    async def get_export_pattern_dict():
+        dict_pattern = {}
+        for profession in export_pattern['professions']:
+            dict_pattern[profession] = {}
+            if 'ma' not in dict_pattern[profession]:
+                dict_pattern[profession]['ma'] = []
+
+            dict_pattern[profession]['ma'] = list(export_pattern['professions'][profession]['ma'])
+            for sub in export_pattern['professions'][profession]['sub']:
+                if 'sub' not in dict_pattern[profession]:
+                    # dict_pattern[profession] = {}
+                    dict_pattern[profession]['sub'] = {}
+
+                if sub not in dict_pattern[profession]['sub']:
+                    dict_pattern[profession]['sub'][sub] = {}
+                    dict_pattern[profession]['sub'][sub]['ma'] = []
+
+                dict_pattern[profession]['sub'][sub]['ma'] = list(export_pattern['professions'][profession]['sub'][sub]['ma'])
+        return dict_pattern
+
+    async def compose_request_to_db(response_data):
+        query_profession = ""
+        common_query = "WHERE "
+        query_job_type = ""
+        if response_data['profession']:
+            for item in response_data['profession']:
+                query_profession += f"OR profession LIKE '%{item}%' "
+        if 'junior' in response_data['level']:
+            query_profession += f"OR profession LIKE '%junior%'"
+        if 'all' in response_data['level']:
+            query_profession = ''
+            for item in valid_professions:
+                query_profession += f"OR profession LIKE '%{item}%' "
+        query_profession = f"({query_profession[3:]})"
+
+        common_query += query_profession
+
+        if response_data['city']:
+            common_query += f" AND city LIKE '%{response_data['city']}%'"
+
+        # if response_data['job_type']:
+        #     for item in response_data['job_type']:
+        #         query_job_type += f"OR job_type LIKE '%{item}%' "
+        #         query_job_type = query_job_type[3:]
+        #     common_query += f"AND {query_job_type}"
+
+        all_vacancies = await get_all_vacancies_from_db(param=common_query)
+
+        return all_vacancies
+
+
 
     app.run(host=localhost, port=int(os.environ.get('PORT', 5000)))
 

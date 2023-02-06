@@ -86,3 +86,25 @@ clear_vacancy_trash_pattern = "[Ии]щем в команду[:]?|[Тт]ребу
 
 how_much_pages = 7
 
+path_post_request_file = "./excel/path_post_request_file.txt"
+
+till = 5
+
+post_request_for_example = {
+    'profession': '',
+    'specialization':
+    'frontend',
+    'programmingLanguage': ['js'],
+    'technologies': ['react'],
+    'level': ['all', 'trainee', 'entry level', 'junior', 'midle', 'senior', 'director', 'lead'],
+    'country': 'BY',
+    'city': '',
+    'state': '',
+    'salary': ['200', '400'],
+    'salaryOption': ['hourly', 'perMonth', 'perYear', 'beforeTaxes', 'inHand'],
+    'companyScope': '',
+    'typeOfEmployment': ['all', 'fulltime', 'parttime', 'tempJob', 'contract', 'freelance', 'internship', 'volunteering'],
+    'companyType': ['all', 'product', 'outsourcing', 'outstaff', 'consulting', 'notTechnical', 'startup'],
+    'companySize': ['1-200', '201-500', '501-1000', '1000+'],
+    'job_type': ['remote']
+}

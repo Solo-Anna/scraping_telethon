@@ -268,6 +268,7 @@ class InviteBot():
                                                             '⛔️/get_vacancy_from_backend - random vacancy from backend\n'
                                                             '⛔️/add_and_push_subs - add subs and fill them\n'
                                                             '⛔️/get_random_vacancy_by_profession \n'
+                                                            '⛔️/get_post_request \n'
                                                             '----------------------------------------------------\n\n'
                                                             '---------------- PARSING: ----------------\n'
                                                             '🔆/magic_word - input word and get results from hh.ru\n'
@@ -301,6 +302,13 @@ class InviteBot():
                                                             '/add_statistics\n\n'
                                                             '---------------------------------------------------\n\n'
                                                             '❗️- it is admin options')
+
+        @self.dp.message_handler(commands=['get_post_request'])
+        async def get_post_request_command(message: types.Message):
+            await send_file_to_user(
+                message=message,
+                path=variable.path_post_request_file
+            )
 
         @self.dp.message_handler(commands=['get_vacancy_from_backend'])
         async def get_vacancy_from_backend_command(message: types.Message):

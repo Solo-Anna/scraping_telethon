@@ -10,7 +10,7 @@ from bs4 import BeautifulSoup
 from db_operations.scraping_db import DataBaseOperations
 from sites.write_each_vacancy_to_db import write_each_vacancy
 from settings.browser_settings import options, chrome_driver_path
-from utils.additional_variables.additional_variables import sites_search_words
+from utils.additional_variables.additional_variables import sites_search_words, till
 from helper_functions.helper_functions import edit_message, send_message
 
 class GeekGetInformation:
@@ -73,7 +73,6 @@ class GeekGetInformation:
     async def get_info(self):
         self.browser = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
 
-        till = 6
         for self.page_number in range(1, till):
             try:
                 await self.bot.send_message(self.chat_id, f'https://geekjob.ru/vacancies/{self.page_number}',
@@ -363,10 +362,10 @@ class GeekGetInformation:
             prof_str = ", ".join(profession['profession'])
             additional_message = f"<b>+w: {prof_str}</b>\n{vacancy_url}\n{profession['tag']}\n{profession['anti_tag']}\n"
 
-            if 'no_sort' not in profession['profession']:
-                self.written_vacancies += 1
-            else:
-                self.written_vacancies += 1
+            # if 'no_sort' not in profession['profession']:
+            #     self.written_vacancies += 1
+            # else:
+            #     self.written_vacancies += 1
 
         if len(f"{self.current_message}\n{self.count_message_in_one_channel}. {vacancy}\n{additional_message}") < 4096:
             new_text = f"\n{self.count_message_in_one_channel}. {vacancy}\n{additional_message}"
@@ -387,7 +386,7 @@ class GeekGetInformation:
             # self.current_message = await self.bot.send_message(self.chat_id,
             #                                                    f"{self.count_message_in_one_channel}. {vacancy}\n{additional_message}")
 
-        print(f"\n{self.count_message_in_one_channel} from_channel hh.ru search {word}")
+        print(f"\n{self.count_message_in_one_channel} from_channel geekjob.ru search {word}")
         self.count_message_in_one_channel += 1
 
 # loop = asyncio.new_event_loop()

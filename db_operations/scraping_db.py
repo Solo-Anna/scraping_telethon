@@ -757,7 +757,7 @@ class DataBaseOperations:
         for one_element in tables_list:
             response = self.get_all_from_db(
                 table_name=f'{one_element}',
-                param=f"WHERE title='{title}' AND body = '{body}'"
+                param=f"WHERE title='{title}' AND body='{body}'"
             )
             if response:
                 print(f'!!!!!!!!!!! Vacancy exists in {one_element} table\n')
