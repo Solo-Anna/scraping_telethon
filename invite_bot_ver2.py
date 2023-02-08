@@ -250,7 +250,9 @@ class InviteBot():
 
         @self.dp.message_handler(commands=['rollback_by_number_short_session'])
         async def rollback_by_number_short_session_command(message: types.Message):
-            await rollback_by_number_short_session(message=message)
+            await rollback_by_number_short_session(
+                message=message
+            )
 
 
         @self.dp.message_handler(commands=['add_tags_to_DB'])
@@ -2158,6 +2160,9 @@ class InviteBot():
             for profession in channels:
                 await ambulance_saved_to_file("", rewrite=True)
 
+                short_session_name = await helper.get_short_session_name(prefix=profession)
+                self.db.write_short_session(short_session_name)
+
                 statistics[profession] = 0
                 # choose from db regarding profession
                 response = self.db.get_all_from_db(
@@ -2255,7 +2260,8 @@ class InviteBot():
                                 prof_list=prof_list,
                                 id_admin_last_session_table=id_admin_last_session_table,
                                 update_profession=True,
-                                update_id_agregator=False
+                                update_id_agregator=False,
+                                shorts_session_name=short_session_name
                             )
                             n += 1
                             progress_message = await progress.show_the_progress(progress_message, n, length)
@@ -3033,8 +3039,17 @@ class InviteBot():
                 prof_list=None,
                 id_admin_last_session_table=None,
                 update_profession=False,
-                update_id_agregator=False
+                update_id_agregator=False,
+                shorts_session_name=None
         ):
+
+            if shorts_session_name:
+                self.db.update_table(
+                    table_name=variable.admin_database,
+                    param=f"WHERE id={id_admin_last_session_table}",
+                    field="short_session_numbers",
+                    value=shorts_session_name
+                )
 
             if update_profession:
                 len_prof_list = len(prof_list)
@@ -3054,17 +3069,17 @@ class InviteBot():
                             new_profession += f'{i}, '
                     new_profession = new_profession[:-2].strip()
                     DataBaseOperations(None).run_free_request(
-                        request=f"UPDATE admin_last_session SET profession='{new_profession}' WHERE id={id_admin_last_session_table}",
+                        request=f"UPDATE {variable.admin_database} SET profession='{new_profession}' WHERE id={id_admin_last_session_table}",
                         output_text='profession has updated'
                     )
 
-                # # check the changes
-                # response_check = DataBaseOperations(None).get_all_from_db(
-                #     table_name='admin_last_session',
-                #     param=f"WHERE id={id_admin_last_session_table}",
-                #     without_sort=True
-                # )
-                # print('changed profession = ', response_check[0][4])
+                # write mark as shorts_session_name
+                if shorts_session_name:
+                    DataBaseOperations(None).run_free_request(
+                        request=f"UPDATE {variable.admin_database} SET short_session_numbers='{shorts_session_name}' WHERE id={id_admin_last_session_table}",
+                        output_text='shorts session name has updated'
+                    )
+
 
             if update_id_agregator:
                 # 6 Mark vacancy like sended to agregator (write to column sended_to_agregator id_agregator)
@@ -3113,7 +3128,7 @@ class InviteBot():
                 query = f"""INSERT INTO {table_to} (
                         chat_name, title, body, profession, vacancy, vacancy_url, company, english, relocation, 
                         job_type, city, salary, experience, contacts, time_of_public, created_at, agregator_link, 
-                        session, sended_to_agregator, sub) 
+                        session, sended_to_agregator, sub, tags, full_tags, full_anti_tags, short_session_numbers) 
                                 VALUES (
                                 '{response_dict['chat_name']}', '{response_dict['title']}', '{response_dict['body']}', 
                                 '{response_dict['profession']}', '{response_dict['vacancy']}', '{response_dict['vacancy_url']}', 
@@ -3122,22 +3137,23 @@ class InviteBot():
                                 '{response_dict['city']}', '{response_dict['salary']}', '{response_dict['experience']}', 
                                 '{response_dict['contacts']}', '{response_dict['time_of_public']}', '{response_dict['created_at']}', 
                                 '{response_dict['agregator_link']}', '{response_dict['session']}', '{response_dict['sended_to_agregator']}', 
-                                '{response_dict['sub']}'
-                                );"""
+                                '{response_dict['sub']}', '{response_dict['tags']}', '{response_dict['full_tags']}', 
+                                '{response_dict['full_anti_tags']}', '{response_dict['short_session_numbers']}');"""
                 self.db.run_free_request(
                     request=query,
                     output_text="\nThe vacancy has removed from admin to archive\n"
                 )
 
 
-        async def compose_data_and_push_to_db(vacancy_from_admin_dict, profession):
+        async def compose_data_and_push_to_db(vacancy_from_admin_dict, profession, shorts_session_name):
             profession_list = {}
             profession_list['profession'] = []
             profession_list['profession'] = [profession, ]
 
             response_from_db = self.db.push_to_bd(
                 results_dict=vacancy_from_admin_dict,
-                profession_list=profession_list
+                profession_list=profession_list,
+                shorts_session_name=shorts_session_name
             )
             return response_from_db
 
@@ -3682,12 +3698,15 @@ class InviteBot():
 
         async def push_shorts(message, callback_data):
 
-            print('callback_data ', callback_data)
-
             profession_list = {}
             self.percent = 0
             message_for_send_dict = {}
             profession = callback_data.split(' ')[-1]
+
+            short_session_name = await helper.get_short_session_name(prefix=profession)
+            self.db.write_short_session(short_session_name)
+
+            await self.bot_aiogram.send_message(message.chat.id, f"Shorts session: {short_session_name}")
 
             self.message = await self.bot_aiogram.send_message(message.chat.id, f'progress {self.percent}%')
             await asyncio.sleep(random.randrange(1, 2))
@@ -3777,6 +3796,7 @@ class InviteBot():
                         await compose_data_and_push_to_db(
                             vacancy_from_admin_dict=vacancy_from_admin_dict,
                             profession=profession,
+                            shorts_session_name=short_session_name
                         )
                         prof_list = vacancy_from_admin_dict['profession'].split(', ')
                         profession_list['profession'] = [profession, ]
@@ -3787,7 +3807,8 @@ class InviteBot():
                             prof_list=prof_list,
                             id_admin_last_session_table=response_temp_dict['id_admin_last_session_table'],
                             update_profession=True,
-                            update_id_agregator=False
+                            update_id_agregator=False,
+                            shorts_session_name=short_session_name,
                         )
                     await delete_used_vacancy_from_admin_temporary(vacancy,
                                                                    response_temp_dict['id_admin_last_session_table'])
@@ -4257,6 +4278,12 @@ class InviteBot():
             table_list = []
             table_list.extend(variable.valid_professions)
             table_list.append(variable.admin_database)
+            table_list.append(variable.archive_database)
+
+            self.db.add_columns_to_tables(
+                table_list=table_list,
+                column_name_type="sended_to_agregator VARCHAR (30)"
+            )
             self.db.add_columns_to_tables(
                 table_list=table_list,
                 column_name_type="tags VARCHAR (700)"
@@ -4281,7 +4308,7 @@ class InviteBot():
                 field=variable.admin_table_fields
             )
 
-            msg = await self.bot_aiogram.send_message(message.chat.id, 'progress 0%')
+            msg = await self.bot_aiogram.send_message(message.chat.id, f'Find {len(responses)}\nprogress 0%')
             self.percent = 0
             length = len(responses)
             n = 0
@@ -4297,24 +4324,36 @@ class InviteBot():
                     get_params=False
 
                 )
-                tag_list = profession['profession']['tag'].split('\n')
-                anti_tag_list = profession['profession']['anti_tag'].split('\n')
-                tags = ''
-                tags_set = set()
-                for tag in tag_list:
-                    if tag:
-                        if 'vacancy' not in tag:
-                            tag_value = tag.split("'")[-2]
-                            tag_word = tag.split("=")[0][3:]
-                            if anti_tag_list:
-                                for anti_tag in anti_tag_list:
-                                    if anti_tag:
-                                        anti_tag_word = anti_tag.split("=")[0][4:]
-                                        if anti_tag_word != tag_word:
-                                            tags_set.add(tag_value)
-                                    else:
-                                        tags_set.add(tag_value)
-                tags = ", ".join(tags_set)
+                tags = helper.get_tags(profession['profession'])
+                # response_dict = await helper.to_dict_from_admin_response(
+                #     response=response,
+                #     fields=variable.admin_table_fields
+                # )
+                # profession = VacancyFilter().sort_profession(
+                #     title=response_dict['title'], body=response_dict['body'],
+                #     check_contacts=False,
+                #     check_profession=True,
+                #     get_params=False
+                #
+                # )
+                # tag_list = profession['profession']['tag'].split('\n')
+                # anti_tag_list = profession['profession']['anti_tag'].split('\n')
+                # tags = ''
+                # tags_set = set()
+                # for tag in tag_list:
+                #     if tag:
+                #         if 'vacancy' not in tag:
+                #             tag_value = tag.split("'")[-2]
+                #             tag_word = tag.split("=")[0][3:]
+                #             if anti_tag_list:
+                #                 for anti_tag in anti_tag_list:
+                #                     if anti_tag:
+                #                         anti_tag_word = anti_tag.split("=")[0][4:]
+                #                         if anti_tag_word != tag_word:
+                #                             tags_set.add(tag_value)
+                #                     else:
+                #                         tags_set.add(tag_value)
+                # tags = ", ".join(tags_set)
                 print('tags: ', tags)
 
                 if tags:
@@ -4322,63 +4361,124 @@ class InviteBot():
                         table_name=variable.admin_database,
                         param=f"WHERE id={response_dict['id']}",
                         field='tags',
-                        value=tags
+                        value=tags,
+                        output_text=f'{n}tags was updated'
                     )
                 if profession['profession']['tag'] :
                     self.db.update_table(
                         table_name=variable.admin_database,
                         param=f"WHERE id={response_dict['id']}",
                         field='full_tags',
-                        value=profession['profession']['tag'].replace("'", "")
+                        value=profession['profession']['tag'].replace("'", ""),
+                        output_text=f'{n}full_tags was updated'
                     )
                 if profession['profession']['anti_tag']:
                     self.db.update_table(
                         table_name=variable.admin_database,
                         param=f"WHERE id={response_dict['id']}",
                         field='full_anti_tags',
-                        value=profession['profession']['anti_tag'].replace("'", "")
+                        value=profession['profession']['anti_tag'].replace("'", ""),
+                        output_text = f'{n}anti_tags was updated'
                     )
-
+                n += 1
                 await progress.show_the_progress(
                     message=msg,
                     current_number=n,
                     end_number=length
                 )
 
-        async def rollback_by_number_short_session(message, short_session_number):
-            # layout: backend: 070220230134; junior: 070220320135
+        async def rollback_by_number_short_session(message):
+            msg = await self.bot_aiogram.send_message(message.chat.id, "Please wait a few seconds")
+
+            responses1 = self.db.get_all_from_db(
+                table_name='devops',
+                param="WHERE short_session_numbers LIKE '%20230207231816%'"
+                # field='short_session_numbers'
+            )
+            responses_admin = self.db.get_all_from_db(
+                table_name=variable.admin_database,
+                param="WHERE short_session_numbers LIKE '%20230207231816%'"
+                # field='short_session_numbers'
+            )
+            responses_archive = self.db.get_all_from_db(
+                table_name=variable.archive_database,
+                param="WHERE short_session_numbers LIKE '%20230207231816%'"
+                # field='short_session_numbers'
+            )
+            pass
+            # layout: backend: 070220230134
             bot_dict = {'bot': self.bot_aiogram, 'chat_id': message.chat.id}
             progress = ShowProgress(bot_dict)
+
+            short_session_number = self.db.get_all_from_db(
+                table_name=variable.short_session_database,
+                param=f"WHERE id=(SELECT MAX(id) FROM {variable.short_session_database})",
+                field='session_name',
+                without_sort=True
+            )[0][0]
+
             # add tags
             table_list = []
             table_list.extend(variable.valid_professions)
             table_list.append(variable.admin_database)
+            table_list.append(variable.archive_database)
+
             fields = 'id, profession, short_session_numbers'
+
             for table_name in table_list:
                 responses = self.db.get_all_from_db(
                     table_name=table_name,
-                    param=f"WHERE short_session_numbers LIKE '%{short_session_number}%'",
-                    field=fields
+                    param=f"WHERE short_session_numbers='{short_session_number}'",
+                    field=variable.admin_table_fields
                 )
                 if responses:
                     for response in responses:
                         response_dict = await helper.to_dict_from_admin_response(
                             response=response,
-                            fields=fields
+                            fields=variable.admin_table_fields
                         )
-                        for response in responses:
-                            session_numbers = response_dict['short_session_numbers'].split(', ')
-                            for session in session_numbers:
-                                if short_session_number in session:
-                                    profession = session.split(":")[0]
-                                    if table_name == variable.admin_database:
-                                        pass
-                                        #update
-                                    # elif table_name ==
+                        if table_name == variable.admin_database:
+                            new_profession = response_dict['short_session_numbers'].split(":")[0].strip()
+                            professions = response_dict['profession']
+                            new_profession = f'{professions}, {new_profession}'
+                            self.db.update_table(
+                                table_name=variable.admin_database,
+                                param=f"WHERE id={response_dict['id']}",
+                                field='profession',
+                                value=new_profession,
+                                output_text="profession was updated"
+                            )
+                            self.db.update_table(
+                                table_name=variable.admin_database,
+                                param=f"WHERE id={response_dict['id']}",
+                                field='short_session_numbers',
+                                value='clear',
+                                output_text="shorts_session was updated"
+                            )
 
+                        elif table_name == variable.archive_database:
+                            new_profession = response_dict['short_session_numbers'].split(":")[0].strip()
+                            professions = response_dict['profession']
+                            new_profession = f'{professions}, {new_profession}'
+                            self.db.update_table(
+                                table_name=variable.admin_database,
+                                param=f"WHERE id={response_dict['id']}",
+                                field='profession',
+                                value=new_profession,
+                                output_text="profession was updated"
+                            )
+                            await transfer_vacancy_admin_archive(
+                                id_admin_last_session_table=response_dict['id'],
+                                table_from=variable.archive_database,
+                                table_to=variable.admin_database,
 
-
-
+                            )
+                        else:
+                            self.db.delete_data(
+                                table_name=table_name,
+                                param=f"WHERE id={response_dict['id']}"
+                            )
+            await msg.edit_text(f"{msg.text}\nDone! Data has restored")
 
         # start_polling(self.dp)
         executor.start_polling(self.dp, skip_updates=True)

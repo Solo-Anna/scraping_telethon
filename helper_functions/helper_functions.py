@@ -1,9 +1,10 @@
 import re
 import time
 from datetime import datetime
+
 from patterns._export_pattern import export_pattern
 from patterns.pseudo_pattern.pseudo_export_pattern import export_pattern as pseudo_export_pattern
-from utils.additional_variables.additional_variables import flood_control_logs_path
+from utils.additional_variables.additional_variables import flood_control_logs_path, admin_table_fields
 
 def compose_to_str_from_list(data_list):
     sub_str = ''
@@ -184,3 +185,26 @@ async def edit_message(bot, text, msg, parse_mode='html', disable_web_page_previ
                     time.sleep(int(seconds) + 5)
     return msg
 
+def get_tags(profession):
+
+    tag_list = profession['tag'].split('\n')
+    anti_tag_list = profession['anti_tag'].split('\n')
+    tags = ''
+    tags_set = set()
+    for tag in tag_list:
+        if tag:
+            if 'vacancy' not in tag and 'contacts' not in tag:
+                tag_value = tag.split("'")[-2]
+                tag_word = tag.split("=")[0][3:]
+                if anti_tag_list:
+                    for anti_tag in anti_tag_list:
+                        if anti_tag:
+                            anti_tag_word = anti_tag.split("=")[0][4:]
+                            if anti_tag_word != tag_word:
+                                tags_set.add(tag_value)
+                        else:
+                            tags_set.add(tag_value)
+    return ", ".join(tags_set)
+
+async def get_short_session_name(prefix):
+    return f"{prefix.strip()}: {datetime.now().strftime('%Y%m%d%H%M%S')}"
