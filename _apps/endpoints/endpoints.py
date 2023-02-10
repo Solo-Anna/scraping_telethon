@@ -1,5 +1,6 @@
 import asyncio
 import configparser
+import datetime
 import json
 import os
 import psycopg2
@@ -13,9 +14,13 @@ from flask import request
 from utils.additional_variables.additional_variables import path_post_request_file, post_request_for_example, valid_professions
 from patterns._export_pattern import export_pattern
 from patterns.data_pattern._data_pattern import pattern
+from filters.filter_jan_2023.filter_jan_2023 import VacancyFilter
+from helper_functions import helper_functions as helper
+from utils.additional_variables import additional_variables as variable
+import requests
 
 db=DataBaseOperations(None)
-
+vacancy_search = VacancyFilter()
 config = configparser.ConfigParser()
 config.read("./settings/config.ini")
 
@@ -77,6 +82,77 @@ async def main_endpoints():
         all_vacancies = await compose_request_to_db(request_data)
         # return {'It works': request_data}
         return all_vacancies
+
+    @app.route("/search-by-text", methods = ['POST'])
+    async def search_by_text():
+        responses_dict = {}
+        request_data = request.json
+        # profession = vacancy_search.sort_profession(
+        #     title=request_data['filter_request'],
+        #     body='',
+        #     check_contacts=False,
+        #     check_vacancy=False,
+        #     check_profession=True
+        # )
+        param = "WHERE"
+        if request_data['vacancy']:
+            request_data['vacancy'] = request_data['vacancy'].lower()
+            if param[-1:] == "'":
+                param += f" AND"
+            param += f" LOWER(vacancy) LIKE '%{request_data['vacancy']}%'"
+
+        if request_data['level']:
+            request_data['level'] = request_data['level'].lower()
+            if param[-1:] == "'":
+                param += f" AND"
+            param += f" LOWER(profession) LIKE '%{request_data['level']}%'"
+
+
+        if request_data['profession']:
+            request_data['profession'] = request_data['profession'].lower()
+            if param[-1:] == "'":
+                param += f" AND"
+            param += f" LOWER(profession) LIKE '%{request_data['profession']}%'"
+
+        if request_data['language']:
+            request_data['language'] = request_data['language'].lower()
+            if param[-1:] == "'":
+                param += " AND"
+            param += f" (LOWER(title) LIKE '%{request_data['language']}%' or LOWER(body) LIKE '%{request_data['language']}%')"
+
+        today = datetime.datetime.now()
+        date_from = (today - datetime.timedelta(days=variable.vacancy_fresh_time_days)).strftime("%Y-%m-%d")
+        param += f" AND DATE(created_at) > '{date_from}'"
+        # param = f"WHERE DATE(created_at) > '{date_from}'"
+
+        responses = db.get_all_from_db(
+            table_name=variable.admin_database,
+            param=param,
+            without_sort=False,
+            field=variable.admin_table_fields
+        )
+        if responses and type(responses) is not str:
+            count = 0
+            for response in responses:
+                response_dict = await helper.to_dict_from_admin_response(
+                    response=response,
+                    fields=variable.admin_table_fields
+                )
+                responses_dict[count] = {}
+                responses_dict[count] = response_dict
+                count +=1
+                if count>=10:
+                    break
+            # await write_to_file(text=request_data)
+            print(len(responses))
+            return {
+                "vacancies_number": len(responses),
+                "vacancies": responses_dict
+            }
+        return {
+            "vacancies_number": 0,
+            "vacancies": ""
+        }
 
     async def get_from_db():
         cur = con.cursor()

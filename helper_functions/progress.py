@@ -19,5 +19,5 @@ class ShowProgress:
             self.percent = check
             self.message = await self.bot.edit_message_text(
                 f"progress {'|' * quantity} {self.percent}%", message.chat.id, message.message_id)
-        await asyncio.sleep(0.5)
+        # await asyncio.sleep(0.5)
         return self.message

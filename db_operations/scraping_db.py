@@ -1,21 +1,13 @@
 import configparser
 import json
 import re
-
-from asgiref.sync import async_to_sync
-
 from utils.additional_variables.additional_variables import admin_database
 from utils.additional_variables.additional_variables import table_list_for_checking_message_in_db, short_session_database
-
 import psycopg2
 from datetime import datetime
-# from filters.scraping_get_profession_Alex_Rus import AlexRusSort
-# from filters.scraping_get_profession_Alex_next_2809 import AlexSort2809
 from logs.logs import Logs
 from helper_functions import helper_functions as helper
 logs = Logs()
-
-# from scraping_send_to_bot import PushToDB
 
 config = configparser.ConfigParser()
 config.read("./../settings/config.ini")
@@ -249,8 +241,6 @@ class DataBaseOperations:
         return text
 
     def get_all_from_db(self, table_name, param='', without_sort=False, order=None, field='*', curs=None):
-
-        logs.write_log(f"scraping_db: function: get_all_from_db")
 
         if not self.con:
             self.connect_db()
@@ -1246,3 +1236,12 @@ class DataBaseOperations:
             cur.execute(query)
 
             print('short_session_name table has created')
+
+    def get_information_about_tables_and_fields(self):
+        if not self.con:
+            self.con = self.connect_db()
+        cur = self.con.cursor()
+        query = "select table_name, column_name from information_schema.columns where table_schema='public'"
+        with self.con:
+            cur.execute(query)
+        return cur.fetchall()

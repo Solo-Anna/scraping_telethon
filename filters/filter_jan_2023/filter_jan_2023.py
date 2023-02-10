@@ -24,7 +24,15 @@ class VacancyFilter:
         self.excel_dict = {}
         self.profession = {}
 
-    def sort_profession(self, title, body, check_contacts=True, check_profession=True, check_vacancy=True, get_params=True):
+    def sort_profession(
+            self,
+            title,
+            body,
+            check_contacts=True,
+            check_profession=True,
+            check_vacancy=True,
+            get_params=True
+    ):
         # profession = dict()
         self.profession['tag'] = ''
         self.profession['anti_tag'] = ''
@@ -69,8 +77,17 @@ class VacancyFilter:
                     return {'profession': self.profession, 'params': {}}
 
             # ---------------- professions -----------------
+            vacancy_name = self.get_vacancy_name(
+                text=vacancy
+            ).capitalize()
+
+            if vacancy_name and (vacancy_name == title or '#' in title):
+                search_profession_text = vacancy_name
+            else:
+                search_profession_text = title
+            pass
             for item in self.valid_profession_list:
-                result = self.search_profession(vacancy=title, item=item, mex=False)
+                result = self.search_profession(vacancy=search_profession_text, item=item, mex=True)
                 if result['result']:
                     self.profession['profession'].append(result['result'])
                     self.profession['tag'] += result['tags']

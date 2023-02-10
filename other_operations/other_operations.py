@@ -830,3 +830,5 @@ response = DataBaseOperations(None).get_all_from_db(
     field='title, profession, sub'
 )
 pass
+
+show_all_tables()

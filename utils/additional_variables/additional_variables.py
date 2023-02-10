@@ -94,6 +94,8 @@ path_post_request_file = "./excel/path_post_request_file.txt"
 
 till = 5
 
+vacancy_fresh_time_days = 7
+
 post_request_for_example = {
     'profession': '',
     'specialization':
@@ -119,9 +121,12 @@ help_text = '/log or /logs - get custom logs (useful for developer\n' \
             '------------ FOR DEVELOPER: ------------\n' \
             '⛔️/debugs\n' \
             '⛔️/developing\n' \
+            '⛔️/get_tables_and_fields\n' \
             '⛔️/get_vacancy_names - you type the profession and bot shows you all titles\n' \
             '⛔️/add_tags_to_DB - (one time usable)\n' \
+            '⛔️/rollback_last_short_session - one step back (shorts) you type number short_session (you can see)\n' \
             '⛔️/rollback_by_number_short_session - one step back (shorts) you type number short_session (you can see)\n' \
+            '⛔️/get_vacancies_name_by_profession\n' \
             '⛔️/ --- refresh_pattern - to get the modify pattern from DB\n' \
             '⛔️/peerchannel - useful for a developer to get id channel\n' \
             '⛔️/getdata - get channel data\n' \
