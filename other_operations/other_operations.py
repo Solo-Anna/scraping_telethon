@@ -5,6 +5,7 @@ from filters.scraping_get_profession_Alex_next_2809 import AlexSort2809
 from db_operations.scraping_db import DataBaseOperations
 # from scraping_telegramchats2 import WriteToDbMessages
 import pandas as pd
+import numpy as np
 from helper_functions.helper_functions import to_dict_from_admin_response_sync
 from utils.additional_variables.additional_variables import admin_table_fields
 
@@ -831,4 +832,34 @@ response = DataBaseOperations(None).get_all_from_db(
 )
 pass
 
-show_all_tables()
+
+
+def make_report_published_vacancies_excel(date1, date2, table_name=None):
+    """Input format: '2023-01-02'"""
+
+    if not table_name:
+        table_name='stats_db'
+
+    param=f"WHERE DATE(time_of_public) BETWEEN '{date1}' AND '{date2}'"
+    data = DataBaseOperations(None).get_all_from_stat_db(param=param, table_name=table_name)
+    columns=data['column_names']
+    all=[i for i in columns if 'all' in i]
+    unique=[i for i in columns if 'unique' in i]
+    df=pd.DataFrame(data['response'], columns=columns)
+    df['time_of_public'] = df['time_of_public'].dt.date
+    df=df.set_index(['time_of_public', 'chat_name'])
+    df['Unique']=df[unique].sum(axis=1)
+    df['All']=df[all].sum(axis=1)
+    df = df[sorted(df.columns )]
+    df2=pd.pivot_table(df, index=['chat_name'], values=df, aggfunc=np.sum)
+    df2.loc['Total for period']=df2.sum(axis=0, numeric_only=True)
+    df_new=pd.concat([y.append(y.sum().rename((x, 'Total for day'))) for x, y in df.groupby (level= 0)]).append(df.sum().rename((f'{date1}-{date2}', 'Total for period')))
+    len=df_new.shape[0]
+
+    with pd.ExcelWriter('./../excel/statistics.xlsx') as writer:
+        df_new.to_excel(writer, sheet_name="Sheet1")
+        df2.to_excel(writer, sheet_name="Sheet1", startrow=len+2,startcol=1, header=False)
+    print('Report is done, saved')
+
+db=DataBaseOperations(None)
+db.make_report_published_vacancies_excel('2023-01-01', '2023-02-01')

@@ -217,16 +217,13 @@ class InviteBot():
         class Form_db(StatesGroup):
             name = State()
 
+        class Form_report(StatesGroup):
+            dates = State()
+
         class Form_check_url(StatesGroup):
             url = State()
 
         class Form_vacancy_names(StatesGroup):
-            profession = State()
-
-        class Form_rollback(StatesGroup):
-            short_session_name = State()
-
-        class Form_vacancy_name(StatesGroup):
             profession = State()
 
         @self.dp.message_handler(commands=['start'])
@@ -254,39 +251,10 @@ class InviteBot():
         async def get_logs(message: types.Message):
             await self.bot_aiogram.send_message(message.chat.id, variable.help_text)
 
-        @self.dp.message_handler(commands=['get_vacancies_name_by_profession'])
-        async def get_vacancies_name_by_profession_command(message: types.Message):
-            await Form_vacancy_names.profession.set()
-            await self.bot_aiogram.send_message(message.chat.id, 'Type the profession')
-
-        @self.dp.message_handler(state=Form_vacancy_names.profession)
-        async def get_vacancies_name_by_profession_form(message: types.Message, state: FSMContext):
-            async with state.proxy() as data:
-                data['profession'] = message.text
-                profession = message.text
-            await state.finish()
-            await get_vacancies_name_by_profession(message,profession)
-
-        @self.dp.message_handler(commands=['rollback_last_short_session'])
+        @self.dp.message_handler(commands=['rollback_by_number_short_session'])
         async def rollback_by_number_short_session_command(message: types.Message):
             await rollback_by_number_short_session(
                 message=message
-            )
-
-        @self.dp.message_handler(commands=['rollback_by_number_short_session'])
-        async def rollback_by_number_short_session_command(message: types.Message):
-            await Form_rollback.short_session_name.set()
-            await self.bot_aiogram.send_message(message.chat.id, 'Type the shorts_session_name from you bot message')
-
-        @self.dp.message_handler(state=Form_rollback.short_session_name)
-        async def rollback_by_number_short_session_form(message: types.Message, state: FSMContext):
-            async with state.proxy() as data:
-                data['short_session_name'] = message.text
-                short_session_name = message.text
-            await state.finish()
-            await rollback_by_number_short_session(
-                message=message,
-                short_session_number=short_session_name
             )
 
 
@@ -513,25 +481,15 @@ class InviteBot():
         async def get_debugs(message: types.Message):
             await debug_function()
 
-        @self.dp.message_handler(commands=['get_tables_and_fields'])
-        async def get_tables_and_fields(message: types.Message):
-            dict_tables = {}
-            info = self.db.get_information_about_tables_and_fields()
-            for i in info:
-                if i[0] not in dict_tables:
-                    dict_tables[i[0]] = []
-                dict_tables[i[0]].append(i[1])
-            for i in dict_tables:
-                print(f"{i}:")
-                count = 0
-                message_for_send = f"{i}:\n"
-                for element in dict_tables[i]:
-                    print(f"   {count}-{element}")
-                    message_for_send += f"   {count}-{element}\n"
-                    count += 1
-                await self.bot_aiogram.send_message(message.chat.id, message_for_send)
-                await asyncio.sleep(random.randrange(1, 2))
-                print('--------\n')
+        @self.dp.message_handler(commands=['developing'])
+        async def developing(message: types.Message):
+            self.db.check_or_create_table_admin(
+                table_name='archive'
+            )
+            self.db.append_columns(
+                table_name_list=['admin_last_session',],
+                column="sub VARCHAR (250)"
+            )
 
         @self.dp.message_handler(commands=['get_backup_db'])
         async def get_logs(message: types.Message):
@@ -1549,15 +1507,9 @@ class InviteBot():
                         text=variable.admin_table_fields,
                         separator=', '
                     )
-                responses = self.db.get_all_from_db(
-                    table_name=variable.admin_database,
-                    param="WHERE profession <> 'no_sort'",
-                    field='id'
-                )
                 for item in variable.valid_professions:
                     message_for_send += f"{item}: {result_dict['last_session'][item]}/{result_dict['all'][item]}\n"
-                message_for_send += f"-----------------\nSumm: {sum(result_dict['last_session'].values())}/{sum(result_dict['all'].values())}\n" \
-                                    f"vacancies number: {len(responses)}"
+                message_for_send += f"-----------------\nSumm: {sum(result_dict['last_session'].values())}/{sum(result_dict['all'].values())}"
                 await self.bot_aiogram.send_message(callback.message.chat.id, message_for_send, parse_mode='html', reply_markup=self.markup)
 
 # -----------------------------------------------------------------------
@@ -3177,18 +3129,18 @@ class InviteBot():
 
                 # response = response[0]
                 query = f"""INSERT INTO {table_to} (
-                        chat_name, title, body, profession, vacancy, vacancy_url, company, english, relocation, 
-                        job_type, city, salary, experience, contacts, time_of_public, created_at, agregator_link, 
-                        session, sended_to_agregator, sub, tags, full_tags, full_anti_tags, short_session_numbers) 
+                        chat_name, title, body, profession, vacancy, vacancy_url, company, english, relocation,
+                        job_type, city, salary, experience, contacts, time_of_public, created_at, agregator_link,
+                        session, sended_to_agregator, sub, tags, full_tags, full_anti_tags, short_session_numbers)
                                 VALUES (
-                                '{response_dict['chat_name']}', '{response_dict['title']}', '{response_dict['body']}', 
-                                '{response_dict['profession']}', '{response_dict['vacancy']}', '{response_dict['vacancy_url']}', 
-                                '{response_dict['company']}', 
-                                '{response_dict['english']}', '{response_dict['relocation']}', '{response_dict['job_type']}', 
-                                '{response_dict['city']}', '{response_dict['salary']}', '{response_dict['experience']}', 
-                                '{response_dict['contacts']}', '{response_dict['time_of_public']}', '{response_dict['created_at']}', 
-                                '{response_dict['agregator_link']}', '{response_dict['session']}', '{response_dict['sended_to_agregator']}', 
-                                '{response_dict['sub']}', '{response_dict['tags']}', '{response_dict['full_tags']}', 
+                                '{response_dict['chat_name']}', '{response_dict['title']}', '{response_dict['body']}',
+                                '{response_dict['profession']}', '{response_dict['vacancy']}', '{response_dict['vacancy_url']}',
+                                '{response_dict['company']}',
+                                '{response_dict['english']}', '{response_dict['relocation']}', '{response_dict['job_type']}',
+                                '{response_dict['city']}', '{response_dict['salary']}', '{response_dict['experience']}',
+                                '{response_dict['contacts']}', '{response_dict['time_of_public']}', '{response_dict['created_at']}',
+                                '{response_dict['agregator_link']}', '{response_dict['session']}', '{response_dict['sended_to_agregator']}',
+                                '{response_dict['sub']}', '{response_dict['tags']}', '{response_dict['full_tags']}',
                                 '{response_dict['full_anti_tags']}', '{response_dict['short_session_numbers']}');"""
                 self.db.run_free_request(
                     request=query,
@@ -3423,13 +3375,11 @@ class InviteBot():
             excel_list['tag'] = []
             excel_list['anti_tag'] = []
             excel_list['vacancy'] = []
-            excel_list['sub'] = []
             n = 0
-            for i in [variable.admin_database,]:
+            for i in ['admin_last_session']:
                 response = DataBaseOperations(None).get_all_from_db(
                     table_name=f'{i}',
                     param="""WHERE profession <> 'no_sort'""",
-                    field=variable.admin_table_fields,
                     without_sort=True
                 )
 
@@ -3438,41 +3388,28 @@ class InviteBot():
                 n=0
                 length=len(response)
                 for vacancy in response:
-                    vacancy_dict = await helper.to_dict_from_admin_response(
-                        response=vacancy,
-                        fields=variable.admin_table_fields
+                    title = vacancy[2]
+                    body = vacancy[3]
+                    vac = vacancy[5]
+                    response_from_filter = VacancyFilter().sort_profession(
+                        title=title,
+                        body=body,
+                        check_vacancy=False,
+                        check_contacts=False
                     )
-                    title = vacancy_dict['title']
-                    body = vacancy_dict['body']
-                    vac = vacancy_dict['vacancy']
-                    full_tags = vacancy_dict['full_tags']
-                    full_anti_tags = vacancy_dict['full_anti_tags']
-                    profession = vacancy_dict['profession']
-                    sub = vacancy_dict['sub']
-
-                    # response_from_filter = VacancyFilter().sort_profession(
-                    #     title=title,
-                    #     body=body,
-                    #     check_vacancy=False,
-                    #     check_contacts=False,
-                    #     check_profession=False,
-                    #     get_params=True
-                    # )
-                    # # profession = response_from_filter['profession']
-                    # params = response_from_filter['params']
-
+                    profession = response_from_filter['profession']
+                    params = response_from_filter['params']
                     if vac:
                         excel_list['vacancy'].append(vac)
-                    # elif params['vacancy']:
-                    #     excel_list['vacancy'].append(params['vacancy'])
+                    elif params['vacancy']:
+                        excel_list['vacancy'].append(params['vacancy'])
                     else:
                         excel_list['vacancy'].append('-')
                     excel_list['title'].append(title)
                     excel_list['body'].append(body)
-                    excel_list['profession'].append(profession)
-                    excel_list['tag'].append(full_tags)
-                    excel_list['anti_tag'].append(full_anti_tags)
-                    excel_list['sub'].append(sub)
+                    excel_list['profession'].append(profession['profession'])
+                    excel_list['tag'].append(profession['tag'])
+                    excel_list['anti_tag'].append(profession['anti_tag'])
                     n += 1
                     print(f'step {n} passed')
                     msg = await sp.show_the_progress(
@@ -3486,7 +3423,6 @@ class InviteBot():
                     'body': excel_list['body'],
                     'vacancy': excel_list['vacancy'],
                     'profession': excel_list['profession'],
-                    'sub': excel_list['sub'],
                     'tag': excel_list['tag'],
                     'anti_tag': excel_list['anti_tag']
                 }
@@ -3760,7 +3696,7 @@ class InviteBot():
             answer_dict = self.db.remove_completed_professions()
             await self.bot_aiogram.send_message(
                 message.chat.id,
-                f"messages: {answer_dict['messages']}\nremoved to archive: {answer_dict['deleted']}\nchanged profession: {answer_dict['change_profession']}"
+                f"messages: {answer_dict['messages']}\ndeleted: {answer_dict['deleted']}\nchanged: {answer_dict['change_profession']}"
             )
 
         async def push_shorts(message, callback_data):
@@ -4422,14 +4358,14 @@ class InviteBot():
                 #                         tags_set.add(tag_value)
                 # tags = ", ".join(tags_set)
                 print('tags: ', tags)
-                profession_name = ", ".join(profession['profession']['profession'])
+
                 if tags:
                     self.db.update_table(
                         table_name=variable.admin_database,
                         param=f"WHERE id={response_dict['id']}",
                         field='tags',
                         value=tags,
-                        output_text=f'{n}-tags was updated'
+                        output_text=f'{n}tags was updated'
                     )
                 if profession['profession']['tag'] :
                     self.db.update_table(
@@ -4437,7 +4373,7 @@ class InviteBot():
                         param=f"WHERE id={response_dict['id']}",
                         field='full_tags',
                         value=profession['profession']['tag'].replace("'", ""),
-                        output_text=f'{n}-full_tags was updated'
+                        output_text=f'{n}full_tags was updated'
                     )
                 if profession['profession']['anti_tag']:
                     self.db.update_table(
@@ -4445,25 +4381,7 @@ class InviteBot():
                         param=f"WHERE id={response_dict['id']}",
                         field='full_anti_tags',
                         value=profession['profession']['anti_tag'].replace("'", ""),
-                        output_text = f'{n}-anti_tags was updated'
-                    )
-                if profession_name != response_dict['profession']:
-                    # rewrite profession
-                    self.db.update_table(
-                        table_name=variable.admin_database,
-                        param=f"WHERE id={response_dict['id']}",
-                        field='profession',
-                        value=profession_name,
-                        output_text=f'{n}-profession was updated'
-                    )
-                    # rewrite sub
-                    sub = helper.compose_to_str_from_list(profession['profession']['sub'])
-                    self.db.update_table(
-                        table_name=variable.admin_database,
-                        param=f"WHERE id={response_dict['id']}",
-                        field='sub',
-                        value=sub,
-                        output_text=f'{n}-sub was updated'
+                        output_text = f'{n}anti_tags was updated'
                     )
                 n += 1
                 await progress.show_the_progress(
@@ -4472,36 +4390,35 @@ class InviteBot():
                     end_number=length
                 )
 
-        async def rollback_by_number_short_session(message, short_session_number=None):
+        async def rollback_by_number_short_session(message):
             msg = await self.bot_aiogram.send_message(message.chat.id, "Please wait a few seconds")
 
-            # responses1 = self.db.get_all_from_db(
-            #     table_name='devops',
-            #     param="WHERE short_session_numbers LIKE '%20230207231816%'"
-            #     # field='short_session_numbers'
-            # )
-            # responses_admin = self.db.get_all_from_db(
-            #     table_name=variable.admin_database,
-            #     param="WHERE short_session_numbers LIKE '%20230207231816%'"
-            #     # field='short_session_numbers'
-            # )
-            # responses_archive = self.db.get_all_from_db(
-            #     table_name=variable.archive_database,
-            #     param="WHERE short_session_numbers LIKE '%20230207231816%'"
-            #     # field='short_session_numbers'
-            # )
+            responses1 = self.db.get_all_from_db(
+                table_name='devops',
+                param="WHERE short_session_numbers LIKE '%20230207231816%'"
+                # field='short_session_numbers'
+            )
+            responses_admin = self.db.get_all_from_db(
+                table_name=variable.admin_database,
+                param="WHERE short_session_numbers LIKE '%20230207231816%'"
+                # field='short_session_numbers'
+            )
+            responses_archive = self.db.get_all_from_db(
+                table_name=variable.archive_database,
+                param="WHERE short_session_numbers LIKE '%20230207231816%'"
+                # field='short_session_numbers'
+            )
             pass
             # layout: backend: 070220230134
             bot_dict = {'bot': self.bot_aiogram, 'chat_id': message.chat.id}
             progress = ShowProgress(bot_dict)
 
-            if not short_session_number:
-                short_session_number = self.db.get_all_from_db(
-                    table_name=variable.short_session_database,
-                    param=f"WHERE id=(SELECT MAX(id) FROM {variable.short_session_database})",
-                    field='session_name',
-                    without_sort=True
-                )[0][0]
+            short_session_number = self.db.get_all_from_db(
+                table_name=variable.short_session_database,
+                param=f"WHERE id=(SELECT MAX(id) FROM {variable.short_session_database})",
+                field='session_name',
+                without_sort=True
+            )[0][0]
 
             # add tags
             table_list = []
@@ -4566,35 +4483,28 @@ class InviteBot():
                             )
             await msg.edit_text(f"{msg.text}\nDone! Data has restored")
 
-        async def get_vacancies_name_by_profession(message, profession):
-            vacancy_name_str = ''
-            vacancy_name_list = []
-            responses = self.db.get_all_from_db(
-                table_name=variable.admin_database,
-                field='title, vacancy, full_tags, full_anti_tags',
-                param=f"WHERE profession LIKE '%{profession}%'"
+
+        @self.dp.message_handler(commands=['how_many_vacancies_published'])
+        async def how_many_vacancies_published_commands(message: types.Message):
+            await Form_report.dates.set()
+            await self.bot_aiogram.send_message(message.chat.id, 'Type the dates period in format: 2023-01-01, 2023-01-04')
+
+        @self.dp.message_handler(state=Form_report.dates)
+        async def report_published (message: types.Message, state: FSMContext):
+            async with state.proxy() as data:
+                data['dates'] = message.text
+                dates_str = message.text
+                dates_list = dates_str.split(',')
+            await state.finish()
+            date1=f'{dates_list[0].strip()}'
+            date2=f'{dates_list[1].strip()}'
+            self.db.make_report_published_vacancies_excel(date1=date1, date2=date2
             )
-            for response in responses:
-                if response[1]:
-                    text = f"{response[1]}\n"
-                else:
-                    text = f"{response[0]}\n"
-                if len(f"{vacancy_name_str}{text}")>4096:
-                    vacancy_name_list.append(vacancy_name_str)
-                    vacancy_name_str = text
-                else:
-                    vacancy_name_str += text
-            vacancy_name_list.append(vacancy_name_str)
-            for i in vacancy_name_list:
-                await self.bot_aiogram.send_message(message.chat.id, i)
-                await asyncio.sleep(random.randrange(1,2))
 
-
-
+            await send_file_to_user(message, f'./excel/excel/report_{date1}_{date2}.xlsx')
 
         # start_polling(self.dp)
         executor.start_polling(self.dp, skip_updates=True)
-
 
 def run(double=False, token_in=None):
     InviteBot(

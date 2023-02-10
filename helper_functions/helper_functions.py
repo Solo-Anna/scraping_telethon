@@ -208,3 +208,14 @@ def get_tags(profession):
 
 async def get_short_session_name(prefix):
     return f"{prefix.strip()}: {datetime.now().strftime('%Y%m%d%H%M%S')}"
+
+def decompose_from_str_to_subs_list(data_str):
+
+    data_list=data_str.split(': ')
+    profession=data_list[0]
+    i=data_list[1].strip()
+    if i=='':
+        i='unsorted'
+    i=i.split(', ')
+    subs_list=[f'{profession}_{j}' for j in i]
+    return subs_list

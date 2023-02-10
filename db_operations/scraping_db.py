@@ -1,13 +1,23 @@
 import configparser
 import json
 import re
+import numpy as np
+import pandas as pd
+
+from asgiref.sync import async_to_sync
+
 from utils.additional_variables.additional_variables import admin_database
 from utils.additional_variables.additional_variables import table_list_for_checking_message_in_db, short_session_database
+
 import psycopg2
 from datetime import datetime
+# from filters.scraping_get_profession_Alex_Rus import AlexRusSort
+# from filters.scraping_get_profession_Alex_next_2809 import AlexSort2809
 from logs.logs import Logs
 from helper_functions import helper_functions as helper
 logs = Logs()
+
+# from scraping_send_to_bot import PushToDB
 
 config = configparser.ConfigParser()
 config.read("./../settings/config.ini")
@@ -96,7 +106,7 @@ class DataBaseOperations:
                 response = cur.fetchall()
 
                 if not response:
-                    new_post = f"""INSERT INTO participant_table (id_participant, first_name, last_name, user_name, phone, is_bot, channel, entity) 
+                    new_post = f"""INSERT INTO participant_table (id_participant, first_name, last_name, user_name, phone, is_bot, channel, entity)
                                             VALUES ('{id_participant}', '{first_name}', '{last_name}', '{user_name}', '{phone}', '{is_bot}', '{channel}', {entity});"""
                     try:
                         cur.execute(new_post)
@@ -133,7 +143,7 @@ class DataBaseOperations:
                             time_of_public TIMESTAMP,
                             created_at TIMESTAMP,
                             agregator_link VARCHAR(200),
-                            sub VARCHAR (250),  
+                            sub VARCHAR (250),
                             tags VARCHAR (700),
                             full_tags VARCHAR (700),
                             full_anti_tags VARCHAR (700),
@@ -174,8 +184,8 @@ class DataBaseOperations:
         results_dict['company'] = self.clear_title_or_body(results_dict['company'])
 
         query = f"""SELECT * FROM {pro} WHERE title='{results_dict['title']}' AND body='{results_dict['body']}'"""
-        query_double = f"""SELECT * FROM {pro} 
-                        WHERE title LIKE '%{results_dict['title'].strip()}%' AND 
+        query_double = f"""SELECT * FROM {pro}
+                        WHERE title LIKE '%{results_dict['title'].strip()}%' AND
                         body LIKE '%{results_dict['body'].strip()}%'"""
         with self.con:
             try:
@@ -208,14 +218,14 @@ class DataBaseOperations:
             response_dict[pro] = False
 
             new_post = f"""INSERT INTO {pro} (
-            chat_name, title, body, profession, vacancy, vacancy_url, company, english, relocation, job_type, 
-            city, salary, experience, contacts, time_of_public, created_at, agregator_link, session, sub, tags, 
-            full_tags, full_anti_tags, short_session_numbers) 
-                        VALUES ('{results_dict['chat_name']}', '{results_dict['title']}', '{results_dict['body']}', 
-                        '{pro}', '{results_dict['vacancy']}', '{results_dict['vacancy_url']}', '{results_dict['company']}', 
-                        '{results_dict['english']}', '{results_dict['relocation']}', '{results_dict['job_type']}', 
-                        '{results_dict['city']}', '{results_dict['salary']}', '{results_dict['experience']}', 
-                        '{results_dict['contacts']}', '{results_dict['time_of_public']}', '{datetime.now()}', '{agregator_id}', 
+            chat_name, title, body, profession, vacancy, vacancy_url, company, english, relocation, job_type,
+            city, salary, experience, contacts, time_of_public, created_at, agregator_link, session, sub, tags,
+            full_tags, full_anti_tags, short_session_numbers)
+                        VALUES ('{results_dict['chat_name']}', '{results_dict['title']}', '{results_dict['body']}',
+                        '{pro}', '{results_dict['vacancy']}', '{results_dict['vacancy_url']}', '{results_dict['company']}',
+                        '{results_dict['english']}', '{results_dict['relocation']}', '{results_dict['job_type']}',
+                        '{results_dict['city']}', '{results_dict['salary']}', '{results_dict['experience']}',
+                        '{results_dict['contacts']}', '{results_dict['time_of_public']}', '{datetime.now()}', '{agregator_id}',
                         '{results_dict['session']}', '{results_dict['sub']}', '{results_dict['tags']}', '{results_dict['full_tags']}',
                         '{results_dict['full_anti_tags']}', '{shorts_session_name}');"""
             # print('query in db: ', new_post)
@@ -223,6 +233,12 @@ class DataBaseOperations:
                 try:
                     cur.execute(new_post)
                     print(self.quant, f'+++++++++++++ The vacancy has been added to DB {pro}\n')
+                    try:
+                        self.push_vacancy_to_main_stats(dict=results_dict)
+                        print(f'+++++++++++++ Added to statistics\n')
+                    except Exception as e:
+                        print('Did not push to statistics', e)
+                        pass
                 except Exception as e:
                     print('Did not push to DB ', e)
                     pass
@@ -241,6 +257,8 @@ class DataBaseOperations:
         return text
 
     def get_all_from_db(self, table_name, param='', without_sort=False, order=None, field='*', curs=None):
+
+        logs.write_log(f"scraping_db: function: get_all_from_db")
 
         if not self.con:
             self.connect_db()
@@ -336,7 +354,7 @@ class DataBaseOperations:
 
                 if not r:
 
-                    new_post = f"""INSERT INTO all_messages (chat_name, title, body, profession, time_of_public, created_at) 
+                    new_post = f"""INSERT INTO all_messages (chat_name, title, body, profession, time_of_public, created_at)
                                                VALUES ('{chat_name}', '{title}', '{body}', '{None}', '{time_of_public}', '{created_at}');"""
                     # cur.execute(new_post) #!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
                     print(f'= Added to DB all_messages\n')
@@ -473,7 +491,7 @@ class DataBaseOperations:
             table_archive = f"{i}_archive"
             self.check_or_create_table(cur=cur, table_name=table_archive)
             for message in response:
-                query = f"""INSERT INTO {table_archive} (chat_name, title, body, profession, time_of_public, created_at) 
+                query = f"""INSERT INTO {table_archive} (chat_name, title, body, profession, time_of_public, created_at)
                         VALUES ('{message[1]}', '{message[2]}', '{message[3]}', '{message[4]}', '{message[5]}', '{message[6]}')"""
                 with self.con:
                     try:
@@ -697,7 +715,7 @@ class DataBaseOperations:
                                 agregator_link VARCHAR(200),
                                 session VARCHAR(15),
                                 sended_to_agregator VARCHAR(30),
-                                sub VARCHAR (250),  
+                                sub VARCHAR (250),
                                 tags VARCHAR (700),
                                 full_tags VARCHAR (700),
                                 full_anti_tags VARCHAR (700),
@@ -746,14 +764,14 @@ class DataBaseOperations:
 
 
         new_post = f"""INSERT INTO {table_name} (
-                            chat_name, title, body, profession, vacancy, vacancy_url, company, english, relocation, job_type, 
+                            chat_name, title, body, profession, vacancy, vacancy_url, company, english, relocation, job_type,
                             city, salary, experience, contacts, time_of_public, created_at, session, sub,
-                            tags, full_tags, full_anti_tags) 
-                                        VALUES ('{results_dict['chat_name']}', '{results_dict['title']}', '{results_dict['body']}', 
-                                        '{results_dict['profession']}', '{results_dict['vacancy']}', '{results_dict['vacancy_url']}', '{results_dict['company']}', 
-                                        '{results_dict['english']}', '{results_dict['relocation']}', '{results_dict['job_type']}', 
-                                        '{results_dict['city']}', '{results_dict['salary']}', '{results_dict['experience']}', 
-                                        '{results_dict['contacts']}', '{results_dict['time_of_public']}', '{datetime.now()}', 
+                            tags, full_tags, full_anti_tags)
+                                        VALUES ('{results_dict['chat_name']}', '{results_dict['title']}', '{results_dict['body']}',
+                                        '{results_dict['profession']}', '{results_dict['vacancy']}', '{results_dict['vacancy_url']}', '{results_dict['company']}',
+                                        '{results_dict['english']}', '{results_dict['relocation']}', '{results_dict['job_type']}',
+                                        '{results_dict['city']}', '{results_dict['salary']}', '{results_dict['experience']}',
+                                        '{results_dict['contacts']}', '{results_dict['time_of_public']}', '{datetime.now()}',
                                         '{results_dict['session']}', '{results_dict['sub']}',
                                         '{tags}', '{full_tags}', '{full_anti_tags}');"""
         with self.con:
@@ -824,7 +842,7 @@ class DataBaseOperations:
                                             mutual_contact BOOLEAN
                                             );"""
                             )
-            query_check = f"""SELECT * FROM followers_statistics 
+            query_check = f"""SELECT * FROM followers_statistics
                             WHERE channel='{channel}' AND id_user='{id_user}'"""
             with self.con:
                 cur.execute(query_check)
@@ -996,8 +1014,8 @@ class DataBaseOperations:
                 print(f'Error in the file writing\n{e}\n{title_temp}')
         # ----------------------- end ----------------------------------
 
-        query_check = f"""SELECT * FROM admin_temporary 
-                WHERE id_admin_channel='{id_admin_channel}' 
+        query_check = f"""SELECT * FROM admin_temporary
+                WHERE id_admin_channel='{id_admin_channel}'
                 AND id_admin_last_session_table = '{id_admin_last_session_table}'"""
 
         with self.con:
@@ -1237,11 +1255,147 @@ class DataBaseOperations:
 
             print('short_session_name table has created')
 
-    def get_information_about_tables_and_fields(self):
+    def add_column_into_table(self,column_name, table_name=None):
         if not self.con:
-            self.con = self.connect_db()
+                self.connect_db()
+
+        if not table_name:
+            table_name='stats_db'
         cur = self.con.cursor()
-        query = "select table_name, column_name from information_schema.columns where table_schema='public'"
         with self.con:
+            query = f"""ALTER TABLE {table_name} ADD COLUMN IF NOT EXISTS {column_name} INT DEFAULT 0"""
             cur.execute(query)
-        return cur.fetchall()
+        print(f'Column {column_name} to {table_name} has been added or exists')
+
+    def check_or_create_stats_table(self, table_name=None, profession_list=[]):
+        if not self.con:
+                self.connect_db()
+        if not table_name:
+            table_name='stats_db'
+        if not profession_list:
+            profession_list=['designer', 'game', 'product', 'mobile', 'pm', 'sales_manager', 'analyst', 'frontend', 'marketing', 'devops', 'hr', 'backend', 'qa', 'junior']
+
+        cur = self.con.cursor()
+        with self.con:
+            cur.execute(f"""CREATE TABLE IF NOT EXISTS {table_name} (
+                                time_of_public DATE,
+                                chat_name VARCHAR(150)
+                                );"""
+                            )
+        for i in profession_list:
+            list=[f'{i}_all', f'{i}_unique']
+            for j in list:
+                self.add_column_into_table(j, table_name)
+
+        print(f'table {table_name} has been created or exists')
+
+    def push_vacancy_to_main_stats(self, dict, table_name=None):
+        if not self.con:
+            self.connect_db()
+
+        if not table_name:
+            table_name='stats_db'
+        time_of_public = dict['time_of_public']
+        chat_name = dict['chat_name']
+        subs_list=helper.decompose_from_str_to_subs_list(dict['sub'])
+        profession = dict['profession']
+        all=f'{profession}_all'
+        unique=f'{profession}_unique'
+
+        cur = self.con.cursor()
+        for sub in subs_list:
+            self.add_column_into_table(sub, table_name)
+            # add_column_into_table(all, table_name) - можно добавить если предполагается, что профессии тоже могут появиться новые
+            # add_column_into_table(unique, table_name)
+            query = f"""SELECT * FROM {table_name} WHERE time_of_public='{time_of_public}' AND chat_name='{chat_name}'"""
+            cur.execute(query)
+
+            if not cur.fetchall():
+                query = f"""INSERT INTO {table_name} (chat_name, time_of_public, {sub}, {all}) VALUES ('{chat_name}','{time_of_public}','1', '1')"""
+                with self.con:
+                    try:
+                        cur.execute(query)
+                        print("Vacancy was added to subs_stats")
+                    except Exception as e:
+                        print('error', e)
+
+            else:
+                query = f"""UPDATE {table_name} SET {sub} = {sub}+1, {all} = {all}+1 WHERE chat_name = '{chat_name}' AND time_of_public = '{time_of_public}'"""
+                with self.con:
+                    try:
+                        cur.execute(query)
+                        print(f"Vacancy was added to subs_stats")
+                    except Exception as e:
+                        print('error', e)
+
+        query = f"""UPDATE {table_name} SET {unique}={unique}+1 WHERE chat_name = '{chat_name}' AND time_of_public = '{time_of_public}'"""
+        with self.con:
+            try:
+                cur.execute(query)
+                print("Vacancy was added to subs_stats")
+            except Exception as e:
+                print('error', e)
+
+        return dict
+
+    def get_all_from_stat_db(self, table_name=None, param='', order=None, field='*'):
+
+        if not self.con:
+            self.connect_db()
+        if not table_name:
+            table_name='stats_db'
+
+        cur = self.con.cursor()
+
+        if not order:
+            order = "ORDER BY time_of_public"
+
+        query = f"""SELECT {field} FROM {table_name} {param} {order}"""
+        with self.con:
+            try:
+                cur.execute(query)
+                response = cur.fetchall()
+                column_names = [description[0] for description in cur.description]
+            except Exception as e:
+                print(e)
+                return str(e)
+
+        return {'response':response, 'column_names':column_names}
+
+    def add_old_vacancies_to_stat_db(self,table_list=None, fields=None, table_name=None):
+
+        if not table_list:
+            table_list=['designer', 'game', 'product', 'mobile', 'pm', 'sales_manager', 'analyst', 'frontend', 'marketing', 'devops', 'hr', 'backend', 'qa', 'junior']
+        fields='time_of_public, chat_name, profession, sub'
+        for i in table_list:
+            response=self.get_all_from_db(table_name=i, field=fields)
+            for j in response:
+                result_dict=helper.to_dict_from_admin_response_sync(j, fields)
+                self.push_vacancy_to_main_stats(result_dict, table_name)
+            print(f'All vacancies from {i} were added to stats db')
+
+    def make_report_published_vacancies_excel(self, date1, date2, table_name=None):
+        """Input format: '2023-01-02'"""
+
+        if not table_name:
+            table_name='stats_db'
+
+        param=f"WHERE DATE(time_of_public) BETWEEN '{date1}' AND '{date2}'"
+        data = self.get_all_from_stat_db(param=param, table_name=table_name)
+        columns=data['column_names']
+        all=[i for i in columns if 'all' in i]
+        unique=[i for i in columns if 'unique' in i]
+        df=pd.DataFrame(data['response'], columns=columns)
+        df=df.set_index(['time_of_public', 'chat_name'])
+        df['Unique']=df[unique].sum(axis=1)
+        df['All']=df[all].sum(axis=1)
+        df = df[sorted(df.columns )]
+        df2=pd.pivot_table(df, index=['chat_name'], values=df, aggfunc=np.sum)
+        df2.loc['Total for period']=df2.sum(axis=0, numeric_only=True)
+        df_new=pd.concat([y.append(y.sum().rename((x, 'Total for day'))) for x, y in df.groupby (level= 0)]).append(df.sum().rename((f'{date1}-{date2}', 'Total for period')))
+        len=df_new.shape[0]
+
+        with pd.ExcelWriter(f'./excel/excel/report_{date1}_{date2}.xlsx') as writer:
+            df_new.to_excel(writer, sheet_name="Sheet1")
+            df2.to_excel(writer, sheet_name="Sheet1", startrow=len+2,startcol=1, header=False)
+            print('Report is done, saved')
