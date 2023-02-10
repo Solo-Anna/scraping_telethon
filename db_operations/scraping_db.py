@@ -1395,7 +1395,8 @@ class DataBaseOperations:
         df_new=pd.concat([y.append(y.sum().rename((x, 'Total for day'))) for x, y in df.groupby (level= 0)]).append(df.sum().rename((f'{date1}-{date2}', 'Total for period')))
         len=df_new.shape[0]
 
-        with pd.ExcelWriter(f'./excel/excel/report_{date1}_{date2}.xlsx') as writer:
+        with pd.ExcelWriter(f'./excel/report_{date1}_{date2}.xlsx') as writer:
             df_new.to_excel(writer, sheet_name="Sheet1")
             df2.to_excel(writer, sheet_name="Sheet1", startrow=len+2,startcol=1, header=False)
             print('Report is done, saved')
+
