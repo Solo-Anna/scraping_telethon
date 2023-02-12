@@ -514,7 +514,7 @@ class DataBaseOperations:
 
         for table_name in table_list:
 
-            query = f"""ALTER TABLE {table_name} ADD COLUMN {column_name_type}"""
+            query = f"""ALTER TABLE {table_name} ADD COLUMN IF NOT EXISTS {column_name_type}"""
             with self.con:
                 try:
                     cur.execute(query)
@@ -1255,18 +1255,6 @@ class DataBaseOperations:
 
             print('short_session_name table has created')
 
-    def add_column_into_table(self,column_name, table_name=None):
-        if not self.con:
-                self.connect_db()
-
-        if not table_name:
-            table_name='stats_db'
-        cur = self.con.cursor()
-        with self.con:
-            query = f"""ALTER TABLE {table_name} ADD COLUMN IF NOT EXISTS {column_name} INT DEFAULT 0"""
-            cur.execute(query)
-        print(f'Column {column_name} to {table_name} has been added or exists')
-
     def check_or_create_stats_table(self, table_name=None, profession_list=[]):
         if not self.con:
                 self.connect_db()
@@ -1285,7 +1273,7 @@ class DataBaseOperations:
         for i in profession_list:
             list=[f'{i}_all', f'{i}_unique']
             for j in list:
-                self.add_column_into_table(j, table_name)
+                self.add_columns_to_tables(table_list=[table_name], column_name_type = f'{j} INT DEFAULT 0')
 
         print(f'table {table_name} has been created or exists')
 
@@ -1304,9 +1292,10 @@ class DataBaseOperations:
 
         cur = self.con.cursor()
         for sub in subs_list:
-            self.add_column_into_table(sub, table_name)
-            # add_column_into_table(all, table_name) - можно добавить если предполагается, что профессии тоже могут появиться новые
-            # add_column_into_table(unique, table_name)
+            self.add_columns_to_tables(table_list=[table_name], column_name_type = f'{sub} INT DEFAULT 0')
+            # можно добавить если предполагается, что профессии тоже могут появиться новые:
+            # self.add_columns_to_tables(table_list=[table_name], column_name_type = f'{all} INT DEFAULT 0')
+            # self.add_columns_to_tables(table_list=[table_name], column_name_type = f'{unique} INT DEFAULT 0')
             query = f"""SELECT * FROM {table_name} WHERE time_of_public='{time_of_public}' AND chat_name='{chat_name}'"""
             cur.execute(query)
 
@@ -1375,7 +1364,7 @@ class DataBaseOperations:
             print(f'All vacancies from {i} were added to stats db')
 
     def make_report_published_vacancies_excel(self, date1, date2, table_name=None):
-        """Input format: '2023-01-02'"""
+        """Input date format: '2023-01-02'"""
 
         if not table_name:
             table_name='stats_db'
@@ -1386,17 +1375,23 @@ class DataBaseOperations:
         all=[i for i in columns if 'all' in i]
         unique=[i for i in columns if 'unique' in i]
         df=pd.DataFrame(data['response'], columns=columns)
-        df=df.set_index(['time_of_public', 'chat_name'])
+        df=df.set_index(['time_of_public'])
         df['Unique']=df[unique].sum(axis=1)
         df['All']=df[all].sum(axis=1)
         df = df[sorted(df.columns )]
-        df2=pd.pivot_table(df, index=['chat_name'], values=df, aggfunc=np.sum)
-        df2.loc['Total for period']=df2.sum(axis=0, numeric_only=True)
-        df_new=pd.concat([y.append(y.sum().rename((x, 'Total for day'))) for x, y in df.groupby (level= 0)]).append(df.sum().rename((f'{date1}-{date2}', 'Total for period')))
-        len=df_new.shape[0]
+        df = df[['chat_name'] + [x for x in df.columns if x!='chat_name']]
+        print(df)
+        df_list=[]
+        df_group= df.groupby('time_of_public', group_keys=False)
+        for date, group in df_group:
+            group.loc[f'Total for {date}']=group.sum(axis=0, numeric_only=True)
+            df_list.append (group)
+        df2 = pd.concat(df_list)
+        df2.loc[f'Total for period {date1}-{date2}']=df.sum(axis=0, numeric_only=True)
+        df3=df.groupby('chat_name').sum(numeric_only=True)
+        len=df2.shape[0]
 
         with pd.ExcelWriter(f'./excel/report_{date1}_{date2}.xlsx') as writer:
-            df_new.to_excel(writer, sheet_name="Sheet1")
-            df2.to_excel(writer, sheet_name="Sheet1", startrow=len+2,startcol=1, header=False)
+            df2.to_excel(writer, sheet_name="Sheet1")
+            df3.to_excel(writer, sheet_name="Sheet1", startrow=len+2,startcol=1, header=False)
             print('Report is done, saved')
-

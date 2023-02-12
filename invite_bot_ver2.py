@@ -218,7 +218,8 @@ class InviteBot():
             name = State()
 
         class Form_report(StatesGroup):
-            dates = State()
+            date_in = State()
+            date_out = State()
 
         class Form_check_url(StatesGroup):
             url = State()
@@ -337,7 +338,11 @@ class InviteBot():
         @self.dp.message_handler(commands=['how_many_records_in_db_table'])
         async def how_many_records_in_db_table_commands(message: types.Message):
             await Form_db.name.set()
-            await self.bot_aiogram.send_message(message.chat.id, 'Type the table name like the profession')
+            await self.bot_aiogram.send_message(message.chat.id, 'Type the TABLE name like the profession')
+
+        @self.dp.message_handler(commands=['how_many_vacancies'])
+        async def how_many_vacancies_commands(message: types.Message):
+            await self.bot_aiogram.send_message(message.chat.id, 'Type the dates')
 
         @self.dp.message_handler(state=Form_db.name)
         async def emeggency_push_profession(message: types.Message, state: FSMContext):
@@ -353,6 +358,49 @@ class InviteBot():
                 await self.bot_aiogram.send_message(message.chat.id, f'{len(response)} records')
             else:
                 await self.bot_aiogram.send_message(message.chat.id, f'{str(response)}')
+
+        @self.dp.message_handler(commands=['how_many_vacancies_published'])
+        async def how_many_vacancies_published_commands(message: types.Message):
+            await Form_report.date_in.set()
+            await self.bot_aiogram.send_message(message.chat.id, 'Type the starting date in format: YYYY-MM-DD')
+
+        @self.dp.message_handler(state=Form_report.date_in)
+        async def report_published (message: types.Message, state: FSMContext):
+            async with state.proxy() as data:
+                data['date_in'] = message.text
+                date = data['date_in']
+                try:
+                    valid_date = datetime.strptime(date, '%Y-%m-%d')
+                    await Form_report.date_out.set()
+                    await self.bot_aiogram.send_message(message.chat.id, 'Type the ending date in format: YYYY-MM-DD \n or put 1 for one-day report')
+                except ValueError:
+                    await self.bot_aiogram.send_message(message.chat.id, 'Invalid date!')
+                    await Form_report.date_in.set()
+                    await self.bot_aiogram.send_message(message.chat.id, 'Type the starting date in format: YYYY-MM-DD')
+
+        @self.dp.message_handler(state=Form_report.date_out)
+        async def report_published (message: types.Message, state: FSMContext):
+            async with state.proxy() as data:
+                data['date_out'] = message.text
+                date_in = data['date_in']
+                date_out = data['date_out']
+                if date_out != '1':
+                    try:
+                        valid_date = datetime.strptime(date_out, '%Y-%m-%d')
+                    except ValueError:
+                        await self.bot_aiogram.send_message(message.chat.id, 'Invalid date!')
+                        await Form_report.date_out.set()
+                        await self.bot_aiogram.send_message(message.chat.id, 'Type the ending date in format: YYYY-MM-DD')
+                if date_out != '1' and datetime.strptime(date_in, '%Y-%m-%d') > datetime.strptime(date_out, '%Y-%m-%d'):
+                    await self.bot_aiogram.send_message(message.chat.id, 'Check the dates! Ending date should be later than starting date.')
+                    await Form_report.date_in.set()
+                    await self.bot_aiogram.send_message(message.chat.id, 'Type the starting date in format: YYYY-MM-DD')
+            await state.finish()
+            if date_out == '1':
+                date_out = date_in
+            self.db.make_report_published_vacancies_excel(date1=date_in, date2=date_out)
+
+            await send_file_to_user(message, f'./excel/report_{date_in}_{date_out}.xlsx')
 
         @self.dp.message_handler(commands=['invite_people'])
         async def invite_people_command(message: types.Message):
@@ -4482,26 +4530,6 @@ class InviteBot():
                                 param=f"WHERE id={response_dict['id']}"
                             )
             await msg.edit_text(f"{msg.text}\nDone! Data has restored")
-
-
-        @self.dp.message_handler(commands=['how_many_vacancies_published'])
-        async def how_many_vacancies_published_commands(message: types.Message):
-            await Form_report.dates.set()
-            await self.bot_aiogram.send_message(message.chat.id, 'Type the dates period in format: 2023-01-01, 2023-01-04')
-
-        @self.dp.message_handler(state=Form_report.dates)
-        async def report_published (message: types.Message, state: FSMContext):
-            async with state.proxy() as data:
-                data['dates'] = message.text
-                dates_str = message.text
-                dates_list = dates_str.split(',')
-            await state.finish()
-            date1=f'{dates_list[0].strip()}'
-            date2=f'{dates_list[1].strip()}'
-            self.db.make_report_published_vacancies_excel(date1=date1, date2=date2
-            )
-
-            await send_file_to_user(message, f'./excel/excel/report_{date1}_{date2}.xlsx')
 
         # start_polling(self.dp)
         executor.start_polling(self.dp, skip_updates=True)
